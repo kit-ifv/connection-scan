@@ -43,12 +43,12 @@ class ArrivalConnections implements UsedConnections {
 	}
 
 	@Override
-	public List<Connection> buildUpConnection(ReachableStops starts, Stop toEnd, Time time)
+	public List<Connection> buildUpConnection(StopPaths starts, Stop toEnd, Time time)
 			throws StopNotReachable {
 		List<Connection> connections = new ArrayList<>();
 		Stop currentStop = toEnd;
 		Connection connection = connectionArrivingAt(currentStop);
-		while (!starts.isStart(currentStop, time, connection)) {
+		while (!starts.isConnectionReachableAt(currentStop, time, connection)) {
 			connection = connectionArrivingAt(currentStop);
 			connections.add(connection);
 			currentStop = connection.start();

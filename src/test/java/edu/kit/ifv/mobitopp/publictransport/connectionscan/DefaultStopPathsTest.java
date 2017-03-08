@@ -25,31 +25,40 @@ import java.util.Optional;
 import org.junit.Test;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
-import edu.kit.ifv.mobitopp.publictransport.model.PathToStop;
+import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-public class PathsToStopsTest {
+public class DefaultStopPathsTest {
 
 	@Test
-	public void knowsDistanceToStops() throws Exception {
-		PathToStop asExpected = shortDistance();
-		ReachableStops stops = stops(asList(asExpected));
+	public void knowsDistanceToStops() {
+		StopPath asExpected = shortDistance();
+		StopPaths stops = stops(asList(asExpected));
 
-		PathToStop distance = stops.pathTo(nearStop());
+		StopPath distance = stops.pathTo(nearStop());
 
 		assertThat(distance, is(asExpected));
 	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void failsForUnknownStop() {
+		StopPath knownStop = shortDistance();
+		Stop unknownStop = farStop();
+		StopPaths stops = stops(asList(knownStop));
+
+		stops.pathTo(unknownStop);
+	}
 
 	@Test
-	public void findsStopWithEarliestArrival() throws Exception {
+	public void findsStopWithEarliestArrival() {
 		Times times = mock(Times.class);
-		ReachableStops stops = stops(asList(shortDistance(), longDistance()));
+		StopPaths stops = stops(asList(shortDistance(), longDistance()));
 		when(times.get(nearStop())).thenReturn(oneMinuteLater());
 		when(times.get(farStop())).thenReturn(someTime());
 
-		Optional<Stop> stop = stops.earliestArrivalAtStop(times);
+		Optional<Stop> stop = stops.stopWithEarliestArrival(times);
 
 		assertThat(stop, isPresent());
 		assertThat(stop, hasValue(nearStop()));
@@ -58,11 +67,11 @@ public class PathsToStopsTest {
 	}
 
 	@Test
-	public void doesNotFindStopWithEarliestArrivalWhenNoStopsAreAvailable() throws Exception {
+	public void doesNotFindStopWithEarliestArrivalWhenNoStopsAreAvailable() {
 		Times times = mock(Times.class);
-		ReachableStops stops = stops(emptyList());
+		StopPaths stops = stops(emptyList());
 
-		Optional<Stop> stop = stops.earliestArrivalAtStop(times);
+		Optional<Stop> stop = stops.stopWithEarliestArrival(times);
 
 		assertThat(stop, isEmpty());
 		verifyZeroInteractions(times);
@@ -70,25 +79,25 @@ public class PathsToStopsTest {
 
 	@Test
 	public void considersPathToStopToFindCorrectStartStop() throws Exception {
-		ReachableStops stops = stops(asList(shortDistance(), longDistance()));
+		StopPaths stops = stops(asList(shortDistance(), longDistance()));
 		Connection connection = mock(Connection.class);
 		when(connection.departure()).thenReturn(oneMinuteLater());
 		Time time = someTime();
 
-		assertTrue(stops.isStart(nearStop(), time, connection));
-		assertFalse(stops.isStart(farStop(), time, connection));
+		assertTrue(stops.isConnectionReachableAt(nearStop(), time, connection));
+		assertFalse(stops.isConnectionReachableAt(farStop(), time, connection));
 	}
 
-	private static ReachableStops stops(List<PathToStop> stops) {
-		return PathsToStops.from(stops);
+	private static StopPaths stops(List<StopPath> stops) {
+		return DefaultStopPaths.from(stops);
 	}
 
-	private PathToStop shortDistance() {
-		return new PathToStop(nearStop(), shortDuration());
+	private StopPath shortDistance() {
+		return new StopPath(nearStop(), shortDuration());
 	}
 
-	private PathToStop longDistance() {
-		return new PathToStop(farStop(), longDuration());
+	private StopPath longDistance() {
+		return new StopPath(farStop(), longDuration());
 	}
 
 	private RelativeTime shortDuration() {

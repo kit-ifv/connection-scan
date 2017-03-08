@@ -12,6 +12,6 @@ interface ConnectionSweeper {
 	Optional<PublicTransportRoute> sweep(Arrival arrival, Stop start, Stop end, Time searchTime);
 
 	Optional<PublicTransportRoute> sweep(
-			Arrival arrival, ReachableStops startStops, ReachableStops ends, Time searchTime);
+			Arrival arrival, StopPaths startStops, StopPaths ends, Time searchTime);
 
 }

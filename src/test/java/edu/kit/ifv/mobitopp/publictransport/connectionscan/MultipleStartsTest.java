@@ -16,7 +16,7 @@ import java.util.function.BiConsumer;
 
 import org.junit.Test;
 
-import edu.kit.ifv.mobitopp.publictransport.model.PathToStop;
+import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.StopBuilder;
@@ -32,7 +32,7 @@ public class MultipleStartsTest {
 
 	@Test
 	public void initialisesTimeAtStart() throws Exception {
-		List<PathToStop> starts = someStartPaths();
+		List<StopPath> starts = someStartPaths();
 		Times times = timesFromPaths(starts, someTime(), onlyStartStops);
 
 		Time time = times.get(startStop());
@@ -165,17 +165,17 @@ public class MultipleStartsTest {
 		assertThat(times.get(otherStop), is(equalTo(timeAtOther)));
 	}
 
-	private List<PathToStop> noWalkTime() {
+	private List<StopPath> noWalkTime() {
 		return asList(pathTo(startStop(), RelativeTime.ZERO),
 				pathTo(anotherStartStop(), RelativeTime.ZERO));
 	}
 
-	private List<PathToStop> someStartPaths() {
+	private List<StopPath> someStartPaths() {
 		return asList(pathTo(startStop(), oneMinute), pathTo(anotherStartStop(), twoMinutes));
 	}
 
-	private PathToStop pathTo(Stop stop, RelativeTime walkTime) {
-		return new PathToStop(stop, walkTime);
+	private StopPath pathTo(Stop stop, RelativeTime walkTime) {
+		return new StopPath(stop, walkTime);
 	}
 
 	private Stop startStop() {
@@ -219,7 +219,7 @@ public class MultipleStartsTest {
 		return timesFromPaths(someStartPaths(), departure, numberOfStops);
 	}
 
-	private Times timesFromPaths(List<PathToStop> starts, Time departure, int numberOfStops) {
+	private Times timesFromPaths(List<StopPath> starts, Time departure, int numberOfStops) {
 		return MultipleStarts.from(starts, departure, numberOfStops);
 	}
 }

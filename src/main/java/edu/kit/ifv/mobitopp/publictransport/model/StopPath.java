@@ -1,11 +1,11 @@
 package edu.kit.ifv.mobitopp.publictransport.model;
 
-public class PathToStop {
+public class StopPath {
 
 	private final Stop stop;
 	private final RelativeTime duration;
 
-	public PathToStop(Stop stop, RelativeTime duration) {
+	public StopPath(Stop stop, RelativeTime duration) {
 		super();
 		this.stop = stop;
 		this.duration = duration;
@@ -19,7 +19,7 @@ public class PathToStop {
 		return duration;
 	}
 
-	public Time walkAt(Time currentTime) {
+	public Time arrivalTimeStartingAt(Time currentTime) {
 		return currentTime.add(duration);
 	}
 
@@ -43,7 +43,7 @@ public class PathToStop {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		PathToStop other = (PathToStop) obj;
+		StopPath other = (StopPath) obj;
 		if (duration == null) {
 			if (other.duration != null) {
 				return false;

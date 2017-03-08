@@ -3,17 +3,17 @@ package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 import java.util.List;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
-import edu.kit.ifv.mobitopp.publictransport.model.PathToStop;
+import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
 class RouteIncludingFootpaths implements PublicTransportRoute {
 
 	private final PublicTransportRoute route;
-	private final PathToStop start;
-	private final PathToStop end;
+	private final StopPath start;
+	private final StopPath end;
 
-	RouteIncludingFootpaths(PublicTransportRoute route, PathToStop start, PathToStop end) {
+	RouteIncludingFootpaths(PublicTransportRoute route, StopPath start, StopPath end) {
 		super();
 		this.route = route;
 		this.start = start;
@@ -32,7 +32,7 @@ class RouteIncludingFootpaths implements PublicTransportRoute {
 
 	@Override
 	public PublicTransportRoute addFootpaths(
-			ReachableStops reachableStart, ReachableStops reachableEnd) {
+			StopPaths reachableStart, StopPaths reachableEnd) {
 		return this;
 	}
 

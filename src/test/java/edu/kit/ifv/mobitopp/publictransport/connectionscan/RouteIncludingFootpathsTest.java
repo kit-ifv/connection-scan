@@ -13,7 +13,7 @@ import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.kit.ifv.mobitopp.publictransport.model.PathToStop;
+import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
@@ -32,8 +32,8 @@ public class RouteIncludingFootpathsTest {
 	@Test
 	public void extendsEndDateByWalkTimeToEnd() throws Exception {
 		when(route.arrival()).thenReturn(someTime());
-		PathToStop start = someDistance();
-		PathToStop end = anotherDistance();
+		StopPath start = someDistance();
+		StopPath end = anotherDistance();
 		PublicTransportRoute routeIncludingFootpath = new RouteIncludingFootpaths(route, start, end);
 
 		Time endDate = routeIncludingFootpath.arrival();
@@ -45,8 +45,8 @@ public class RouteIncludingFootpathsTest {
 	@Test
 	public void expandsDurationWithFootpaths() throws Exception {
 		when(route.duration()).thenReturn(RelativeTime.of(3, MINUTES));
-		PathToStop start = someDistance();
-		PathToStop end = anotherDistance();
+		StopPath start = someDistance();
+		StopPath end = anotherDistance();
 		RouteIncludingFootpaths completeTour = new RouteIncludingFootpaths(route, start, end);
 
 		RelativeTime duration = completeTour.duration();
@@ -54,11 +54,11 @@ public class RouteIncludingFootpathsTest {
 		assertThat(duration, is(equalTo(RelativeTime.of(6, MINUTES))));
 	}
 
-	private PathToStop someDistance() {
-		return new PathToStop(someStop(), oneMinute);
+	private StopPath someDistance() {
+		return new StopPath(someStop(), oneMinute);
 	}
 
-	private PathToStop anotherDistance() {
-		return new PathToStop(anotherStop(), twoMinutes);
+	private StopPath anotherDistance() {
+		return new StopPath(anotherStop(), twoMinutes);
 	}
 }

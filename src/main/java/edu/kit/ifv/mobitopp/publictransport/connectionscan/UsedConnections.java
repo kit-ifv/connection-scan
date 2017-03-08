@@ -12,6 +12,6 @@ interface UsedConnections {
 
 	List<Connection> buildUpConnection(Stop fromStart, Stop toEnd) throws StopNotReachable;
 
-	List<Connection> buildUpConnection(ReachableStops starts, Stop end, Time time) throws StopNotReachable;
+	List<Connection> buildUpConnection(StopPaths starts, Stop end, Time time) throws StopNotReachable;
 
 }

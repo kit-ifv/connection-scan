@@ -21,7 +21,7 @@ public class ConnectionScan implements RouteSearch {
 		this.connections = connections;
 	}
 
-	public static RouteSearch from(Collection<Stop> stops, Connections connections) {
+	public static RouteSearch create(Collection<Stop> stops, Connections connections) {
 		assertIdsOf(stops);
 		ConnectionSweeper prepareConnections = PreparedConnections.from(connections);
 		return new ConnectionScan(stops, prepareConnections);
@@ -61,7 +61,7 @@ public class ConnectionScan implements RouteSearch {
 
 	@Override
 	public Optional<PublicTransportRoute> findRoute(
-			ReachableStops fromStarts, ReachableStops toEnds, Time atTime) {
+			StopPaths fromStarts, StopPaths toEnds, Time atTime) {
 		if (scanNotNeeded(fromStarts, toEnds, atTime)) {
 			return Optional.empty();
 		}
@@ -74,15 +74,15 @@ public class ConnectionScan implements RouteSearch {
 		return stops.size();
 	}
 
-	private boolean scanNotNeeded(ReachableStops startStops, ReachableStops endStops, Time time) {
+	private boolean scanNotNeeded(StopPaths startStops, StopPaths endStops, Time time) {
 		return connections.isTooLate(time) || notAvailable(startStops, endStops);
 	}
 
-	private boolean notAvailable(ReachableStops startStops, ReachableStops endStops) {
+	private boolean notAvailable(StopPaths startStops, StopPaths endStops) {
 		return notAvailable(startStops) || notAvailable(endStops);
 	}
 
-	private boolean notAvailable(ReachableStops requested) {
+	private boolean notAvailable(StopPaths requested) {
 		return requested.stops().isEmpty() || !stops.containsAll(requested.stops());
 	}
 

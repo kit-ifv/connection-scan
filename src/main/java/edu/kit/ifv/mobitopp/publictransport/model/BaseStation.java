@@ -1,5 +1,7 @@
 package edu.kit.ifv.mobitopp.publictransport.model;
 
+import static java.util.Comparator.comparing;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -7,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -19,11 +22,11 @@ public abstract class BaseStation implements Station {
 	private final Set<Stop> stops;
 	private final Set<Node> nodes;
 
-	public BaseStation(int id) {
+	public BaseStation(int id, Collection<Node> nodes) {
 		super();
 		this.id = id;
-		stops = new HashSet<>();
-		nodes = new HashSet<>();
+		stops = new TreeSet<>(comparing(Stop::id));
+		this.nodes = new HashSet<>(nodes);
 	}
 
 	@Override
@@ -34,10 +37,6 @@ public abstract class BaseStation implements Station {
 	@Override
 	public List<Node> nodes() {
 		return new ArrayList<>(nodes);
-	}
-
-	public void locateAt(Collection<Node> locations) {
-		this.nodes.addAll(locations);
 	}
 
 	@Override

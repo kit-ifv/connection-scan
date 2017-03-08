@@ -7,8 +7,7 @@ import edu.kit.ifv.mobitopp.network.Node;
 public class DefaultStation extends BaseStation implements Station {
 
 	public DefaultStation(int id, List<Node> nodes) {
-		super(id);
-		locateAt(nodes);
+		super(id, nodes);
 	}
 
 	@Override

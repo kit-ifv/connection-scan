@@ -4,6 +4,4 @@ public interface ModifiableJourney extends Journey {
 
 	void add(Connection connection);
 
-	public static final ModifiableJourney noJourney = new NoJourney();
-
 }

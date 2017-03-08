@@ -119,8 +119,8 @@ public class PreparedConnectionsTest {
 	public void cancelsScanWhenConnectionsIsAfterArrivalAtOneOfSeveralEndStops() throws Exception {
 		List<Stop> endStops = asList(anotherStop(), otherStop());
 		PreparedConnections connections = alwaysCancelConnections(from1To2(), from2To3());
-		ReachableStops start = mock(ReachableStops.class);
-		ReachableStops end = mock(ReachableStops.class);
+		StopPaths start = mock(StopPaths.class);
+		StopPaths end = mock(StopPaths.class);
 		when(end.stops()).thenReturn(endStops);
 		when(arrival.isTooLateAtOne(from2To3(), endStops)).thenReturn(true);
 
@@ -139,8 +139,8 @@ public class PreparedConnectionsTest {
 			throws Exception {
 		List<Stop> endStops = asList(anotherStop(), otherStop());
 		PreparedConnections connections = alwaysCancelConnections(from1To2(), from2To3());
-		ReachableStops start = mock(ReachableStops.class);
-		ReachableStops end = mock(ReachableStops.class);
+		StopPaths start = mock(StopPaths.class);
+		StopPaths end = mock(StopPaths.class);
 		when(end.stops()).thenReturn(endStops);
 		when(arrival.isTooLateAtOne(from2To3(), endStops)).thenReturn(true);
 
@@ -156,8 +156,8 @@ public class PreparedConnectionsTest {
 
 	@Test
 	public void findsRouteFromSeveralStartsStopsToSeveralEndStops() throws Exception {
-		ReachableStops start = mock(ReachableStops.class);
-		ReachableStops reachableEnd = mock(ReachableStops.class);
+		StopPaths start = mock(StopPaths.class);
+		StopPaths reachableEnd = mock(StopPaths.class);
 		when(arrival.createRoute(start, reachableEnd, someTime())).thenReturn(someRoute);
 		PreparedConnections connections = alwaysCancelConnections(from1To2(), from3To4());
 

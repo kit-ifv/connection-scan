@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
-import edu.kit.ifv.mobitopp.publictransport.model.PathToStop;
+import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
@@ -32,7 +32,7 @@ class ScannedArrival implements Arrival {
 		return from(times, usedConnections);
 	}
 
-	static Arrival from(List<PathToStop> stops, Time time, int numberOfStops) {
+	static Arrival from(List<StopPath> stops, Time time, int numberOfStops) {
 		Times times = MultipleStarts.from(stops, time, numberOfStops);
 		UsedConnections usedConnections = new ArrivalConnections(numberOfStops);
 		return from(times, usedConnections);
@@ -140,12 +140,12 @@ class ScannedArrival implements Arrival {
 
 	@Override
 	public Optional<PublicTransportRoute> createRoute(
-			ReachableStops starts, ReachableStops toEnd, Time time) {
-		Optional<Stop> end = toEnd.earliestArrivalAtStop(times);
+			StopPaths starts, StopPaths toEnd, Time time) {
+		Optional<Stop> end = toEnd.stopWithEarliestArrival(times);
 		return end.flatMap(stop -> createRoute(starts, stop, time));
 	}
 
-	private Optional<PublicTransportRoute> createRoute(ReachableStops starts, Stop end, Time time) {
+	private Optional<PublicTransportRoute> createRoute(StopPaths starts, Stop end, Time time) {
 		try {
 			List<Connection> connections = arrivalConnections.buildUpConnection(starts, end, time);
 			if (connections.isEmpty()) {

@@ -577,10 +577,10 @@ public class ScannedArrivalTest {
 		Connection someConnection = someConnection();
 		Times times = mock(Times.class);
 		UsedConnections usedConnections = mock(UsedConnections.class);
-		ReachableStops start = mock(ReachableStops.class);
-		ReachableStops reachableEnd = mock(ReachableStops.class);
+		StopPaths start = mock(StopPaths.class);
+		StopPaths reachableEnd = mock(StopPaths.class);
 		when(start.stops()).thenReturn(startStops);
-		when(reachableEnd.earliestArrivalAtStop(times)).thenReturn(of(endStop));
+		when(reachableEnd.stopWithEarliestArrival(times)).thenReturn(of(endStop));
 		when(times.get(endStop)).thenReturn(oneMinuteLater());
 		Time scanTime = someTime();
 		when(usedConnections.buildUpConnection(start, endStop, scanTime))
@@ -594,7 +594,7 @@ public class ScannedArrivalTest {
 		PublicTransportRoute expectedTour = new ScannedRoute(stop1, endStop, scanTime, oneMinuteLater(),
 				asList(someConnection()));
 		assertThat(tour, hasValue(expectedTour));
-		verify(reachableEnd).earliestArrivalAtStop(times);
+		verify(reachableEnd).stopWithEarliestArrival(times);
 		verify(times).get(endStop);
 		verify(usedConnections).buildUpConnection(start, endStop, scanTime);
 	}
@@ -603,12 +603,12 @@ public class ScannedArrivalTest {
 	public void doesNotCreateTourWhenNoConnectionsCanBeFound() throws Exception {
 		Times times = mock(Times.class);
 		UsedConnections usedConnections = mock(UsedConnections.class);
-		ReachableStops start = mock(ReachableStops.class);
-		ReachableStops end = mock(ReachableStops.class);
+		StopPaths start = mock(StopPaths.class);
+		StopPaths end = mock(StopPaths.class);
 		Stop startStop = stop2;
 		Stop endStop = stop1;
 		List<Stop> startStops = asList(startStop);
-		when(end.earliestArrivalAtStop(times)).thenReturn(of(endStop));
+		when(end.stopWithEarliestArrival(times)).thenReturn(of(endStop));
 		when(start.stops()).thenReturn(startStops);
 		Time scanTime = someTime();
 		when(times.get(any())).thenReturn(scanTime);

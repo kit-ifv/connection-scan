@@ -1,5 +1,6 @@
 package edu.kit.ifv.mobitopp.publictransport.model;
 
+import static java.util.Collections.emptyList;
 import static java.util.Optional.of;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.contains;
@@ -36,10 +37,10 @@ public class BaseStationTest {
 	@SuppressWarnings("unchecked")
 	@Before
 	public void initialise() throws Exception {
-		someStop = mock(Stop.class);
-		anotherStop = mock(Stop.class);
-		otherStop = mock(Stop.class);
-		yetAnotherStop = mock(Stop.class);
+		someStop = Data.someStop();
+		anotherStop = Data.anotherStop();
+		otherStop = Data.otherStop();
+		yetAnotherStop = Data.yetAnotherStop();
 		station = someStation();
 		otherStation = anotherStation();
 		function = mock(BiFunction.class);
@@ -81,8 +82,7 @@ public class BaseStationTest {
 	}
 
 	@Test
-	public void callsFunctionWhenBothStationsContainSeveralStopsButEmptyOptionalWillBeReturned()
-			throws Exception {
+	public void callsFunctionWhenBothStationsContainSeveralStopsButEmptyOptionalWillBeReturned() {
 		linkSeveralStopsAndStations();
 
 		when(function.apply(any(), any())).thenReturn(Optional.empty());
@@ -95,8 +95,7 @@ public class BaseStationTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void callsFunctionWhenBothStationsContainSeveralStopsAndFunctionReturnsAResultForAll()
-			throws Exception {
+	public void callsFunctionWhenBothStationsContainSeveralStopsAndFunctionReturnsAResultForAll() {
 		linkSeveralStopsAndStations();
 
 		when(function.apply(any(), any())).thenReturn(of(result1), of(result2), of(result3),
@@ -110,8 +109,7 @@ public class BaseStationTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void callsFunctionWhenBothStationsContainSeveralStopsAndFunctionReturnsAResultForSome()
-			throws Exception {
+	public void callsFunctionWhenBothStationsContainSeveralStopsAndFunctionReturnsAResultForSome() {
 		linkSeveralStopsAndStations();
 
 		when(function.apply(any(), any())).thenReturn(of(result1), Optional.empty(), of(result2),
@@ -147,7 +145,7 @@ public class BaseStationTest {
 	}
 
 	private static BaseStation newStation(int id) {
-		return new BaseStation(id) {
+		return new BaseStation(id, emptyList()) {
 
 			@Override
 			public RelativeTime minimumChangeTime(int id) {

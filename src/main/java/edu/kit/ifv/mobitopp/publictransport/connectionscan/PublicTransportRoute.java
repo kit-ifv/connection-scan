@@ -12,7 +12,7 @@ public interface PublicTransportRoute {
 	
 	RelativeTime duration();
 
-	PublicTransportRoute addFootpaths(ReachableStops reachableStart, ReachableStops reachableEnd);
+	PublicTransportRoute addFootpaths(StopPaths reachableStart, StopPaths reachableEnd);
 
 	List<Connection> connections();
 

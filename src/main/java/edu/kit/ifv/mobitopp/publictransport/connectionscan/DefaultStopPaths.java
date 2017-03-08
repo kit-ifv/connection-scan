@@ -10,35 +10,35 @@ import java.util.Map;
 import java.util.Optional;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
-import edu.kit.ifv.mobitopp.publictransport.model.PathToStop;
+import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-public class PathsToStops implements ReachableStops {
+public class DefaultStopPaths implements StopPaths {
 
-	private final List<PathToStop> reachable;
+	private final List<StopPath> reachable;
 	private final List<Stop> stops;
-	private final Map<Stop, PathToStop> lookup;
+	private final Map<Stop, StopPath> stopToPaths;
 
-	private PathsToStops(List<PathToStop> reachable, List<Stop> stops, Map<Stop, PathToStop> lookup) {
+	private DefaultStopPaths(List<StopPath> reachable, List<Stop> stops, Map<Stop, StopPath> lookup) {
 		super();
 		this.reachable = reachable;
 		this.stops = stops;
-		this.lookup = lookup;
+		this.stopToPaths = lookup;
 	}
 
-	public static ReachableStops from(List<PathToStop> reachable) {
-		List<Stop> stops = reachable.stream().map(PathToStop::stop).collect(toList());
-		Map<Stop, PathToStop> lookup = new HashMap<>();
-		for (PathToStop stopDistance : reachable) {
+	public static StopPaths from(List<StopPath> reachable) {
+		List<Stop> stops = reachable.stream().map(StopPath::stop).collect(toList());
+		Map<Stop, StopPath> lookup = new HashMap<>();
+		for (StopPath stopDistance : reachable) {
 			lookup.put(stopDistance.stop(), stopDistance);
 		}
-		return new PathsToStops(reachable, stops, lookup);
+		return new DefaultStopPaths(reachable, stops, lookup);
 	}
 
 	@Override
-	public Arrival createArrival(Time time, int numberOfStops) {
-		return ScannedArrival.from(reachable, time, numberOfStops);
+	public Arrival createArrival(Time time, int totalNumberOfStopsInNetwork) {
+		return ScannedArrival.from(reachable, time, totalNumberOfStopsInNetwork);
 	}
 
 	@Override
@@ -47,12 +47,15 @@ public class PathsToStops implements ReachableStops {
 	}
 
 	@Override
-	public PathToStop pathTo(Stop stop) {
-		return lookup.get(stop);
+	public StopPath pathTo(Stop stop) {
+		if (stopToPaths.containsKey(stop)) {
+			return stopToPaths.get(stop);
+		}
+		throw new IllegalArgumentException("Stop is not known: " + stop);
 	}
 
 	@Override
-	public Optional<Stop> earliestArrivalAtStop(Times times) {
+	public Optional<Stop> stopWithEarliestArrival(Times times) {
 		if (stops.isEmpty()) {
 			return empty();
 		}
@@ -62,10 +65,10 @@ public class PathsToStops implements ReachableStops {
 	private Optional<Stop> earliestStop(Times times) {
 		Stop stop = null;
 		Time currentArrival = null;
-		for (PathToStop stopDistance : reachable) {
+		for (StopPath stopDistance : reachable) {
 			Stop current = stopDistance.stop();
 			Time currentTime = times.get(current);
-			Time includingFootpath = stopDistance.walkAt(currentTime);
+			Time includingFootpath = stopDistance.arrivalTimeStartingAt(currentTime);
 			if (null == currentArrival || includingFootpath.isBefore(currentArrival)) {
 				stop = current;
 				currentArrival = currentTime;
@@ -75,12 +78,11 @@ public class PathsToStops implements ReachableStops {
 	}
 
 	@Override
-	public boolean isStart(Stop stop, Time time, Connection connection) {
-		Time departure = connection.departure();
-		if (lookup.containsKey(stop)) {
-			PathToStop pathToStop = lookup.get(stop);
+	public boolean isConnectionReachableAt(Stop stop, Time time, Connection connection) {
+		if (stopToPaths.containsKey(stop)) {
+			StopPath pathToStop = stopToPaths.get(stop);
 			Time arrivalAtStop = time.add(pathToStop.duration());
-			return arrivalAtStop.isBeforeOrEqualTo(departure);
+			return arrivalAtStop.isBeforeOrEqualTo(connection.departure());
 		}
 		return false;
 	}
@@ -104,7 +106,7 @@ public class PathsToStops implements ReachableStops {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		PathsToStops other = (PathsToStops) obj;
+		DefaultStopPaths other = (DefaultStopPaths) obj;
 		if (reachable == null) {
 			if (other.reachable != null) {
 				return false;

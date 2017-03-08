@@ -100,7 +100,7 @@ public class PreparedConnections implements ConnectionSweeper {
 
 	@Override
 	public Optional<PublicTransportRoute> sweep(
-			Arrival arrival, ReachableStops startStops, ReachableStops reachableEnds, Time time) {
+			Arrival arrival, StopPaths startStops, StopPaths reachableEnds, Time time) {
 		int fromIndex = lookup.apply(time);
 		List<Stop> tillOneEnd = reachableEnds.stops();
 		scanConnections(fromIndex, tillOneEnd, arrival);

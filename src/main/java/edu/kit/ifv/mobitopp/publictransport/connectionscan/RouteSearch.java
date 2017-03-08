@@ -9,6 +9,6 @@ public interface RouteSearch {
 
 	Optional<PublicTransportRoute> findRoute(Stop fromStart, Stop toEnd, Time time);
 
-	Optional<PublicTransportRoute> findRoute(ReachableStops startStops, ReachableStops endStops, Time time);
+	Optional<PublicTransportRoute> findRoute(StopPaths startStops, StopPaths endStops, Time time);
 
 }

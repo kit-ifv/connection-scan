@@ -124,8 +124,8 @@ public class ConnectionScanTest {
 		List<Stop> endStops = asList(anotherStop());
 		List<Stop> stops = asList(someStop(), anotherStop());
 		int numberOfStops = stops.size();
-		ReachableStops reachableStart = mock(ReachableStops.class);
-		ReachableStops reachableEnd = mock(ReachableStops.class);
+		StopPaths reachableStart = mock(StopPaths.class);
+		StopPaths reachableEnd = mock(StopPaths.class);
 		PublicTransportRoute vehicleRoute = mock(PublicTransportRoute.class);
 		PublicTransportRoute tourIncludingFootpath = mock(PublicTransportRoute.class);
 		Arrival arrival = mock(Arrival.class);
@@ -150,8 +150,8 @@ public class ConnectionScanTest {
 	public void findsNoRouteBetweenSeveralStopsWhenStartTimeIsTooLate() throws Exception {
 		Time time = someTime();
 		List<Stop> stops = asList(someStop(), anotherStop());
-		ReachableStops reachableStart = mock(ReachableStops.class);
-		ReachableStops reachableEnd = mock(ReachableStops.class);
+		StopPaths reachableStart = mock(StopPaths.class);
+		StopPaths reachableEnd = mock(StopPaths.class);
 		when(connections.isTooLate(time)).thenReturn(true);
 
 		ConnectionScan scan = scan(stops, connections);
@@ -167,8 +167,8 @@ public class ConnectionScanTest {
 		List<Stop> startStops = asList(someStop());
 		List<Stop> endStops = asList(anotherStop());
 		List<Stop> stops = endStops;
-		ReachableStops reachableStart = mock(ReachableStops.class);
-		ReachableStops reachableEnd = mock(ReachableStops.class);
+		StopPaths reachableStart = mock(StopPaths.class);
+		StopPaths reachableEnd = mock(StopPaths.class);
 		when(reachableStart.stops()).thenReturn(startStops);
 		when(reachableEnd.stops()).thenReturn(endStops);
 
@@ -185,8 +185,8 @@ public class ConnectionScanTest {
 		List<Stop> startStops = asList(someStop());
 		List<Stop> endStops = asList(anotherStop());
 		List<Stop> stops = startStops;
-		ReachableStops reachableStart = mock(ReachableStops.class);
-		ReachableStops reachableEnd = mock(ReachableStops.class);
+		StopPaths reachableStart = mock(StopPaths.class);
+		StopPaths reachableEnd = mock(StopPaths.class);
 		when(reachableStart.stops()).thenReturn(startStops);
 		when(reachableEnd.stops()).thenReturn(endStops);
 
@@ -203,8 +203,8 @@ public class ConnectionScanTest {
 		List<Stop> startStops = asList(someStop());
 		List<Stop> endStops = emptyList();
 		List<Stop> stops = asList(someStop());
-		ReachableStops reachableStart = mock(ReachableStops.class);
-		ReachableStops reachableEnd = mock(ReachableStops.class);
+		StopPaths reachableStart = mock(StopPaths.class);
+		StopPaths reachableEnd = mock(StopPaths.class);
 		when(reachableStart.stops()).thenReturn(startStops);
 		when(reachableEnd.stops()).thenReturn(endStops);
 
@@ -220,8 +220,8 @@ public class ConnectionScanTest {
 		Time time = someTime();
 		List<Stop> startStops = emptyList();
 		List<Stop> stops = asList(someStop(), anotherStop());
-		ReachableStops reachableStart = mock(ReachableStops.class);
-		ReachableStops reachableEnd = mock(ReachableStops.class);
+		StopPaths reachableStart = mock(StopPaths.class);
+		StopPaths reachableEnd = mock(StopPaths.class);
 		when(reachableStart.stops()).thenReturn(startStops);
 
 		ConnectionScan scan = scan(stops, connections);
@@ -237,7 +237,7 @@ public class ConnectionScanTest {
 		Stop tooHighId = stop().withId(2).build();
 		Collection<Stop> stops = asList(first, tooHighId);
 		
-		ConnectionScan.from(stops, noConnections());
+		ConnectionScan.create(stops, noConnections());
 	}
 
 	private Connections noConnections() {

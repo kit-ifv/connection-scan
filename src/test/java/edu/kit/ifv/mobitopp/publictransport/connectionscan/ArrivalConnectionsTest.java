@@ -66,9 +66,9 @@ public class ArrivalConnectionsTest {
 
 	@Test
 	public void buildsUpConnectionsToSeveralStartStops() throws Exception {
-		ReachableStops start = mock(ReachableStops.class);
-		when(start.isStart(someStop(), someTime(), from1To2())).thenReturn(true);
-		when(start.isStart(yetAnotherStop(), someTime(), from4To2())).thenReturn(false);
+		StopPaths start = mock(StopPaths.class);
+		when(start.isConnectionReachableAt(someStop(), someTime(), from1To2())).thenReturn(true);
+		when(start.isConnectionReachableAt(yetAnotherStop(), someTime(), from4To2())).thenReturn(false);
 		when(start.stops()).thenReturn(asList(someStop(), yetAnotherStop()));
 		UsedConnections arrivals = new ArrivalConnections(maximumNumberOfStops);
 		arrivals.update(anotherStop(), from1To2());
@@ -81,10 +81,10 @@ public class ArrivalConnectionsTest {
 
 	@Test
 	public void buildsUpConnectionsToSeveralStartStopsTriangulation() throws Exception {
-		ReachableStops start = mock(ReachableStops.class);
+		StopPaths start = mock(StopPaths.class);
 		when(start.stops()).thenReturn(asList(yetAnotherStop(), someStop()));
-		when(start.isStart(someStop(), someTime(), from1To2())).thenReturn(true);
-		when(start.isStart(yetAnotherStop(), someTime(), from4To2())).thenReturn(false);
+		when(start.isConnectionReachableAt(someStop(), someTime(), from1To2())).thenReturn(true);
+		when(start.isConnectionReachableAt(yetAnotherStop(), someTime(), from4To2())).thenReturn(false);
 		UsedConnections arrivals = new ArrivalConnections(maximumNumberOfStops);
 		arrivals.update(anotherStop(), from1To2());
 		arrivals.update(otherStop(), from2To3());
@@ -96,10 +96,10 @@ public class ArrivalConnectionsTest {
 
 	@Test
 	public void buildsUpConnectionsToSeveralStartStopsWithFootpaths() throws Exception {
-		ReachableStops start = mock(ReachableStops.class);
+		StopPaths start = mock(StopPaths.class);
 		when(start.stops()).thenReturn(asList(yetAnotherStop(), someStop()));
-		when(start.isStart(yetAnotherStop(), someTime(), from4To1WithFootpath())).thenReturn(true);
-		when(start.isStart(someStop(), someTime(), from1To2WithFootpath())).thenReturn(false);
+		when(start.isConnectionReachableAt(yetAnotherStop(), someTime(), from4To1WithFootpath())).thenReturn(true);
+		when(start.isConnectionReachableAt(someStop(), someTime(), from1To2WithFootpath())).thenReturn(false);
 		UsedConnections arrivals = new ArrivalConnections(maximumNumberOfStops);
 		arrivals.update(anotherStop(), from1To2WithFootpath());
 		arrivals.update(otherStop(), from2To3());

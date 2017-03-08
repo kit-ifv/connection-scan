@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
-import edu.kit.ifv.mobitopp.publictransport.model.PathToStop;
+import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
@@ -43,9 +43,9 @@ public class ScannedRoute implements PublicTransportRoute {
 	}
 
 	@Override
-	public PublicTransportRoute addFootpaths(ReachableStops fromStart, ReachableStops toEnd) {
-		PathToStop distanceToStart = fromStart.pathTo(start);
-		PathToStop distanceToEnd = toEnd.pathTo(end);
+	public PublicTransportRoute addFootpaths(StopPaths fromStart, StopPaths toEnd) {
+		StopPath distanceToStart = fromStart.pathTo(start);
+		StopPath distanceToEnd = toEnd.pathTo(end);
 		return new RouteIncludingFootpaths(this, distanceToStart, distanceToEnd);
 	}
 
