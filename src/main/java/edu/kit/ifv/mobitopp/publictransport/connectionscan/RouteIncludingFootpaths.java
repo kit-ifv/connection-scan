@@ -89,7 +89,7 @@ class RouteIncludingFootpaths implements PublicTransportRoute {
 
 	@Override
 	public String toString() {
-		return "CompleteTour [tour=" + route + ", start=" + start + ", end=" + end + "]";
+		return "RouteIncludingFootpaths [route=" + route + ", start=" + start + ", end=" + end + "]";
 	}
 
 }
