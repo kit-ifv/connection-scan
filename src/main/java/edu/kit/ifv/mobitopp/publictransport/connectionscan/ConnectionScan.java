@@ -48,7 +48,7 @@ public class ConnectionScan implements RouteSearch {
 	}
 
 	private boolean scanNotNeeded(Stop start, Stop end, Time time) {
-		return connections.isTooLate(time) || notAvailable(start, end);
+		return connections.allAreDepartedAt(time) || notAvailable(start, end);
 	}
 
 	private boolean notAvailable(Stop fromStart, Stop toEnd) {
@@ -74,7 +74,7 @@ public class ConnectionScan implements RouteSearch {
 	}
 
 	private boolean scanNotNeeded(StopPaths startStops, StopPaths endStops, Time time) {
-		return connections.isTooLate(time) || notAvailable(startStops, endStops);
+		return connections.allAreDepartedAt(time) || notAvailable(startStops, endStops);
 	}
 
 	private boolean notAvailable(StopPaths startStops, StopPaths endStops) {

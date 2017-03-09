@@ -76,7 +76,7 @@ public class PreparedConnections implements ConnectionSweeper {
 	}
 
 	@Override
-	public boolean isTooLate(Time time) {
+	public boolean allAreDepartedAt(Time time) {
 		return isTooLate.apply(time);
 	}
 

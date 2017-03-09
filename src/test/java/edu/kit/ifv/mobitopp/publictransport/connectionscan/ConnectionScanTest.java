@@ -51,11 +51,11 @@ public class ConnectionScanTest {
 		ConnectionScan scan = scan(stops, connections);
 
 		Time searchTime = someTime();
-		when(connections.isTooLate(searchTime)).thenReturn(false);
+		when(connections.allAreDepartedAt(searchTime)).thenReturn(false);
 		Optional<PublicTransportRoute> route = scan.findRoute(start, unreachableEnd, searchTime);
 
 		assertThat(route, isEmpty());
-		verify(connections).isTooLate(searchTime);
+		verify(connections).allAreDepartedAt(searchTime);
 		verifyNoMoreInteractions(connections);
 	}
 
@@ -67,7 +67,7 @@ public class ConnectionScanTest {
 
 		PublicTransportRoute route = mock(PublicTransportRoute.class);
 		Time searchTime = someTime();
-		when(connections.isTooLate(searchTime)).thenReturn(false);
+		when(connections.allAreDepartedAt(searchTime)).thenReturn(false);
 		when(connections.sweep(any())).thenReturn(of(route));
 
 		ConnectionScan connectionScan = scan(stops, connections);
@@ -76,7 +76,7 @@ public class ConnectionScanTest {
 
 		assertThat(startToStop, isPresent());
 		assertThat(startToStop, hasValue(equalTo(route)));
-		verify(connections).isTooLate(searchTime);
+		verify(connections).allAreDepartedAt(searchTime);
 		verify(connections).sweep(any());
 	}
 
@@ -94,11 +94,11 @@ public class ConnectionScanTest {
 		ConnectionScan scan = scan(stops, connections);
 
 		Time searchTime = someTime();
-		when(connections.isTooLate(searchTime)).thenReturn(false);
+		when(connections.allAreDepartedAt(searchTime)).thenReturn(false);
 		Optional<PublicTransportRoute> route = scan.findRoute(anotherStart, end, searchTime);
 
 		assertThat(route, isEmpty());
-		verify(connections).isTooLate(searchTime);
+		verify(connections).allAreDepartedAt(searchTime);
 		verifyNoMoreInteractions(connections);
 	}
 
@@ -109,12 +109,12 @@ public class ConnectionScanTest {
 		Collection<Stop> stops = asList(start, end);
 
 		Time searchTime = someTime();
-		when(connections.isTooLate(searchTime)).thenReturn(true);
+		when(connections.allAreDepartedAt(searchTime)).thenReturn(true);
 		ConnectionScan scan = scan(stops, connections);
 		Optional<PublicTransportRoute> route = scan.findRoute(start, end, searchTime);
 
 		assertThat(route, isEmpty());
-		verify(connections).isTooLate(searchTime);
+		verify(connections).allAreDepartedAt(searchTime);
 		verifyNoMoreInteractions(connections);
 	}
 	
@@ -146,7 +146,7 @@ public class ConnectionScanTest {
 		List<Stop> stops = asList(someStop(), anotherStop());
 		StopPaths reachableStart = mock(StopPaths.class);
 		StopPaths reachableEnd = mock(StopPaths.class);
-		when(connections.isTooLate(time)).thenReturn(true);
+		when(connections.allAreDepartedAt(time)).thenReturn(true);
 
 		ConnectionScan scan = scan(stops, connections);
 

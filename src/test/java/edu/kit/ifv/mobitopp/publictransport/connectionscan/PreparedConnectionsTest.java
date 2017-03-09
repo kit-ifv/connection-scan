@@ -168,7 +168,7 @@ public class PreparedConnectionsTest {
 	public void timeIsTooLateWhenNoConnectionsAreAvailable() throws Exception {
 		Time someTime = someTime();
 
-		assertThat(connections(), is(tooLate(someTime)));
+		assertThat(connections(), is(afterLatestDeparture(someTime)));
 	}
 
 	@Test
@@ -179,7 +179,7 @@ public class PreparedConnectionsTest {
 		PreparedConnections connections = connections(connection);
 
 		Time earlyEnoughTime = someTime();
-		assertThat(connections, is(not(tooLate(earlyEnoughTime))));
+		assertThat(connections, is(not(afterLatestDeparture(earlyEnoughTime))));
 	}
 
 	@Test
@@ -190,7 +190,7 @@ public class PreparedConnectionsTest {
 		PreparedConnections connections = connections(connection);
 
 		Time tooLateTime = oneMinuteLater();
-		assertThat(connections, is(tooLate(tooLateTime)));
+		assertThat(connections, is(afterLatestDeparture(tooLateTime)));
 	}
 
 	@Test
@@ -199,7 +199,7 @@ public class PreparedConnectionsTest {
 		Connection laterConnection = connection().departsAt(oneMinuteLater()).build();
 		PreparedConnections connections = connections(earlierConnection, laterConnection);
 
-		assertThat(connections, is(tooLate(twoMinutesLater())));
+		assertThat(connections, is(afterLatestDeparture(twoMinutesLater())));
 	}
 
 	@Test
@@ -208,7 +208,7 @@ public class PreparedConnectionsTest {
 		Connection laterConnection = connection().departsAt(oneMinuteLater()).build();
 		PreparedConnections connections = connections(laterConnection, earlierConnection);
 
-		assertThat(connections, is(tooLate(twoMinutesLater())));
+		assertThat(connections, is(afterLatestDeparture(twoMinutesLater())));
 	}
 
 	@Test
@@ -218,7 +218,7 @@ public class PreparedConnectionsTest {
 		Connection laterConnection = connection().departsAt(twoMinutesLater()).build();
 		PreparedConnections connections = connections(laterConnection, earlierConnection);
 
-		assertThat(connections, is(not(tooLate(oneMinuteLater()))));
+		assertThat(connections, is(not(afterLatestDeparture(oneMinuteLater()))));
 	}
 
 	private static PreparedConnections alwaysCancelConnections(Connection... connections) {
@@ -237,7 +237,7 @@ public class PreparedConnectionsTest {
 		return validatedConnections;
 	}
 
-	private static Matcher<PreparedConnections> tooLate(Time time) {
+	private static Matcher<PreparedConnections> afterLatestDeparture(Time time) {
 		return new TypeSafeMatcher<PreparedConnections>() {
 
 			@Override
@@ -248,7 +248,7 @@ public class PreparedConnectionsTest {
 
 			@Override
 			protected boolean matchesSafely(PreparedConnections connections) {
-				return connections.isTooLate(time);
+				return connections.allAreDepartedAt(time);
 			}
 		};
 	}
