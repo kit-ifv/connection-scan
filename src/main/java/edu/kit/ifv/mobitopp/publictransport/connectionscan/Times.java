@@ -20,6 +20,4 @@ interface Times {
 
 	Time startTime();
 
-	boolean isAfterArrivalAtEnd(Time departure);
-
 }

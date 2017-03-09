@@ -95,14 +95,14 @@ public abstract class BaseSweeperData implements SweeperData {
 		}
 	}
 
-	@Override
-	public boolean isAfterArrivalAtEnd(Connection connection) {
-		return times.isAfterArrivalAtEnd(connection.departure());
-	}
-
 	protected Optional<PublicTransportRoute> createRoute(Stop start, Stop end, Time time, List<Connection> connections) {
 		Time arrivalTime = times().get(end);
 		return of(new ScannedRoute(start, end, time, arrivalTime, connections));
+	}
+
+	protected boolean isTooLateAt(Time departure, Stop end) {
+		Time arrival = times.getConsideringMinimumChangeTime(end);
+		return arrival.isBefore(departure);
 	}
 
 }

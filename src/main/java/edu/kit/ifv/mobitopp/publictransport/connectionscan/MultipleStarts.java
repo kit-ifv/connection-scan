@@ -10,7 +10,7 @@ import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-class MultipleStarts extends BasicTimes implements Times {
+class MultipleStarts extends BasicTimes {
 
 	private final Time startTime;
 	private final List<StopPath> startPaths;
@@ -73,14 +73,4 @@ class MultipleStarts extends BasicTimes implements Times {
 		return ofNullable(stop);
 	}
 	
-	@Override
-	public boolean isAfterArrivalAtEnd(Time departure) {
-		for (Stop stop : toEnds.stops()) {
-			if (isTooLateAt(departure, stop)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 }

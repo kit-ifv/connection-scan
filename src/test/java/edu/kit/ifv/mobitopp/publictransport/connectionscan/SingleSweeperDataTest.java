@@ -13,9 +13,9 @@ import static edu.kit.ifv.mobitopp.publictransport.model.JourneyBuilder.journey;
 import static edu.kit.ifv.mobitopp.publictransport.model.StopBuilder.stop;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
 
@@ -38,7 +38,6 @@ public class SingleSweeperDataTest {
 	private Stop stop2;
 	private Stop stop3;
 	private Stop otherStop;
-	private Stop dummyStart;
 
 	@Before
 	public void initialise() throws Exception {
@@ -46,7 +45,6 @@ public class SingleSweeperDataTest {
 		stop2 = stop().withId(1).withName("stop 2").build();
 		stop3 = stop().withId(2).withName("stop 3").build();
 		otherStop = stop().withId(2).withName("other stop").build();
-		dummyStart = stop().withId(3).withName("dummy start").build();
 	}
 
 	@Test
@@ -144,14 +142,26 @@ public class SingleSweeperDataTest {
 
 	@Test
 	public void whenConnectionStartsAfterLatestDepartureAtTheEndStop() throws Exception {
-		Connection connection1 = someConnection();
-		Times times = mock(Times.class);
-		SweeperData data = newScannedArrival(times);
+		Stop start = stop1;
+		Stop end = stop2;
+		Time time = someTime();
+		SweeperData data = newScannedArrival(start, end, time);
 		
-		data.isAfterArrivalAtEnd(connection1);
+		assertFalse(data.isAfterArrivalAtEnd(reachableConnection()));
+		assertFalse(data.isAfterArrivalAtEnd(tooLateConnection()));
 		
-		Time departure = someConnection().departure();
-		verify(times).isAfterArrivalAtEnd(departure);
+		data.updateArrival(someConnection());
+		
+		assertFalse(data.isAfterArrivalAtEnd(reachableConnection()));
+		assertTrue(data.isAfterArrivalAtEnd(tooLateConnection()));
+	}
+	
+	private Connection reachableConnection() {
+		return connection().startsAt(stop2).endsAt(stop3).departsAndArrivesAt(oneMinuteLater()).build();
+	}
+
+	private Connection tooLateConnection() {
+		return connection().startsAt(stop2).endsAt(stop3).departsAndArrivesAt(twoMinutesLater()).build();
 	}
 
 	@Test
@@ -526,9 +536,4 @@ public class SingleSweeperDataTest {
 		return SingleSweeperData.from(start, end, time, maximumNumberOfStops);
 	}
 	
-	private SweeperData newScannedArrival(Times times) {
-		UsedConnections connections = mock(UsedConnections.class);
-		return SingleSweeperData.from(dummyStart, times, connections);
-	}
-
 }

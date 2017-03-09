@@ -6,7 +6,7 @@ import java.util.function.BiConsumer;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-class SingleStart extends BasicTimes implements Times {
+class SingleStart extends BasicTimes {
 
 	private final Stop start;
 	private final Time startTime;
@@ -47,11 +47,6 @@ class SingleStart extends BasicTimes implements Times {
 	@Override
 	public Optional<Stop> stopWithEarliestArrival() {
 		return Optional.of(end);
-	}
-	
-	@Override
-	public boolean isAfterArrivalAtEnd(Time departure) {
-		return isTooLateAt(departure, end);
 	}
 
 }

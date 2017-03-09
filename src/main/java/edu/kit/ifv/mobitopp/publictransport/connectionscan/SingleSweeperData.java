@@ -12,22 +12,20 @@ import edu.kit.ifv.mobitopp.publictransport.model.Time;
 class SingleSweeperData extends BaseSweeperData implements SweeperData {
 
 	private final Stop start;
+	private final Stop end;
 
 	private SingleSweeperData(
-			Stop start, Times times, UsedConnections usedConnections, UsedJourneys usedJourneys) {
+			Stop start, Stop end, Times times, UsedConnections usedConnections, UsedJourneys usedJourneys) {
 		super(times, usedConnections, usedJourneys);
 		this.start = start;
+		this.end = end;
 	}
 
 	static SweeperData from(Stop start, Stop end, Time atTime, int numberOfStops) {
 		Times times = SingleStart.from(start, end, atTime, numberOfStops);
 		UsedConnections usedConnections = new ArrivalConnections(numberOfStops);
-		return from(start, times, usedConnections);
-	}
-
-	static SweeperData from(Stop start, Times times, UsedConnections usedConnections) {
 		UsedJourneys usedJourneys = new ScannedJourneys();
-		BaseSweeperData data = new SingleSweeperData(start, times, usedConnections, usedJourneys);
+		BaseSweeperData data = new SingleSweeperData(start, end, times, usedConnections, usedJourneys);
 		times.initialise(data::initialise);
 		return data;
 	}
@@ -45,5 +43,10 @@ class SingleSweeperData extends BaseSweeperData implements SweeperData {
 		} catch (StopNotReachable e) {
 			return empty();
 		}
+	}
+
+	@Override
+	public boolean isAfterArrivalAtEnd(Connection connection) {
+		return isTooLateAt(connection.departure(), end);
 	}
 }

@@ -11,12 +11,9 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
@@ -204,28 +201,6 @@ public class MultipleStartsTest {
 		Optional<Stop> stop = times.stopWithEarliestArrival();
 
 		assertThat(stop, isEmpty());
-	}
-	
-
-	@Test
-	public void isAfterArrivalAtOneOfSeveralEndStops() throws Exception {
-		StopPaths starts = mock(StopPaths.class);
-		StopPaths ends = mock(StopPaths.class);
-		when(starts.stopPaths()).thenReturn(emptyList());
-		when(ends.stopPaths()).thenReturn(asList(shortDistance(), longDistance()));
-		when(ends.stops()).thenReturn(asList(nearStop(), farStop()));
-		Time atTime = someTime();
-		Times times = timesFromPaths(starts, ends, atTime, additionalStops);
-		Time beforeArrival = someTime();
-		Time arrival = oneMinuteLater();
-		Time afterArrival = twoMinutesLater();
-		
-		times.set(nearStop(), arrival);
-		times.set(farStop(), afterArrival);
-		
-		assertFalse(times.isAfterArrivalAtEnd(beforeArrival));
-		assertFalse(times.isAfterArrivalAtEnd(arrival));
-		assertTrue(times.isAfterArrivalAtEnd(afterArrival));
 	}
 
 	private StopPath shortDistance() {

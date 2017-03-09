@@ -3,15 +3,12 @@ package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 import static com.github.npathai.hamcrestopt.OptionalMatchers.hasValue;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.oneMinuteLater;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.someTime;
-import static edu.kit.ifv.mobitopp.publictransport.model.Data.twoMinutesLater;
 import static edu.kit.ifv.mobitopp.publictransport.model.StopBuilder.stop;
 import static edu.kit.ifv.mobitopp.publictransport.model.Time.infinite;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -181,24 +178,6 @@ public class SingleStartTest {
 		Optional<Stop> earliestArrival = times.stopWithEarliestArrival();
 		
 		assertThat(earliestArrival , hasValue(end));
-	}
-
-	@Test
-	public void isAfterArrivalAtEnd() {
-		Stop start = someStop();
-		Stop end = anotherStop();
-		Time atTime = someTime();
-		Time reachable = someTime();
-		Time tooLateTime = twoMinutesLater();
-		Times times = times(start, end, atTime, startAndEnd);
-
-		assertFalse(times.isAfterArrivalAtEnd(reachable));
-		assertFalse(times.isAfterArrivalAtEnd(tooLateTime));
-		
-		times.set(end, oneMinuteLater());
-		
-		assertFalse(times.isAfterArrivalAtEnd(reachable));
-		assertTrue(times.isAfterArrivalAtEnd(tooLateTime));
 	}
 
 	private Stop someStop() {
