@@ -94,7 +94,7 @@ public abstract class BaseSweeperData implements SweeperData {
 		}
 	}
 
-	protected Optional<PublicTransportRoute> createRoute(Stop start, Stop end, Time time, List<Connection> connections) {
+	private Optional<PublicTransportRoute> createRoute(Stop start, Stop end, Time time, List<Connection> connections) {
 		Time arrivalTime = times.get(end);
 		return of(new ScannedRoute(start, end, time, arrivalTime, connections));
 	}
