@@ -15,7 +15,9 @@ import org.junit.Test;
 
 import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
+import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class RouteIncludingFootpathsTest {
 
@@ -60,5 +62,14 @@ public class RouteIncludingFootpathsTest {
 
 	private StopPath anotherDistance() {
 		return new StopPath(anotherStop(), twoMinutes);
+	}
+	
+	@Test
+	public void equalsAndHashCode() {
+		EqualsVerifier
+				.forClass(RouteIncludingFootpaths.class)
+				.withPrefabValues(Stop.class, someStop(), anotherStop())
+				.usingGetClass()
+				.verify();
 	}
 }
