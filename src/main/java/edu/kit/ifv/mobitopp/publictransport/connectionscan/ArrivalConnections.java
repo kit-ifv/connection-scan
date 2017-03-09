@@ -26,10 +26,10 @@ class ArrivalConnections implements UsedConnections {
 	@Override
 	public List<Connection> collectConnections(Stop fromStart, Stop toEnd) throws StopNotReachable {
 		Predicate<Stop> isStart = fromStart::equals;
-		return buildUpConnections(toEnd, isStart);
+		return collectConnections(toEnd, isStart);
 	}
 
-	private List<Connection> buildUpConnections(Stop toEnd, Predicate<Stop> isStart)
+	private List<Connection> collectConnections(Stop toEnd, Predicate<Stop> isStart)
 			throws StopNotReachable {
 		List<Connection> connections = new ArrayList<>();
 		Stop currentStop = toEnd;
