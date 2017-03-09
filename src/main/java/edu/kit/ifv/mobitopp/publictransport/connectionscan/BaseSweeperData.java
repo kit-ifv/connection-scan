@@ -96,7 +96,7 @@ public abstract class BaseSweeperData implements SweeperData {
 	}
 
 	@Override
-	public boolean isTooLate(Connection connection) {
+	public boolean isAfterArrivalAtEnd(Connection connection) {
 		return times.isAfterArrivalAtEnd(connection.departure());
 	}
 

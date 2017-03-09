@@ -148,7 +148,7 @@ public class SingleSweeperDataTest {
 		Times times = mock(Times.class);
 		SweeperData data = newScannedArrival(times);
 		
-		data.isTooLate(connection1);
+		data.isAfterArrivalAtEnd(connection1);
 		
 		Time departure = someConnection().departure();
 		verify(times).isAfterArrivalAtEnd(departure);

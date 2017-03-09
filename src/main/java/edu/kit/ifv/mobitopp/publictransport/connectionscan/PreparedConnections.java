@@ -91,7 +91,7 @@ public class PreparedConnections implements ConnectionSweeper {
 	private void scanConnections(int startIndex, SweeperData data) {
 		for (int index = startIndex; index < connections.size(); index++) {
 			Connection connection = connections.get(index);
-			if (shouldCheck(index) && data.isTooLate(connection)) {
+			if (shouldCheck(index) && data.isAfterArrivalAtEnd(connection)) {
 				break;
 			}
 			data.updateArrival(connection);

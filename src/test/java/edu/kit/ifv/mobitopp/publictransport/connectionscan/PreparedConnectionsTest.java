@@ -43,20 +43,20 @@ public class PreparedConnectionsTest {
 	public void initialise() throws Exception {
 		someRoute = of(mock(PublicTransportRoute.class));
 		data = mock(SweeperData.class);
-		when(data.isTooLate(any())).thenReturn(false);
+		when(data.isAfterArrivalAtEnd(any())).thenReturn(false);
 	}
 
 	@Test
 	public void findRouteWithOneAvailableConnection() {
 		departAt(someTime());
-		when(data.isTooLate(from1To2())).thenReturn(false);
+		when(data.isAfterArrivalAtEnd(from1To2())).thenReturn(false);
 		when(data.createRoute()).thenReturn(someRoute);
 		PreparedConnections connections = connections(from1To2());
 
 		Optional<PublicTransportRoute> startToStop = connections.sweep(data);
 
 		assertThat(startToStop, is(equalTo(someRoute)));
-		verify(data).isTooLate(from1To2());
+		verify(data).isAfterArrivalAtEnd(from1To2());
 		verify(data).updateArrival(from1To2());
 		verify(data).createRoute();
 	}
@@ -64,16 +64,16 @@ public class PreparedConnectionsTest {
 	@Test
 	public void findRouteInConnectionsWithDifferentArrivalTimes() {
 		departAt(someTime());
-		when(data.isTooLate(from1To2())).thenReturn(false);
-		when(data.isTooLate(from1To2Long())).thenReturn(false);
+		when(data.isAfterArrivalAtEnd(from1To2())).thenReturn(false);
+		when(data.isAfterArrivalAtEnd(from1To2Long())).thenReturn(false);
 		when(data.createRoute()).thenReturn(someRoute);
 		PreparedConnections connections = alwaysCancelConnections(from1To2(), from1To2Long());
 
 		Optional<PublicTransportRoute> startToStop = connections.sweep(data);
 
 		assertThat(startToStop, is(equalTo(someRoute)));
-		verify(data).isTooLate(from1To2());
-		verify(data).isTooLate(from1To2Long());
+		verify(data).isAfterArrivalAtEnd(from1To2());
+		verify(data).isAfterArrivalAtEnd(from1To2Long());
 		verify(data).updateArrival(from1To2());
 		verify(data).updateArrival(from1To2Long());
 		verify(data).createRoute();
@@ -82,16 +82,16 @@ public class PreparedConnectionsTest {
 	@Test
 	public void findRouteInSeveralConnections() {
 		departAt(someTime());
-		when(data.isTooLate(any())).thenReturn(false);
+		when(data.isAfterArrivalAtEnd(any())).thenReturn(false);
 		when(data.createRoute()).thenReturn(someRoute);
 		PreparedConnections connections = alwaysCancelConnections(from1To2(), from2To3(), from3To4());
 
 		Optional<PublicTransportRoute> startToStop = connections.sweep(data);
 
 		assertThat(startToStop, is(equalTo(someRoute)));
-		verify(data).isTooLate(from1To2());
-		verify(data).isTooLate(from2To3());
-		verify(data).isTooLate(from3To4());
+		verify(data).isAfterArrivalAtEnd(from1To2());
+		verify(data).isAfterArrivalAtEnd(from2To3());
+		verify(data).isAfterArrivalAtEnd(from3To4());
 		verify(data).updateArrival(from1To2());
 		verify(data).updateArrival(from2To3());
 		verify(data).updateArrival(from3To4());
@@ -117,13 +117,13 @@ public class PreparedConnectionsTest {
 			throws Exception {
 		PreparedConnections connections = alwaysCancelConnections(from1To2(), from2To3());
 		when(data.atTime()).thenReturn(someTime());
-		when(data.isTooLate(from2To3())).thenReturn(true);
+		when(data.isAfterArrivalAtEnd(from2To3())).thenReturn(true);
 
 		connections.sweep(data);
 
 		verify(data).atTime();
-		verify(data).isTooLate(from1To2());
-		verify(data).isTooLate(from2To3());
+		verify(data).isAfterArrivalAtEnd(from1To2());
+		verify(data).isAfterArrivalAtEnd(from2To3());
 		verify(data).updateArrival(from1To2());
 		verify(data).createRoute();
 		verifyNoMoreInteractions(data);
