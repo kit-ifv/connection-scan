@@ -65,14 +65,11 @@ public class ConnectionScan implements RouteSearch {
 		if (scanNotNeeded(fromStarts, toEnds, atTime)) {
 			return Optional.empty();
 		}
-		Arrival arrival = fromStarts.createArrival(atTime, arrivalSize());
+		Arrival arrival = newArrival(fromStarts, atTime);
 		Optional<PublicTransportRoute> found = connections.sweep(arrival, fromStarts, toEnds, atTime);
 		return found.map(tour -> tour.addFootpaths(fromStarts, toEnds));
 	}
 
-	private int arrivalSize() {
-		return stops.size();
-	}
 
 	private boolean scanNotNeeded(StopPaths startStops, StopPaths endStops, Time time) {
 		return connections.isTooLate(time) || notAvailable(startStops, endStops);
@@ -84,6 +81,14 @@ public class ConnectionScan implements RouteSearch {
 
 	private boolean notAvailable(StopPaths requested) {
 		return requested.stops().isEmpty() || !stops.containsAll(requested.stops());
+	}
+
+	Arrival newArrival(StopPaths fromStarts, Time atTime) {
+		return ScannedArrival.from(fromStarts.stopPaths(), atTime, arrivalSize());
+	}
+	
+	private int arrivalSize() {
+		return stops.size();
 	}
 
 	@Override

@@ -4,27 +4,28 @@ import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
-import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
+import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
 public class DefaultStopPaths implements StopPaths {
 
-	private final List<StopPath> reachable;
+	private final List<StopPath> stopPaths;
 	private final List<Stop> stops;
-	private final Map<Stop, StopPath> stopToPaths;
+	private final Map<Stop, StopPath> stopToPath;
 
-	private DefaultStopPaths(List<StopPath> reachable, List<Stop> stops, Map<Stop, StopPath> lookup) {
+	private DefaultStopPaths(List<StopPath> reachable, List<Stop> stops, Map<Stop, StopPath> stopToPath) {
 		super();
-		this.reachable = reachable;
+		this.stopPaths = reachable;
 		this.stops = stops;
-		this.stopToPaths = lookup;
+		this.stopToPath = stopToPath;
 	}
 
 	public static StopPaths from(List<StopPath> reachable) {
@@ -37,19 +38,19 @@ public class DefaultStopPaths implements StopPaths {
 	}
 
 	@Override
-	public Arrival createArrival(Time time, int totalNumberOfStopsInNetwork) {
-		return ScannedArrival.from(reachable, time, totalNumberOfStopsInNetwork);
-	}
-
-	@Override
 	public List<Stop> stops() {
 		return stops;
+	}
+	
+	@Override
+	public List<StopPath> stopPaths() {
+		return Collections.unmodifiableList(stopPaths);
 	}
 
 	@Override
 	public StopPath pathTo(Stop stop) {
-		if (stopToPaths.containsKey(stop)) {
-			return stopToPaths.get(stop);
+		if (stopToPath.containsKey(stop)) {
+			return stopToPath.get(stop);
 		}
 		throw new IllegalArgumentException("Stop is not known: " + stop);
 	}
@@ -65,7 +66,7 @@ public class DefaultStopPaths implements StopPaths {
 	private Optional<Stop> earliestStop(Times times) {
 		Stop stop = null;
 		Time currentArrival = null;
-		for (StopPath stopDistance : reachable) {
+		for (StopPath stopDistance : stopPaths) {
 			Stop current = stopDistance.stop();
 			Time currentTime = times.get(current);
 			Time includingFootpath = stopDistance.arrivalTimeStartingAt(currentTime);
@@ -79,8 +80,8 @@ public class DefaultStopPaths implements StopPaths {
 
 	@Override
 	public boolean isConnectionReachableAt(Stop stop, Time time, Connection connection) {
-		if (stopToPaths.containsKey(stop)) {
-			StopPath pathToStop = stopToPaths.get(stop);
+		if (stopToPath.containsKey(stop)) {
+			StopPath pathToStop = stopToPath.get(stop);
 			Time arrivalAtStop = time.add(pathToStop.duration());
 			return arrivalAtStop.isBeforeOrEqualTo(connection.departure());
 		}
@@ -91,7 +92,7 @@ public class DefaultStopPaths implements StopPaths {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((reachable == null) ? 0 : reachable.hashCode());
+		result = prime * result + ((stopPaths == null) ? 0 : stopPaths.hashCode());
 		return result;
 	}
 
@@ -107,11 +108,11 @@ public class DefaultStopPaths implements StopPaths {
 			return false;
 		}
 		DefaultStopPaths other = (DefaultStopPaths) obj;
-		if (reachable == null) {
-			if (other.reachable != null) {
+		if (stopPaths == null) {
+			if (other.stopPaths != null) {
 				return false;
 			}
-		} else if (!reachable.equals(other.reachable)) {
+		} else if (!stopPaths.equals(other.stopPaths)) {
 			return false;
 		}
 		return true;
@@ -119,7 +120,7 @@ public class DefaultStopPaths implements StopPaths {
 
 	@Override
 	public String toString() {
-		return "Stops [reachable=" + reachable + "]";
+		return "DefaultStopPaths [stopPaths=" + stopPaths + "]";
 	}
 
 }

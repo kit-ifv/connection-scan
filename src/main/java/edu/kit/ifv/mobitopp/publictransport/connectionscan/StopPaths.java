@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
-import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
+import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
 public interface StopPaths {
@@ -14,9 +14,8 @@ public interface StopPaths {
 
 	StopPath pathTo(Stop stop);
 
-	// TODO move
-	Arrival createArrival(Time time, int totalNumberOfStopsInNetwork);
-
+	List<StopPath> stopPaths();
+	
 	// TODO move
 	Optional<Stop> stopWithEarliestArrival(Times times);
 

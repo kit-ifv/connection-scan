@@ -35,10 +35,12 @@ import edu.kit.ifv.mobitopp.publictransport.model.Time;
 public class ConnectionScanTest {
 
 	private ConnectionSweeper connections;
+	private Arrival arrival;
 
 	@Before
 	public void initialise() throws Exception {
 		connections = mock(ConnectionSweeper.class);
+		arrival = mock(Arrival.class);
 	}
 
 	@Test
@@ -116,34 +118,30 @@ public class ConnectionScanTest {
 		verify(connections).isTooLate(searchTime);
 		verifyNoMoreInteractions(connections);
 	}
-
+	
 	@Test
 	public void findsRouteBetweenSeveralStops() throws Exception {
 		Time time = someTime();
 		List<Stop> startStops = asList(someStop());
 		List<Stop> endStops = asList(anotherStop());
 		List<Stop> stops = asList(someStop(), anotherStop());
-		int numberOfStops = stops.size();
-		StopPaths reachableStart = mock(StopPaths.class);
-		StopPaths reachableEnd = mock(StopPaths.class);
+		StopPaths starts = mock(StopPaths.class);
+		StopPaths ends = mock(StopPaths.class);
 		PublicTransportRoute vehicleRoute = mock(PublicTransportRoute.class);
 		PublicTransportRoute tourIncludingFootpath = mock(PublicTransportRoute.class);
-		Arrival arrival = mock(Arrival.class);
-		when(reachableStart.createArrival(time, numberOfStops)).thenReturn(arrival);
-		when(reachableStart.stops()).thenReturn(startStops);
-		when(reachableEnd.stops()).thenReturn(endStops);
-		when(vehicleRoute.addFootpaths(reachableStart, reachableEnd)).thenReturn(tourIncludingFootpath);
-		when(connections.sweep(arrival, reachableStart, reachableEnd, time)).thenReturn(of(vehicleRoute));
+		when(starts.stops()).thenReturn(startStops);
+		when(ends.stops()).thenReturn(endStops);
+		when(vehicleRoute.addFootpaths(starts, ends)).thenReturn(tourIncludingFootpath);
+		when(connections.sweep(arrival, starts, ends, time)).thenReturn(of(vehicleRoute));
 
 		ConnectionScan scan = scan(stops, connections);
 
-		Optional<PublicTransportRoute> startToEnd = scan.findRoute(reachableStart, reachableEnd, time);
+		Optional<PublicTransportRoute> startToEnd = scan.findRoute(starts, ends, time);
 
 		assertThat(startToEnd, isPresent());
 		assertThat(startToEnd, hasValue(tourIncludingFootpath));
-		verify(reachableStart).createArrival(time, numberOfStops);
-		verify(connections).sweep(arrival, reachableStart, reachableEnd, time);
-		verify(vehicleRoute).addFootpaths(reachableStart, reachableEnd);
+		verify(connections).sweep(arrival, starts, ends, time);
+		verify(vehicleRoute).addFootpaths(starts, ends);
 	}
 
 	@Test
@@ -244,8 +242,13 @@ public class ConnectionScanTest {
 		return new Connections();
 	}
 
-	private static ConnectionScan scan(Collection<Stop> stops, ConnectionSweeper sweeper) {
-		return new ConnectionScan(stops, sweeper);
+	private  ConnectionScan scan(Collection<Stop> stops, ConnectionSweeper sweeper) {
+		return new ConnectionScan(stops, sweeper) {
+			@Override
+			Arrival newArrival(StopPaths fromStarts, Time atTime) {
+				return arrival;
+			}
+		};
 	}
 
 }
