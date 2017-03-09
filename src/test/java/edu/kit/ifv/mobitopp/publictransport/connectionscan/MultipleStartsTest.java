@@ -227,6 +227,6 @@ public class MultipleStartsTest {
 
 	private Times timesFromPaths(
 			StopPaths starts, Time timeAtStart, int totalNumberOfStops) {
-		return MultipleStarts.from(starts, timeAtStart, totalNumberOfStops);
+		return MultipleStarts.create(starts, timeAtStart, totalNumberOfStops);
 	}
 }

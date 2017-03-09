@@ -19,7 +19,7 @@ class MultipleStarts extends BasicTimes {
 		initialise();
 	}
 
-	static Times from(StopPaths fromStarts, Time startTime, int numberOfStops) {
+	static Times create(StopPaths fromStarts, Time startTime, int numberOfStops) {
 		return new MultipleStarts(fromStarts.stopPaths(), startTime, numberOfStops);
 	}
 

@@ -19,7 +19,7 @@ class SingleSweeperData extends BaseSweeperData {
 	}
 
 	static SweeperData from(Stop start, Stop end, Time atTime, int numberOfStops) {
-		Times times = SingleStart.from(start, atTime, numberOfStops);
+		Times times = SingleStart.create(start, atTime, numberOfStops);
 		UsedConnections usedConnections = new ArrivalConnections(numberOfStops);
 		UsedJourneys usedJourneys = new ScannedJourneys();
 		BaseSweeperData data = new SingleSweeperData(start, end, times, usedConnections, usedJourneys);

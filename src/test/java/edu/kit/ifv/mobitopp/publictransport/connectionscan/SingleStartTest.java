@@ -187,6 +187,6 @@ public class SingleStartTest {
 	}
 
 	private Times times(Stop start, Time departure, int numberOfStops) {
-		return SingleStart.from(start, departure, numberOfStops);
+		return SingleStart.create(start, departure, numberOfStops);
 	}
 }

@@ -17,7 +17,7 @@ class SingleStart extends BasicTimes {
 		initialise();
 	}
 
-	static Times from(Stop start, Time departure, int numberOfStops) {
+	static Times create(Stop start, Time departure, int numberOfStops) {
 		return new SingleStart(start, departure, numberOfStops);
 	}
 	

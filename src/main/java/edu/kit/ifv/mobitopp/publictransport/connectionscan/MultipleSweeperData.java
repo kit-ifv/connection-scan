@@ -24,7 +24,7 @@ public class MultipleSweeperData extends BaseSweeperData {
 	}
 
 	static SweeperData from(StopPaths fromStarts, StopPaths toEnds, Time atTime, int numberOfStops) {
-		Times times = MultipleStarts.from(fromStarts, atTime, numberOfStops);
+		Times times = MultipleStarts.create(fromStarts, atTime, numberOfStops);
 		UsedConnections usedConnections = new ArrivalConnections(numberOfStops);
 		UsedJourneys usedJourneys = new ScannedJourneys();
 		return from(fromStarts, toEnds, times, usedConnections, usedJourneys);
