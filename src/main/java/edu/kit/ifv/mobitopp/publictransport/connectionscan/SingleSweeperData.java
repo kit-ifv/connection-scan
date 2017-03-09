@@ -35,6 +35,6 @@ class SingleSweeperData extends BaseSweeperData {
 	@Override
 	protected List<Connection> collectConnections(UsedConnections usedConnections, Time time)
 			throws StopNotReachable {
-		return usedConnections.buildUpConnection(start, end);
+		return usedConnections.collectConnections(start, end);
 	}
 }

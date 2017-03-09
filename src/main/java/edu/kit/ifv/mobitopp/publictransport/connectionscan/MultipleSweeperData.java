@@ -70,7 +70,7 @@ public class MultipleSweeperData extends BaseSweeperData {
 			throws StopNotReachable {
 		Optional<Stop> toEnd = stopWithEarliestArrival();
 		if (toEnd.isPresent()) {
-			return usedConnections.buildUpConnection(fromStarts, toEnd.get(), time);
+			return usedConnections.collectConnections(fromStarts, toEnd.get(), time);
 		}
 		return emptyList();
 	}

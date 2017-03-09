@@ -36,7 +36,7 @@ public class ArrivalConnectionsTest {
 		UsedConnections arrivals = new ArrivalConnections(maximumNumberOfStops);
 		arrivals.update(anotherStop(), from1To2());
 
-		List<Connection> connections = arrivals.buildUpConnection(someStop(), anotherStop());
+		List<Connection> connections = arrivals.collectConnections(someStop(), anotherStop());
 
 		assertThat(connections, is(equalTo(Arrays.asList(from1To2()))));
 	}
@@ -47,7 +47,7 @@ public class ArrivalConnectionsTest {
 		arrivals.update(anotherStop(), from1To2());
 		arrivals.update(otherStop(), from2To3());
 
-		List<Connection> connections = arrivals.buildUpConnection(someStop(), otherStop());
+		List<Connection> connections = arrivals.collectConnections(someStop(), otherStop());
 
 		assertThat(connections, is(equalTo(Arrays.asList(from1To2(), from2To3()))));
 	}
@@ -59,7 +59,7 @@ public class ArrivalConnectionsTest {
 		arrivals.update(otherStop(), from2To3());
 		arrivals.update(yetAnotherStop(), from3To4());
 
-		List<Connection> connections = arrivals.buildUpConnection(someStop(), otherStop());
+		List<Connection> connections = arrivals.collectConnections(someStop(), otherStop());
 
 		assertThat(connections, is(equalTo(Arrays.asList(from1To2(), from2To3()))));
 	}
@@ -74,7 +74,7 @@ public class ArrivalConnectionsTest {
 		arrivals.update(anotherStop(), from1To2());
 		arrivals.update(otherStop(), from2To3());
 
-		List<Connection> connections = arrivals.buildUpConnection(start, otherStop(), someTime());
+		List<Connection> connections = arrivals.collectConnections(start, otherStop(), someTime());
 
 		assertThat(connections, is(equalTo(asList(from1To2(), from2To3()))));
 	}
@@ -89,7 +89,7 @@ public class ArrivalConnectionsTest {
 		arrivals.update(anotherStop(), from1To2());
 		arrivals.update(otherStop(), from2To3());
 
-		List<Connection> connections = arrivals.buildUpConnection(start, otherStop(), someTime());
+		List<Connection> connections = arrivals.collectConnections(start, otherStop(), someTime());
 
 		assertThat(connections, is(equalTo(asList(from1To2(), from2To3()))));
 	}
@@ -105,7 +105,7 @@ public class ArrivalConnectionsTest {
 		arrivals.update(otherStop(), from2To3());
 		arrivals.update(someStop(), from4To1WithFootpath());
 
-		List<Connection> connections = arrivals.buildUpConnection(start, otherStop(), someTime());
+		List<Connection> connections = arrivals.collectConnections(start, otherStop(), someTime());
 
 		assertThat(connections,
 				is(equalTo(asList(from4To1WithFootpath(), from1To2WithFootpath(), from2To3()))));
@@ -161,6 +161,6 @@ public class ArrivalConnectionsTest {
 		UsedConnections arrivals = new ArrivalConnections(numberOfStops);
 
 		expected.expect(StopNotReachable.class);
-		arrivals.buildUpConnection(someStop(), anotherStop());
+		arrivals.collectConnections(someStop(), anotherStop());
 	}
 }

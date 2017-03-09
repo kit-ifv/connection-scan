@@ -10,8 +10,9 @@ interface UsedConnections {
 
 	void update(Stop stop, Connection connection);
 
-	List<Connection> buildUpConnection(Stop fromStart, Stop toEnd) throws StopNotReachable;
+	List<Connection> collectConnections(Stop fromStart, Stop toEnd) throws StopNotReachable;
 
-	List<Connection> buildUpConnection(StopPaths starts, Stop end, Time time) throws StopNotReachable;
+	List<Connection> collectConnections(StopPaths fromStarts, Stop toEnd, Time atTime)
+			throws StopNotReachable;
 
 }

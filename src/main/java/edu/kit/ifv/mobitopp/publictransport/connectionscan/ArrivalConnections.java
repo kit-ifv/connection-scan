@@ -24,7 +24,7 @@ class ArrivalConnections implements UsedConnections {
 	}
 
 	@Override
-	public List<Connection> buildUpConnection(Stop fromStart, Stop toEnd) throws StopNotReachable {
+	public List<Connection> collectConnections(Stop fromStart, Stop toEnd) throws StopNotReachable {
 		Predicate<Stop> isStart = fromStart::equals;
 		return buildUpConnections(toEnd, isStart);
 	}
@@ -43,7 +43,7 @@ class ArrivalConnections implements UsedConnections {
 	}
 
 	@Override
-	public List<Connection> buildUpConnection(StopPaths starts, Stop toEnd, Time time)
+	public List<Connection> collectConnections(StopPaths starts, Stop toEnd, Time time)
 			throws StopNotReachable {
 		List<Connection> connections = new ArrayList<>();
 		Stop currentStop = toEnd;
