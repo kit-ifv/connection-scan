@@ -110,8 +110,8 @@ public class PreparedConnections implements ConnectionSweeper {
 
 	@Override
 	public String toString() {
-		return "PreparedConnections [connections=" + connections + ", lookup=" + lookup + ", isTooLate="
-				+ isTooLate + "]";
+		return "PreparedConnections [connections=" + connections
+				+ ", distanceBetweenConnectionsToCheck=" + distanceBetweenConnectionsToCheck + "]";
 	}
 
 }
