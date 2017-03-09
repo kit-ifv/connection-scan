@@ -39,15 +39,11 @@ public class Connection {
 	public static Connection from(
 			int id, Stop start, Stop end, Time departure, Time arrival, Journey journey,
 			RoutePoints route) {
-		RoutePoints containsStart = route.startsWith(start);
-		RoutePoints containsStartAndEnd = containsStart.endsWith(end);
-		return new Connection(id, start, end, departure, arrival, journey, containsStartAndEnd);
+		return new Connection(id, start, end, departure, arrival, journey, route);
 	}
 
 	public static Connection byFootFrom(Stop stop, Stop neighbour, Time departure, Time arrival) {
-		RoutePoints route = new RoutePoints();
-		route.add(stop.coordinate());
-		route.add(neighbour.coordinate());
+		RoutePoints route = RoutePoints.from(stop, neighbour);
 		return Connection.from(footId, stop, neighbour, departure, arrival, FootJourney.footJourney, route);
 	}
 

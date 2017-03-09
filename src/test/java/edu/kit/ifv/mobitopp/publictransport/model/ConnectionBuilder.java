@@ -5,9 +5,11 @@ import static edu.kit.ifv.mobitopp.publictransport.model.Data.someStop;
 import static edu.kit.ifv.mobitopp.publictransport.model.JourneyBuilder.journey;
 import static edu.kit.ifv.mobitopp.publictransport.model.StopBuilder.stop;
 import static java.time.temporal.ChronoUnit.MINUTES;
+import static java.util.Collections.emptyList;
 
 import java.awt.geom.Point2D;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
@@ -24,7 +26,7 @@ public class ConnectionBuilder {
 	private static final Stop defaultStart = someStop();
 	private static final Stop defaultEnd = anotherStop();
 	private static final Journey defaultJourney = journey().build();
-	private static final RoutePoints defaultPoints = new RoutePoints();
+	private static final List<Point2D> defaultPoints = emptyList();
 
 	private int id;
 	private Stop start;
@@ -32,7 +34,7 @@ public class ConnectionBuilder {
 	private Time departure;
 	private Time arrival;
 	private Journey journey;
-	private RoutePoints points;
+	private List<Point2D> points;
 
 	private ConnectionBuilder() {
 		super();
@@ -61,7 +63,8 @@ public class ConnectionBuilder {
 	}
 
 	public Connection build() {
-		return Connection.from(id, start, end, departure, arrival, journey, points);
+		RoutePoints route = RoutePoints.from(start, end, points);
+		return Connection.from(id, start, end, departure, arrival, journey, route );
 	}
 
 	public ConnectionBuilder withId(int id) {
@@ -70,12 +73,7 @@ public class ConnectionBuilder {
 	}
 
 	public ConnectionBuilder with(List<Point2D> points) {
-		this.points = new RoutePoints(points);
-		return this;
-	}
-
-	public ConnectionBuilder with(RoutePoints points) {
-		this.points = points;
+		this.points = new ArrayList<>(points);
 		return this;
 	}
 
