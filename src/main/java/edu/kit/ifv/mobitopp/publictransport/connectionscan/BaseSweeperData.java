@@ -1,5 +1,6 @@
 package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 
+import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
 import java.util.List;
@@ -11,6 +12,8 @@ import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
 public abstract class BaseSweeperData implements SweeperData {
 
+	private static final int firstConnection = 0;
+	
 	private final Times times;
 	private final UsedConnections usedConnections;
 	private final UsedJourneys usedJourneys;
@@ -103,6 +106,32 @@ public abstract class BaseSweeperData implements SweeperData {
 	protected boolean isTooLateAt(Time departure, Stop end) {
 		Time arrival = times.getConsideringMinimumChangeTime(end);
 		return arrival.isBefore(departure);
+	}
+
+	@Override
+	public Optional<PublicTransportRoute> createRoute() {
+		try {
+			Time time = times().startTime();
+			List<Connection> connections = collectConnections(usedConnections, time);
+			if (connections.isEmpty()) {
+				return empty();
+			}
+			Stop start = firstStopOf(connections);
+			Stop end = lastStopOf(connections);
+			return createRoute(start, end, time, connections);
+		} catch (StopNotReachable e) {
+			return empty();
+		}
+	}
+
+	protected abstract List<Connection> collectConnections(UsedConnections usedConnections, Time time) throws StopNotReachable;
+
+	private Stop firstStopOf(List<Connection> connections) {
+		return connections.get(firstConnection).start();
+	}
+	
+	private Stop lastStopOf(List<Connection> connections) {
+		return connections.get(connections.size() - 1).end();
 	}
 
 }

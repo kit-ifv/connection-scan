@@ -1,6 +1,6 @@
 package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 
-import static java.util.Optional.empty;
+import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 
 import java.util.List;
@@ -13,7 +13,6 @@ import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
 public class MultipleSweeperData extends BaseSweeperData {
 
-	private static final int firstConnection = 0;
 	private final StopPaths starts;
 	private final StopPaths toEnds;
 	
@@ -34,7 +33,7 @@ public class MultipleSweeperData extends BaseSweeperData {
 	static SweeperData from(
 			StopPaths fromStarts, StopPaths toEnds, Times times, UsedConnections usedConnections,
 			UsedJourneys usedJourneys) {
-		MultipleSweeperData data = new MultipleSweeperData(fromStarts, toEnds, times, usedConnections,
+		BaseSweeperData data = new MultipleSweeperData(fromStarts, toEnds, times, usedConnections,
 				usedJourneys);
 		times.initialise(data::initialise);
 		return data;
@@ -42,8 +41,7 @@ public class MultipleSweeperData extends BaseSweeperData {
 
 	@Override
 	public Optional<PublicTransportRoute> createRoute() {
-		Optional<Stop> toEnd = stopWithEarliestArrival();
-		return toEnd.flatMap(end -> createRoute(starts, end, times().startTime()));
+		return super.createRoute();
 	}
 
 	private Optional<Stop> stopWithEarliestArrival() {
@@ -61,21 +59,14 @@ public class MultipleSweeperData extends BaseSweeperData {
 		return ofNullable(stop);
 	}
 
-	private Optional<PublicTransportRoute> createRoute(StopPaths starts, Stop end, Time time) {
-		try {
-			List<Connection> connections = usedConnections().buildUpConnection(starts, end, time);
-			if (connections.isEmpty()) {
-				return empty();
-			}
-			Stop start = firstStopOf(connections);
-			return createRoute(start, end, time, connections);
-		} catch (StopNotReachable e) {
-			return empty();
+	@Override
+	protected List<Connection> collectConnections(UsedConnections usedConnections, Time time)
+			throws StopNotReachable {
+		Optional<Stop> toEnd = stopWithEarliestArrival();
+		if (toEnd.isPresent()) {
+			return usedConnections.buildUpConnection(starts, toEnd.get(), time);
 		}
-	}
-
-	private Stop firstStopOf(List<Connection> connections) {
-		return connections.get(firstConnection).start();
+		return emptyList();
 	}
 
 	@Override

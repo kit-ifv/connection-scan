@@ -1,9 +1,6 @@
 package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 
-import static java.util.Optional.empty;
-
 import java.util.List;
-import java.util.Optional;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
@@ -31,21 +28,13 @@ class SingleSweeperData extends BaseSweeperData {
 	}
 
 	@Override
-	public Optional<PublicTransportRoute> createRoute() {
-		return createRoute(start, end, times().startTime());
-	}
-
-	private Optional<PublicTransportRoute> createRoute(Stop start, Stop end, Time time) {
-		try {
-			List<Connection> connections = usedConnections().buildUpConnection(start, end);
-			return createRoute(start, end, time, connections);
-		} catch (StopNotReachable e) {
-			return empty();
-		}
+	public boolean isAfterArrivalAtEnd(Connection connection) {
+		return isTooLateAt(connection.departure(), end);
 	}
 
 	@Override
-	public boolean isAfterArrivalAtEnd(Connection connection) {
-		return isTooLateAt(connection.departure(), end);
+	protected List<Connection> collectConnections(UsedConnections usedConnections, Time time)
+			throws StopNotReachable {
+		return usedConnections.buildUpConnection(start, end);
 	}
 }
