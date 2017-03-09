@@ -7,7 +7,7 @@ import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
 interface SweeperData {
 
-	Time atTime();
+	Time startTime();
 	
 	boolean isAfterArrivalAtEnd(Connection connection);
 

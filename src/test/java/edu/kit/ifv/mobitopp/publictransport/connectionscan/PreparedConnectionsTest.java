@@ -107,7 +107,7 @@ public class PreparedConnectionsTest {
 		Optional<PublicTransportRoute> startToStop = connections.sweep(data);
 
 		assertThat(startToStop, is(equalTo(someRoute)));
-		verify(data).atTime();
+		verify(data).startTime();
 		verify(data).createRoute();
 		verifyNoMoreInteractions(data);
 	}
@@ -116,12 +116,12 @@ public class PreparedConnectionsTest {
 	public void cancelsScanWhenConnectionsIsAfterArrivalAtEnd()
 			throws Exception {
 		PreparedConnections connections = alwaysCancelConnections(from1To2(), from2To3());
-		when(data.atTime()).thenReturn(someTime());
+		when(data.startTime()).thenReturn(someTime());
 		when(data.isAfterArrivalAtEnd(from2To3())).thenReturn(true);
 
 		connections.sweep(data);
 
-		verify(data).atTime();
+		verify(data).startTime();
 		verify(data).isAfterArrivalAtEnd(from1To2());
 		verify(data).isAfterArrivalAtEnd(from2To3());
 		verify(data).updateArrival(from1To2());
@@ -130,7 +130,7 @@ public class PreparedConnectionsTest {
 	}
 
 	private void departAt(Time time) {
-		when(data.atTime()).thenReturn(time);
+		when(data.startTime()).thenReturn(time);
 	}
 
 	private Connection from1To2() {

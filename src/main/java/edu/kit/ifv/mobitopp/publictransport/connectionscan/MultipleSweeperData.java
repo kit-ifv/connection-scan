@@ -50,7 +50,7 @@ public class MultipleSweeperData extends BaseSweeperData {
 		Time currentArrival = null;
 		for (StopPath path : toEnds.stopPaths()) {
 			Stop current = path.stop();
-			Time currentTime = times().get(current);
+			Time currentTime = arrivalAt(current);
 			Time includingFootpath = path.arrivalTimeStartingAt(currentTime);
 			if (null == currentArrival || includingFootpath.isBefore(currentArrival)) {
 				stop = current;

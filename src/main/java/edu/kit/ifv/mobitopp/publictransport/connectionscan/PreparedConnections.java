@@ -82,7 +82,7 @@ public class PreparedConnections implements ConnectionSweeper {
 
 	@Override
 	public Optional<PublicTransportRoute> sweep(SweeperData data) {
-		Time atTime = data.atTime();
+		Time atTime = data.startTime();
 		int fromStartIndex = lookup.apply(atTime);
 		scanConnections(fromStartIndex, data);
 		return data.createRoute();

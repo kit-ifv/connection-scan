@@ -45,16 +45,12 @@ public abstract class BaseSweeperData implements SweeperData {
 		usedJourneys.use(connection.journey());
 	}
 	
-	protected UsedConnections usedConnections() {
-		return usedConnections;
-	}
-	
-	protected Times times() {
-		return times;
+	protected Time arrivalAt(Stop stop) {
+		return times.get(stop);
 	}
 
 	@Override
-	public Time atTime() {
+	public Time startTime() {
 		return times.startTime();
 	}
 
@@ -99,7 +95,7 @@ public abstract class BaseSweeperData implements SweeperData {
 	}
 
 	protected Optional<PublicTransportRoute> createRoute(Stop start, Stop end, Time time, List<Connection> connections) {
-		Time arrivalTime = times().get(end);
+		Time arrivalTime = times.get(end);
 		return of(new ScannedRoute(start, end, time, arrivalTime, connections));
 	}
 
@@ -111,7 +107,7 @@ public abstract class BaseSweeperData implements SweeperData {
 	@Override
 	public Optional<PublicTransportRoute> createRoute() {
 		try {
-			Time time = times().startTime();
+			Time time = times.startTime();
 			List<Connection> connections = collectConnections(usedConnections, time);
 			if (connections.isEmpty()) {
 				return empty();
