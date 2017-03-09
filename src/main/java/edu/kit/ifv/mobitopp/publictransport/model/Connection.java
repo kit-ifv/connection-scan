@@ -12,7 +12,6 @@ public class Connection {
 	private final RoutePoints points;
 	private final Journey journey;
 	private int positionInJourney;
-	private Connection next;
 
 	private Connection(
 			int id, Stop start, Stop end, Time departure, Time arrival, Journey journey,
@@ -82,14 +81,6 @@ public class Connection {
 
 	public Journey journey() {
 		return journey;
-	}
-	
-	public Connection next() {
-		return next;
-	}
-	
-	void setNext(Connection next) {
-		this.next = next;
 	}
 	
 	public int positionInJourney() {

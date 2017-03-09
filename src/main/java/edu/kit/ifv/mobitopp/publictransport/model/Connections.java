@@ -5,6 +5,7 @@ import static java.util.Collections.unmodifiableCollection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +46,20 @@ public class Connections {
 
 	int size() {
 		return connections.size();
+	}
+
+	public Connection nextAfter(Connection connection) {
+		Iterator<Connection> iterator = connections.iterator();
+		while (iterator.hasNext()) {
+			Connection current = iterator.next();
+			if (current.equals(connection)) {
+				if (iterator.hasNext()) {
+					return iterator.next();
+				}
+				return null;
+			}
+		}
+		return null;
 	}
 
 	@Override

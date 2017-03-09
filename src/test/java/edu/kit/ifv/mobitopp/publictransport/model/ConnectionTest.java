@@ -120,7 +120,7 @@ public class ConnectionTest {
 				.withPrefabValues(Stop.class, oneStop, anotherStop)
 				.withPrefabValues(Journey.class, oneJourney, anotherJourney)
 				.withPrefabValues(Connection.class, oneConnection, anotherConnection)
-				.withIgnoredFields("points", "id", "next", "positionInJourney")
+				.withIgnoredFields("points", "id", "positionInJourney")
 				.usingGetClass()
 				.verify();
 	}

@@ -7,7 +7,6 @@ public class DefaultModifiableJourney implements ModifiableJourney {
 	private final Connections connections;
 	private final Time day;
 	private final TransportSystem system;
-	private Connection last;
 
 	public DefaultModifiableJourney(int id, Time day, TransportSystem system, int capacity) {
 		super();
@@ -37,14 +36,6 @@ public class DefaultModifiableJourney implements ModifiableJourney {
 	public void add(Connection connection) {
 		connection.setPositionInJourney(connections.size());
 		connections.add(connection);
-		linkToLast(connection);
-	}
-
-	private void linkToLast(Connection connection) {
-		if (null != last) {
-			last.setNext(connection);
-		}
-		last = connection;
 	}
 
 	@Override

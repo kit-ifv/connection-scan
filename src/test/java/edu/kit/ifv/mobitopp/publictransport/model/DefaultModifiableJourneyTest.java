@@ -33,16 +33,6 @@ public class DefaultModifiableJourneyTest {
 		last = connection().startsAt(otherStop()).endsAt(yetAnotherStop()).build();
 	}
 
-	@Test
-	public void connectsConnection() throws Exception {
-		addSeveralConnections();
-		
-		Connection nextAfterFirst = first.next();
-		assertThat(nextAfterFirst, is(equalTo(second)));
-		Connection nextAfterSecond = second.next();
-		assertThat(nextAfterSecond, is(equalTo(last)));
-	}
-
 	private void addSeveralConnections() {
 		ModifiableJourney journey = journey().build();
 		journey.add(first);

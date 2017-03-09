@@ -5,6 +5,7 @@ import static edu.kit.ifv.mobitopp.publictransport.model.Data.anotherStop;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.coordinate;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.otherStop;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.someStop;
+import static edu.kit.ifv.mobitopp.publictransport.model.Data.yetAnotherStop;
 import static edu.kit.ifv.mobitopp.publictransport.model.JourneyBuilder.journey;
 import static edu.kit.ifv.mobitopp.publictransport.model.StopBuilder.stop;
 import static java.time.temporal.ChronoUnit.MINUTES;
@@ -13,6 +14,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -236,6 +238,25 @@ public class ConnectionsTest {
 		all.addAll(newOnes);
 		
 		assertThat(all.get(id), is(equalTo(connection)));
+	}
+	
+	@Test
+	public void nextAfterIsAvailable() {
+		Connections connections = connections();
+		Connection first = connection().startsAt(someStop()).endsAt(anotherStop()).build();
+		Connection second = connection().startsAt(anotherStop()).endsAt(otherStop()).build();
+		Connection third = connection().startsAt(otherStop()).endsAt(yetAnotherStop()).build();
+		
+		connections.add(first);
+		connections.add(second);
+		connections.add(third);
+		Connection nextAfterFirst = connections.nextAfter(first);
+		Connection nextAfterSecond = connections.nextAfter(second);
+		Connection nextAfterThird = connections.nextAfter(third);
+		
+		assertThat(nextAfterFirst, is(second));
+		assertThat(nextAfterSecond, is(third));
+		assertThat(nextAfterThird, is(nullValue()));
 	}
 
 	private Time someTime() {
