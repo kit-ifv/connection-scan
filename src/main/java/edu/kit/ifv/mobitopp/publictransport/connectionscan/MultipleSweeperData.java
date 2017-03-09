@@ -1,12 +1,14 @@
 package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 
 import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
 
 import java.util.List;
 import java.util.Optional;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
+import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
 public class MultipleSweeperData extends BaseSweeperData {
@@ -23,7 +25,7 @@ public class MultipleSweeperData extends BaseSweeperData {
 	}
 
 	static SweeperData from(StopPaths fromStarts, StopPaths toEnds, Time atTime, int numberOfStops) {
-		Times times = MultipleStarts.from(fromStarts, toEnds, atTime, numberOfStops);
+		Times times = MultipleStarts.from(fromStarts, atTime, numberOfStops);
 		UsedConnections usedConnections = new ArrivalConnections(numberOfStops);
 		UsedJourneys usedJourneys = new ScannedJourneys();
 		return from(fromStarts, toEnds, times, usedConnections, usedJourneys);
@@ -40,8 +42,23 @@ public class MultipleSweeperData extends BaseSweeperData {
 
 	@Override
 	public Optional<PublicTransportRoute> createRoute() {
-		Optional<Stop> toEnd = times().stopWithEarliestArrival();
+		Optional<Stop> toEnd = stopWithEarliestArrival();
 		return toEnd.flatMap(end -> createRoute(starts, end, times().startTime()));
+	}
+
+	private Optional<Stop> stopWithEarliestArrival() {
+		Stop stop = null;
+		Time currentArrival = null;
+		for (StopPath path : toEnds.stopPaths()) {
+			Stop current = path.stop();
+			Time currentTime = times().get(current);
+			Time includingFootpath = path.arrivalTimeStartingAt(currentTime);
+			if (null == currentArrival || includingFootpath.isBefore(currentArrival)) {
+				stop = current;
+				currentArrival = currentTime;
+			}
+		}
+		return ofNullable(stop);
 	}
 
 	private Optional<PublicTransportRoute> createRoute(StopPaths starts, Stop end, Time time) {

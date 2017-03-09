@@ -1,14 +1,10 @@
 package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 
-import static com.github.npathai.hamcrestopt.OptionalMatchers.hasValue;
-import static com.github.npathai.hamcrestopt.OptionalMatchers.isEmpty;
-import static com.github.npathai.hamcrestopt.OptionalMatchers.isPresent;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.someTime;
 import static edu.kit.ifv.mobitopp.publictransport.model.StopBuilder.stop;
 import static edu.kit.ifv.mobitopp.publictransport.model.Time.infinite;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -16,10 +12,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
@@ -30,7 +24,6 @@ import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
 public class MultipleStartsTest {
 
-	private static final int noStops = 0;
 	private static final int onlyStartStops = 2;
 	private static final int additionalStops = 4;
 	private static final RelativeTime changeTime = RelativeTime.of(1, MINUTES);
@@ -38,13 +31,6 @@ public class MultipleStartsTest {
 	private static final RelativeTime oneMinute = RelativeTime.of(1, MINUTES);
 	private static final RelativeTime twoMinutes = RelativeTime.of(2, MINUTES);
 	
-	private StopPaths ends;
-	
-	@Before
-	public void initialise() {
-		ends = mock(StopPaths.class);
-	}
-
 	@Test
 	public void initialisesTimeAtStart() throws Exception {
 		List<StopPath> starts = someStartPaths();
@@ -180,53 +166,6 @@ public class MultipleStartsTest {
 		assertThat(times.get(otherStop), is(equalTo(timeAtOther)));
 	}
 
-	@Test
-	public void findsStopWithEarliestArrival() {
-		Time timeAtStart = someTime();
-		StopPaths starts = DefaultStopPaths.from(emptyList());
-		StopPaths ends = DefaultStopPaths.from(asList(shortDistance(), longDistance()));
-		Times times = timesFromPaths(starts, ends, timeAtStart, onlyStartStops);
-
-		Optional<Stop> stop = times.stopWithEarliestArrival();
-
-		assertThat(stop, isPresent());
-		assertThat(stop, hasValue(nearStop()));
-	}
-
-	@Test
-	public void doesNotFindStopWithEarliestArrivalWhenNoStopsAreAvailable() {
-		Time timeAtStart = someTime();
-		Times times = timesFromPaths(emptyList(), timeAtStart , noStops);
-
-		Optional<Stop> stop = times.stopWithEarliestArrival();
-
-		assertThat(stop, isEmpty());
-	}
-
-	private StopPath shortDistance() {
-		return new StopPath(nearStop(), shortDuration());
-	}
-
-	private StopPath longDistance() {
-		return new StopPath(farStop(), longDuration());
-	}
-
-	private RelativeTime shortDuration() {
-		return oneMinute;
-	}
-
-	private Stop nearStop() {
-		return targetStop();
-	}
-
-	private RelativeTime longDuration() {
-		return twoMinutes;
-	}
-
-	private Stop farStop() {
-		return anotherTargetStop();
-	}
-
 	private List<StopPath> noWalkTime() {
 		return asList(pathTo(startStop(), noMinutes),
 				pathTo(anotherStartStop(), noMinutes));
@@ -283,11 +222,11 @@ public class MultipleStartsTest {
 
 	private Times timesFromPaths(List<StopPath> fromStarts, Time departure, int numberOfStops) {
 		StopPaths starts = DefaultStopPaths.from(fromStarts);
-		return MultipleStarts.from(starts, ends, departure, numberOfStops);
+		return timesFromPaths(starts, departure, numberOfStops);
 	}
 
 	private Times timesFromPaths(
-			StopPaths starts, StopPaths ends, Time timeAtStart, int totalNumberOfStops) {
-		return MultipleStarts.from(starts, ends, timeAtStart, totalNumberOfStops);
+			StopPaths starts, Time timeAtStart, int totalNumberOfStops) {
+		return MultipleStarts.from(starts, timeAtStart, totalNumberOfStops);
 	}
 }

@@ -2,7 +2,6 @@ package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 
 import static edu.kit.ifv.mobitopp.publictransport.model.ConnectionBuilder.connection;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.someTime;
-import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -14,16 +13,11 @@ import org.junit.Test;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Data;
-import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
 public class MultipleSweeperDataTest {
 
-	private static final RelativeTime oneMinute = RelativeTime.of(1, MINUTES);
-	private static final RelativeTime twoMinutes = RelativeTime.of(2, MINUTES);
-	
 	private Times times;
 	private UsedConnections usedConnections;
 	private UsedJourneys usedJourneys;
@@ -64,24 +58,8 @@ public class MultipleSweeperDataTest {
 		return connection().departsAt(beforeArrival).build();
 	}
 
-	private StopPath shortDistance() {
-		return new StopPath(nearStop(), shortDuration());
-	}
-
-	private StopPath longDistance() {
-		return new StopPath(farStop(), longDuration());
-	}
-
-	private RelativeTime shortDuration() {
-		return oneMinute;
-	}
-
 	private Stop nearStop() {
 		return Data.someStop();
-	}
-
-	private RelativeTime longDuration() {
-		return twoMinutes;
 	}
 
 	private Stop farStop() {

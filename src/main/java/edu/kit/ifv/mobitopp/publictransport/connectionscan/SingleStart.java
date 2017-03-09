@@ -1,6 +1,5 @@
 package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 
-import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
@@ -10,18 +9,16 @@ class SingleStart extends BasicTimes {
 
 	private final Stop start;
 	private final Time startTime;
-	private final Stop end;
 
-	private SingleStart(Stop start, Stop end, Time startTime, int numberOfStops) {
+	private SingleStart(Stop start, Time startTime, int numberOfStops) {
 		super(numberOfStops);
 		this.start = start;
-		this.end = end;
 		this.startTime = startTime;
 		initialise();
 	}
 
-	static Times from(Stop start, Stop end, Time departure, int numberOfStops) {
-		return new SingleStart(start, end, departure, numberOfStops);
+	static Times from(Stop start, Time departure, int numberOfStops) {
+		return new SingleStart(start, departure, numberOfStops);
 	}
 	
 	@Override
@@ -42,11 +39,6 @@ class SingleStart extends BasicTimes {
 	@Override
 	protected boolean isStart(Stop stop) {
 		return start.equals(stop);
-	}
-
-	@Override
-	public Optional<Stop> stopWithEarliestArrival() {
-		return Optional.of(end);
 	}
 
 }

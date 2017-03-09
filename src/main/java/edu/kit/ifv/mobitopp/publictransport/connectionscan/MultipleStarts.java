@@ -1,9 +1,6 @@
 package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 
-import static java.util.Optional.ofNullable;
-
 import java.util.List;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
@@ -14,18 +11,16 @@ class MultipleStarts extends BasicTimes {
 
 	private final Time startTime;
 	private final List<StopPath> startPaths;
-	private final StopPaths toEnds;
 
-	private MultipleStarts(List<StopPath> startPaths, StopPaths toEnds, Time startTime, int numberOfStops) {
+	private MultipleStarts(List<StopPath> startPaths, Time startTime, int numberOfStops) {
 		super(numberOfStops);
 		this.startPaths = startPaths;
-		this.toEnds = toEnds;
 		this.startTime = startTime;
 		initialise();
 	}
 
-	static Times from(StopPaths fromStarts, StopPaths toEnds, Time startTime, int numberOfStops) {
-		return new MultipleStarts(fromStarts.stopPaths(), toEnds, startTime, numberOfStops);
+	static Times from(StopPaths fromStarts, Time startTime, int numberOfStops) {
+		return new MultipleStarts(fromStarts.stopPaths(), startTime, numberOfStops);
 	}
 
 	@Override
@@ -57,20 +52,4 @@ class MultipleStarts extends BasicTimes {
 		return false;
 	}
 
-	@Override
-	public Optional<Stop> stopWithEarliestArrival() {
-		Stop stop = null;
-		Time currentArrival = null;
-		for (StopPath path : toEnds.stopPaths()) {
-			Stop current = path.stop();
-			Time currentTime = get(current);
-			Time includingFootpath = path.arrivalTimeStartingAt(currentTime);
-			if (null == currentArrival || includingFootpath.isBefore(currentArrival)) {
-				stop = current;
-				currentArrival = currentTime;
-			}
-		}
-		return ofNullable(stop);
-	}
-	
 }

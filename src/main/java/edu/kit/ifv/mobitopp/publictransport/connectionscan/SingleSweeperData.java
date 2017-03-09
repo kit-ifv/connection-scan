@@ -22,7 +22,7 @@ class SingleSweeperData extends BaseSweeperData implements SweeperData {
 	}
 
 	static SweeperData from(Stop start, Stop end, Time atTime, int numberOfStops) {
-		Times times = SingleStart.from(start, end, atTime, numberOfStops);
+		Times times = SingleStart.from(start, atTime, numberOfStops);
 		UsedConnections usedConnections = new ArrivalConnections(numberOfStops);
 		UsedJourneys usedJourneys = new ScannedJourneys();
 		BaseSweeperData data = new SingleSweeperData(start, end, times, usedConnections, usedJourneys);
@@ -32,8 +32,7 @@ class SingleSweeperData extends BaseSweeperData implements SweeperData {
 
 	@Override
 	public Optional<PublicTransportRoute> createRoute() {
-		Optional<Stop> toEnd = times().stopWithEarliestArrival();
-		return toEnd.flatMap(end -> createRoute(start, end, times().startTime()));
+		return createRoute(start, end, times().startTime());
 	}
 
 	private Optional<PublicTransportRoute> createRoute(Stop start, Stop end, Time time) {
