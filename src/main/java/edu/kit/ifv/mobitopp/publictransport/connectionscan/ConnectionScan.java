@@ -66,8 +66,7 @@ public class ConnectionScan implements RouteSearch {
 			return Optional.empty();
 		}
 		SweeperData data = newSweeperData(fromStarts, toEnds, atTime);
-		Optional<PublicTransportRoute> found = connections.sweep(data);
-		return found.map(tour -> tour.addFootpaths(fromStarts, toEnds));
+		return connections.sweep(data);
 	}
 
 

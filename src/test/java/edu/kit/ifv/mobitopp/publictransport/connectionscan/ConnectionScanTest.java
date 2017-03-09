@@ -127,10 +127,8 @@ public class ConnectionScanTest {
 		StopPaths starts = mock(StopPaths.class);
 		StopPaths ends = mock(StopPaths.class);
 		PublicTransportRoute vehicleRoute = mock(PublicTransportRoute.class);
-		PublicTransportRoute tourIncludingFootpath = mock(PublicTransportRoute.class);
 		when(starts.stops()).thenReturn(startStops);
 		when(ends.stops()).thenReturn(endStops);
-		when(vehicleRoute.addFootpaths(starts, ends)).thenReturn(tourIncludingFootpath);
 		when(connections.sweep(sweeperData)).thenReturn(of(vehicleRoute));
 
 		ConnectionScan scan = scan(stops, connections);
@@ -138,9 +136,8 @@ public class ConnectionScanTest {
 		Optional<PublicTransportRoute> startToEnd = scan.findRoute(starts, ends, time);
 
 		assertThat(startToEnd, isPresent());
-		assertThat(startToEnd, hasValue(tourIncludingFootpath));
+		assertThat(startToEnd, hasValue(vehicleRoute));
 		verify(connections).sweep(sweeperData);
-		verify(vehicleRoute).addFootpaths(starts, ends);
 	}
 
 	@Test

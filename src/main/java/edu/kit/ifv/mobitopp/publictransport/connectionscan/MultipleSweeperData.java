@@ -13,13 +13,13 @@ import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
 public class MultipleSweeperData extends BaseSweeperData {
 
-	private final StopPaths starts;
+	private final StopPaths fromStarts;
 	private final StopPaths toEnds;
 	
 	private MultipleSweeperData(
 			StopPaths starts, StopPaths toEnds, Times times, UsedConnections usedConnections, UsedJourneys usedJourneys) {
 		super(times, usedConnections, usedJourneys);
-		this.starts = starts;
+		this.fromStarts = starts;
 		this.toEnds = toEnds;
 	}
 
@@ -41,7 +41,8 @@ public class MultipleSweeperData extends BaseSweeperData {
 
 	@Override
 	public Optional<PublicTransportRoute> createRoute() {
-		return super.createRoute();
+		Optional<PublicTransportRoute> found = super.createRoute();
+		return found.map(tour -> tour.addFootpaths(fromStarts, toEnds));
 	}
 
 	private Optional<Stop> stopWithEarliestArrival() {
@@ -64,7 +65,7 @@ public class MultipleSweeperData extends BaseSweeperData {
 			throws StopNotReachable {
 		Optional<Stop> toEnd = stopWithEarliestArrival();
 		if (toEnd.isPresent()) {
-			return usedConnections.buildUpConnection(starts, toEnd.get(), time);
+			return usedConnections.buildUpConnection(fromStarts, toEnd.get(), time);
 		}
 		return emptyList();
 	}
