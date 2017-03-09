@@ -35,12 +35,12 @@ import edu.kit.ifv.mobitopp.publictransport.model.Time;
 public class ConnectionScanTest {
 
 	private ConnectionSweeper connections;
-	private Arrival arrival;
+	private SweeperData sweeperData;
 
 	@Before
 	public void initialise() throws Exception {
 		connections = mock(ConnectionSweeper.class);
-		arrival = mock(Arrival.class);
+		sweeperData = mock(SweeperData.class);
 	}
 
 	@Test
@@ -132,7 +132,7 @@ public class ConnectionScanTest {
 		when(starts.stops()).thenReturn(startStops);
 		when(ends.stops()).thenReturn(endStops);
 		when(vehicleRoute.addFootpaths(starts, ends)).thenReturn(tourIncludingFootpath);
-		when(connections.sweep(arrival, starts, ends, time)).thenReturn(of(vehicleRoute));
+		when(connections.sweep(sweeperData, starts, ends, time)).thenReturn(of(vehicleRoute));
 
 		ConnectionScan scan = scan(stops, connections);
 
@@ -140,7 +140,7 @@ public class ConnectionScanTest {
 
 		assertThat(startToEnd, isPresent());
 		assertThat(startToEnd, hasValue(tourIncludingFootpath));
-		verify(connections).sweep(arrival, starts, ends, time);
+		verify(connections).sweep(sweeperData, starts, ends, time);
 		verify(vehicleRoute).addFootpaths(starts, ends);
 	}
 
@@ -245,8 +245,8 @@ public class ConnectionScanTest {
 	private  ConnectionScan scan(Collection<Stop> stops, ConnectionSweeper sweeper) {
 		return new ConnectionScan(stops, sweeper) {
 			@Override
-			Arrival newArrival(StopPaths fromStarts, StopPaths toEnds, Time atTime) {
-				return arrival;
+			SweeperData newSweeperData(StopPaths fromStarts, StopPaths toEnds, Time atTime) {
+				return sweeperData;
 			}
 		};
 	}

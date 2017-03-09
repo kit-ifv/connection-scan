@@ -82,38 +82,38 @@ public class PreparedConnections implements ConnectionSweeper {
 	}
 
 	@Override
-	public Optional<PublicTransportRoute> sweep(Arrival arrival, Stop start, Stop toEnd, Time time) {
+	public Optional<PublicTransportRoute> sweep(SweeperData data, Stop start, Stop toEnd, Time time) {
 		int fromStartIndex = lookup.apply(time);
-		scanConnections(fromStartIndex, toEnd, arrival);
-		return arrival.createRoute(start, toEnd, time);
+		scanConnections(fromStartIndex, toEnd, data);
+		return data.createRoute(start, toEnd, time);
 	}
 
-	private void scanConnections(int startIndex, Stop toEnd, Arrival arrival) {
+	private void scanConnections(int startIndex, Stop toEnd, SweeperData data) {
 		for (int index = startIndex; index < connections.size(); index++) {
 			Connection connection = connections.get(index);
-			if (arrival.isTooLate(connection, toEnd)) {
+			if (data.isTooLate(connection, toEnd)) {
 				break;
 			}
-			arrival.updateArrival(connection);
+			data.updateArrival(connection);
 		}
 	}
 
 	@Override
 	public Optional<PublicTransportRoute> sweep(
-			Arrival arrival, StopPaths startStops, StopPaths reachableEnds, Time time) {
+			SweeperData data, StopPaths startStops, StopPaths reachableEnds, Time time) {
 		int fromIndex = lookup.apply(time);
 		List<Stop> tillOneEnd = reachableEnds.stops();
-		scanConnections(fromIndex, tillOneEnd, arrival);
-		return arrival.createRoute(startStops, reachableEnds, time);
+		scanConnections(fromIndex, tillOneEnd, data);
+		return data.createRoute(startStops, reachableEnds, time);
 	}
 
-	private void scanConnections(int startIndex, List<Stop> endStops, Arrival arrival) {
+	private void scanConnections(int startIndex, List<Stop> endStops, SweeperData data) {
 		for (int index = startIndex; index < connections.size(); index++) {
 			Connection connection = connections.get(index);
-			if (shouldCheck(index) && arrival.isTooLateAtOne(connection, endStops)) {
+			if (shouldCheck(index) && data.isTooLateAtOne(connection, endStops)) {
 				break;
 			}
-			arrival.updateArrival(connection);
+			data.updateArrival(connection);
 		}
 	}
 

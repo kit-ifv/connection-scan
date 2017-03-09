@@ -9,9 +9,9 @@ interface ConnectionSweeper {
 
 	boolean isTooLate(Time time);
 
-	Optional<PublicTransportRoute> sweep(Arrival arrival, Stop start, Stop end, Time searchTime);
+	Optional<PublicTransportRoute> sweep(SweeperData data, Stop start, Stop end, Time searchTime);
 
 	Optional<PublicTransportRoute> sweep(
-			Arrival arrival, StopPaths startStops, StopPaths ends, Time searchTime);
+			SweeperData data, StopPaths startStops, StopPaths ends, Time searchTime);
 
 }

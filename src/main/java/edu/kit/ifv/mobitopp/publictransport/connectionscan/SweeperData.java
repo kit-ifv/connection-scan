@@ -7,7 +7,7 @@ import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-interface Arrival {
+interface SweeperData {
 
 	/**
 	 * Connection departs after arrival at end {@link Stop}

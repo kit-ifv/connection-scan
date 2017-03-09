@@ -40,79 +40,79 @@ import edu.kit.ifv.mobitopp.publictransport.model.Time;
 public class PreparedConnectionsTest {
 
 	private static final int cancelAlways = 1;
-	private Arrival arrival;
+	private SweeperData data;
 	private Optional<PublicTransportRoute> someRoute;
 
 	@Before
 	public void initialise() throws Exception {
 		someRoute = of(mock(PublicTransportRoute.class));
-		arrival = mock(Arrival.class);
-		when(arrival.isTooLateAtOne(any(), any())).thenReturn(false);
+		data = mock(SweeperData.class);
+		when(data.isTooLateAtOne(any(), any())).thenReturn(false);
 	}
 
 	@Test
 	public void findRouteWithOneAvailableConnection() throws Exception {
-		when(arrival.isTooLate(from1To2(), anotherStop())).thenReturn(false);
-		when(arrival.createRoute(someStop(), anotherStop(), someTime())).thenReturn(someRoute);
+		when(data.isTooLate(from1To2(), anotherStop())).thenReturn(false);
+		when(data.createRoute(someStop(), anotherStop(), someTime())).thenReturn(someRoute);
 		PreparedConnections connections = connections(from1To2());
 
-		Optional<PublicTransportRoute> startToStop = connections.sweep(arrival, someStop(),
+		Optional<PublicTransportRoute> startToStop = connections.sweep(data, someStop(),
 				anotherStop(), someTime());
 
 		assertThat(startToStop, is(equalTo(someRoute)));
-		verify(arrival).isTooLate(from1To2(), anotherStop());
-		verify(arrival).updateArrival(from1To2());
-		verify(arrival).createRoute(someStop(), anotherStop(), someTime());
+		verify(data).isTooLate(from1To2(), anotherStop());
+		verify(data).updateArrival(from1To2());
+		verify(data).createRoute(someStop(), anotherStop(), someTime());
 	}
 
 	@Test
 	public void findRouteInConnectionsWithDifferentArrivalTimes() throws Exception {
-		when(arrival.isTooLate(from1To2(), anotherStop())).thenReturn(false);
-		when(arrival.isTooLate(from1To2Long(), anotherStop())).thenReturn(false);
-		when(arrival.createRoute(someStop(), anotherStop(), someTime())).thenReturn(someRoute);
+		when(data.isTooLate(from1To2(), anotherStop())).thenReturn(false);
+		when(data.isTooLate(from1To2Long(), anotherStop())).thenReturn(false);
+		when(data.createRoute(someStop(), anotherStop(), someTime())).thenReturn(someRoute);
 		PreparedConnections connections = connections(from1To2(), from1To2Long());
 
-		Optional<PublicTransportRoute> startToStop = connections.sweep(arrival, someStop(),
+		Optional<PublicTransportRoute> startToStop = connections.sweep(data, someStop(),
 				anotherStop(), someTime());
 
 		assertThat(startToStop, is(equalTo(someRoute)));
-		verify(arrival).isTooLate(from1To2(), anotherStop());
-		verify(arrival).isTooLate(from1To2Long(), anotherStop());
-		verify(arrival).updateArrival(from1To2());
-		verify(arrival).updateArrival(from1To2Long());
-		verify(arrival).createRoute(someStop(), anotherStop(), someTime());
+		verify(data).isTooLate(from1To2(), anotherStop());
+		verify(data).isTooLate(from1To2Long(), anotherStop());
+		verify(data).updateArrival(from1To2());
+		verify(data).updateArrival(from1To2Long());
+		verify(data).createRoute(someStop(), anotherStop(), someTime());
 	}
 
 	@Test
 	public void findRouteInSeveralConnections() throws Exception {
-		when(arrival.isTooLate(any(), any())).thenReturn(false);
-		when(arrival.createRoute(someStop(), yetAnotherStop(), someTime())).thenReturn(someRoute);
+		when(data.isTooLate(any(), any())).thenReturn(false);
+		when(data.createRoute(someStop(), yetAnotherStop(), someTime())).thenReturn(someRoute);
 		PreparedConnections connections = connections(from1To2(), from2To3(), from3To4());
 
-		Optional<PublicTransportRoute> startToStop = connections.sweep(arrival, someStop(),
+		Optional<PublicTransportRoute> startToStop = connections.sweep(data, someStop(),
 				yetAnotherStop(), someTime());
 
 		assertThat(startToStop, is(equalTo(someRoute)));
-		verify(arrival).isTooLate(from1To2(), yetAnotherStop());
-		verify(arrival).isTooLate(from2To3(), yetAnotherStop());
-		verify(arrival).isTooLate(from3To4(), yetAnotherStop());
-		verify(arrival).updateArrival(from1To2());
-		verify(arrival).updateArrival(from2To3());
-		verify(arrival).updateArrival(from3To4());
-		verify(arrival).createRoute(someStop(), yetAnotherStop(), someTime());
+		verify(data).isTooLate(from1To2(), yetAnotherStop());
+		verify(data).isTooLate(from2To3(), yetAnotherStop());
+		verify(data).isTooLate(from3To4(), yetAnotherStop());
+		verify(data).updateArrival(from1To2());
+		verify(data).updateArrival(from2To3());
+		verify(data).updateArrival(from3To4());
+		verify(data).createRoute(someStop(), yetAnotherStop(), someTime());
 	}
 
 	@Test
 	public void findNoRouteWhenDepartureTimeOfConnectionsIsOver() throws Exception {
-		when(arrival.createRoute(someStop(), anotherStop(), oneMinuteLater())).thenReturn(someRoute);
+		when(data.createRoute(someStop(), anotherStop(), oneMinuteLater())).thenReturn(someRoute);
 		PreparedConnections connections = connections(from1To2());
 
-		Optional<PublicTransportRoute> startToStop = connections.sweep(arrival, someStop(),
+		Optional<PublicTransportRoute> startToStop = connections.sweep(data, someStop(),
 				anotherStop(), oneMinuteLater());
 
 		assertThat(startToStop, is(equalTo(someRoute)));
-		verify(arrival).createRoute(someStop(), anotherStop(), oneMinuteLater());
-		verifyNoMoreInteractions(arrival);
+		verify(data).createRoute(someStop(), anotherStop(), oneMinuteLater());
+		verifyNoMoreInteractions(data);
 	}
 
 	@Test
@@ -122,16 +122,16 @@ public class PreparedConnectionsTest {
 		StopPaths start = mock(StopPaths.class);
 		StopPaths end = mock(StopPaths.class);
 		when(end.stops()).thenReturn(endStops);
-		when(arrival.isTooLateAtOne(from2To3(), endStops)).thenReturn(true);
+		when(data.isTooLateAtOne(from2To3(), endStops)).thenReturn(true);
 
-		connections.sweep(arrival, start, end, someTime());
+		connections.sweep(data, start, end, someTime());
 
 		verify(end).stops();
-		verify(arrival).isTooLateAtOne(from1To2(), endStops);
-		verify(arrival).isTooLateAtOne(from2To3(), endStops);
-		verify(arrival).updateArrival(from1To2());
-		verify(arrival).createRoute(eq(start), eq(end), eq(someTime()));
-		verifyNoMoreInteractions(arrival);
+		verify(data).isTooLateAtOne(from1To2(), endStops);
+		verify(data).isTooLateAtOne(from2To3(), endStops);
+		verify(data).updateArrival(from1To2());
+		verify(data).createRoute(eq(start), eq(end), eq(someTime()));
+		verifyNoMoreInteractions(data);
 	}
 
 	@Test
@@ -142,32 +142,32 @@ public class PreparedConnectionsTest {
 		StopPaths start = mock(StopPaths.class);
 		StopPaths end = mock(StopPaths.class);
 		when(end.stops()).thenReturn(endStops);
-		when(arrival.isTooLateAtOne(from2To3(), endStops)).thenReturn(true);
+		when(data.isTooLateAtOne(from2To3(), endStops)).thenReturn(true);
 
-		connections.sweep(arrival, start, end, someTime());
+		connections.sweep(data, start, end, someTime());
 
 		verify(end).stops();
-		verify(arrival).isTooLateAtOne(from1To2(), endStops);
-		verify(arrival).isTooLateAtOne(from2To3(), endStops);
-		verify(arrival).updateArrival(from1To2());
-		verify(arrival).createRoute(eq(start), eq(end), eq(someTime()));
-		verifyNoMoreInteractions(arrival);
+		verify(data).isTooLateAtOne(from1To2(), endStops);
+		verify(data).isTooLateAtOne(from2To3(), endStops);
+		verify(data).updateArrival(from1To2());
+		verify(data).createRoute(eq(start), eq(end), eq(someTime()));
+		verifyNoMoreInteractions(data);
 	}
 
 	@Test
 	public void findsRouteFromSeveralStartsStopsToSeveralEndStops() throws Exception {
 		StopPaths start = mock(StopPaths.class);
 		StopPaths reachableEnd = mock(StopPaths.class);
-		when(arrival.createRoute(start, reachableEnd, someTime())).thenReturn(someRoute);
+		when(data.createRoute(start, reachableEnd, someTime())).thenReturn(someRoute);
 		PreparedConnections connections = alwaysCancelConnections(from1To2(), from3To4());
 
-		Optional<PublicTransportRoute> shortestRoute = connections.sweep(arrival, start, reachableEnd,
+		Optional<PublicTransportRoute> shortestRoute = connections.sweep(data, start, reachableEnd,
 				someTime());
 
 		assertThat(shortestRoute, is(equalTo(someRoute)));
-		verify(arrival).updateArrival(from1To2());
-		verify(arrival).updateArrival(from3To4());
-		verify(arrival).createRoute(eq(start), eq(reachableEnd), eq(someTime()));
+		verify(data).updateArrival(from1To2());
+		verify(data).updateArrival(from3To4());
+		verify(data).createRoute(eq(start), eq(reachableEnd), eq(someTime()));
 	}
 
 	private Connection from1To2() {

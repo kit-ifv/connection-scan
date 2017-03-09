@@ -10,14 +10,14 @@ import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-class ScannedArrival implements Arrival {
+class DefaultSweeperData implements SweeperData {
 
 	private static final int firstConnection = 0;
 	private final Times times;
 	private final UsedConnections arrivalConnections;
 	private final UsedJourneys usedJourneys;
 
-	private ScannedArrival(
+	private DefaultSweeperData(
 			Times times, UsedConnections arrivalConnections, UsedJourneys usedJourneys) {
 		super();
 		this.times = times;
@@ -25,27 +25,27 @@ class ScannedArrival implements Arrival {
 		this.usedJourneys = usedJourneys;
 	}
 
-	static Arrival from(Stop start, Stop end, Time departure, int numberOfStops) {
+	static SweeperData from(Stop start, Stop end, Time departure, int numberOfStops) {
 		Times times = SingleStart.from(start, end, departure, numberOfStops);
 		UsedConnections usedConnections = new ArrivalConnections(numberOfStops);
 		return from(times, usedConnections);
 	}
 
-	static Arrival from(StopPaths fromStarts, StopPaths toEnds, Time atTime, int numberOfStops) {
+	static SweeperData from(StopPaths fromStarts, StopPaths toEnds, Time atTime, int numberOfStops) {
 		Times times = MultipleStarts.from(fromStarts, toEnds, atTime, numberOfStops);
 		UsedConnections usedConnections = new ArrivalConnections(numberOfStops);
 		return from(times, usedConnections);
 	}
 
-	static Arrival from(Times times, UsedConnections usedConnections) {
+	static SweeperData from(Times times, UsedConnections usedConnections) {
 		UsedJourneys usedJourneys = new ScannedJourneys();
 		return from(times, usedConnections, usedJourneys);
 	}
 
-	static Arrival from(Times times, UsedConnections arrivalConnections, UsedJourneys usedJourneys) {
-		ScannedArrival scannedArrival = new ScannedArrival(times, arrivalConnections, usedJourneys);
-		times.initialise(scannedArrival::initialise);
-		return scannedArrival;
+	static SweeperData from(Times times, UsedConnections arrivalConnections, UsedJourneys usedJourneys) {
+		DefaultSweeperData data = new DefaultSweeperData(times, arrivalConnections, usedJourneys);
+		times.initialise(data::initialise);
+		return data;
 	}
 
 	private void initialise(Stop start, Time departure) {

@@ -37,7 +37,7 @@ import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-public class ScannedArrivalTest {
+public class DefaultSweeperDataTest {
 
 	private static final int maximumNumberOfStops = 4;
 	private static final RelativeTime defaultTransferTime = RelativeTime.of(0, MINUTES);
@@ -61,11 +61,11 @@ public class ScannedArrivalTest {
 	public void whenOneConnectionHasBeenUpdated() throws Exception {
 		Connection connection = someConnection();
 
-		Arrival arrivalTimes = newScannedArrival(stop1);
+		SweeperData data = newScannedArrival(stop1);
 
-		arrivalTimes.updateArrival(connection);
+		data.updateArrival(connection);
 
-		Optional<PublicTransportRoute> tour = arrivalTimes.createRoute(stop1, stop2, someTime());
+		Optional<PublicTransportRoute> tour = data.createRoute(stop1, stop2, someTime());
 
 		PublicTransportRoute expectedTour = new ScannedRoute(stop1, stop2, someTime(), oneMinuteLater(),
 				asList(connection));
@@ -87,13 +87,13 @@ public class ScannedArrivalTest {
 		Connection connection1 = longConnection();
 		Connection connection2 = shortConnection();
 
-		Arrival arrivalTimes = newScannedArrival(stop1);
+		SweeperData data = newScannedArrival(stop1);
 
-		arrivalTimes.updateArrival(connection1);
-		arrivalTimes.updateArrival(connection2);
+		data.updateArrival(connection1);
+		data.updateArrival(connection2);
 
-		Optional<PublicTransportRoute> tour1 = arrivalTimes.createRoute(stop1, stop2, someTime());
-		Optional<PublicTransportRoute> tour2 = arrivalTimes.createRoute(stop1, otherStop(), someTime());
+		Optional<PublicTransportRoute> tour1 = data.createRoute(stop1, stop2, someTime());
+		Optional<PublicTransportRoute> tour2 = data.createRoute(stop1, otherStop(), someTime());
 
 		PublicTransportRoute expectedTour1 = new ScannedRoute(stop1, stop2, someTime(),
 				threeMinutesLater(), asList(connection1));
@@ -143,12 +143,12 @@ public class ScannedArrivalTest {
 				.partOf(sameJourney)
 				.build();
 
-		Arrival arrivalTimes = newScannedArrival(stop1);
+		SweeperData data = newScannedArrival(stop1);
 
-		arrivalTimes.updateArrival(connection1);
-		arrivalTimes.updateArrival(connection2);
+		data.updateArrival(connection1);
+		data.updateArrival(connection2);
 
-		Optional<PublicTransportRoute> tour = arrivalTimes.createRoute(stop1, otherStop(), someTime());
+		Optional<PublicTransportRoute> tour = data.createRoute(stop1, otherStop(), someTime());
 
 		assertThat(tour, isPresent());
 		PublicTransportRoute expectedTour = new ScannedRoute(stop1, otherStop(), someTime(),
@@ -159,13 +159,13 @@ public class ScannedArrivalTest {
 	@Test
 	public void whenConnectionStartsAfterLatestDepartureAtTheEndStop() throws Exception {
 		Connection connection1 = someConnection();
-		Arrival arrivalTimes = newScannedArrival(stop1);
+		SweeperData data = newScannedArrival(stop1);
 
-		assertThat(arrivalTimes.isTooLate(connection1, stop2), is(false));
-		assertThat(arrivalTimes.isTooLate(tooLateConnection(), stop2), is(false));
-		arrivalTimes.updateArrival(connection1);
-		assertThat(arrivalTimes.isTooLate(connection1, stop2), is(false));
-		assertThat(arrivalTimes.isTooLate(tooLateConnection(), stop2), is(true));
+		assertThat(data.isTooLate(connection1, stop2), is(false));
+		assertThat(data.isTooLate(tooLateConnection(), stop2), is(false));
+		data.updateArrival(connection1);
+		assertThat(data.isTooLate(connection1, stop2), is(false));
+		assertThat(data.isTooLate(tooLateConnection(), stop2), is(true));
 	}
 
 	private Connection tooLateConnection() {
@@ -179,13 +179,13 @@ public class ScannedArrivalTest {
 
 	@Test
 	public void whenConnectionIsNotReachable() throws Exception {
-		Arrival arrivalTimes = newScannedArrival(stop1);
+		SweeperData data = newScannedArrival(stop1);
 
-		arrivalTimes.updateArrival(someConnection());
-		arrivalTimes.updateArrival(notReachable());
-		arrivalTimes.updateArrival(reachable());
+		data.updateArrival(someConnection());
+		data.updateArrival(notReachable());
+		data.updateArrival(reachable());
 
-		Optional<PublicTransportRoute> tour = arrivalTimes.createRoute(stop1, otherStop(), someTime());
+		Optional<PublicTransportRoute> tour = data.createRoute(stop1, otherStop(), someTime());
 
 		PublicTransportRoute expectedTour = new ScannedRoute(stop1, otherStop(), someTime(),
 				twoMinutesLater(), asList(someConnection(), reachable()));
@@ -218,13 +218,13 @@ public class ScannedArrivalTest {
 		Connection viaStop2 = someConnection();
 		Connection direct = direct();
 
-		Arrival arrivalTimes = newScannedArrival(stop1);
+		SweeperData data = newScannedArrival(stop1);
 
-		arrivalTimes.updateArrival(viaStop2);
-		arrivalTimes.updateArrival(direct);
+		data.updateArrival(viaStop2);
+		data.updateArrival(direct);
 
-		Optional<PublicTransportRoute> tourToStop3 = arrivalTimes.createRoute(stop1, stop3, someTime());
-		Optional<PublicTransportRoute> tourToStop2 = arrivalTimes.createRoute(stop1, stop2, someTime());
+		Optional<PublicTransportRoute> tourToStop3 = data.createRoute(stop1, stop3, someTime());
+		Optional<PublicTransportRoute> tourToStop2 = data.createRoute(stop1, stop2, someTime());
 
 		PublicTransportRoute expectedTourToStop3 = new ScannedRoute(stop1, stop3, someTime(),
 				oneMinuteLater(), asList(viaStop2, laterByFootFrom2To3()));
@@ -266,13 +266,13 @@ public class ScannedArrivalTest {
 		Connection viaStop3 = viaStop3();
 		Connection viaStop2 = viaStop2();
 
-		Arrival arrivalTimes = newScannedArrival(stop1);
+		SweeperData data = newScannedArrival(stop1);
 
-		arrivalTimes.updateArrival(viaStop3);
-		arrivalTimes.updateArrival(viaStop2);
+		data.updateArrival(viaStop3);
+		data.updateArrival(viaStop2);
 
-		Optional<PublicTransportRoute> tourToStop3 = arrivalTimes.createRoute(stop1, stop3, someTime());
-		Optional<PublicTransportRoute> tourToStop2 = arrivalTimes.createRoute(stop1, stop2, someTime());
+		Optional<PublicTransportRoute> tourToStop3 = data.createRoute(stop1, stop3, someTime());
+		Optional<PublicTransportRoute> tourToStop2 = data.createRoute(stop1, stop2, someTime());
 
 		PublicTransportRoute expectedTourToStop3 = new ScannedRoute(stop1, stop3, someTime(),
 				oneMinuteLater(), asList(viaStop3));
@@ -333,13 +333,13 @@ public class ScannedArrivalTest {
 		Connection directToStop3 = viaStop3();
 		Connection directToStop2 = someConnection();
 
-		Arrival arrivalTimes = newScannedArrival(stop1);
+		SweeperData data = newScannedArrival(stop1);
 
-		arrivalTimes.updateArrival(directToStop3);
-		arrivalTimes.updateArrival(directToStop2);
+		data.updateArrival(directToStop3);
+		data.updateArrival(directToStop2);
 
-		Optional<PublicTransportRoute> tourToStop3 = arrivalTimes.createRoute(stop1, stop3, someTime());
-		Optional<PublicTransportRoute> tourToStop2 = arrivalTimes.createRoute(stop1, stop2, someTime());
+		Optional<PublicTransportRoute> tourToStop3 = data.createRoute(stop1, stop3, someTime());
+		Optional<PublicTransportRoute> tourToStop2 = data.createRoute(stop1, stop2, someTime());
 
 		PublicTransportRoute expectedTourToStop3 = new ScannedRoute(stop1, stop3, someTime(),
 				oneMinuteLater(), asList(directToStop3));
@@ -360,14 +360,14 @@ public class ScannedArrivalTest {
 		Connection direct = from2To1();
 		Connection transferToStop3 = byFootFrom2To3();
 
-		Arrival arrivalTimes = newScannedArrival(stop2);
+		SweeperData data = newScannedArrival(stop2);
 
-		arrivalTimes.updateArrival(viaStop3);
-		arrivalTimes.updateArrival(direct);
+		data.updateArrival(viaStop3);
+		data.updateArrival(direct);
 
-		Optional<PublicTransportRoute> routeToStop1 = arrivalTimes.createRoute(stop2, stop1,
+		Optional<PublicTransportRoute> routeToStop1 = data.createRoute(stop2, stop1,
 				someTime());
-		Optional<PublicTransportRoute> routeToStop3 = arrivalTimes.createRoute(stop2, stop3,
+		Optional<PublicTransportRoute> routeToStop3 = data.createRoute(stop2, stop3,
 				someTime());
 
 		PublicTransportRoute expectedRouteToStop1 = new ScannedRoute(stop2, stop1, someTime(),
@@ -418,13 +418,13 @@ public class ScannedArrivalTest {
 		Connection viaStop2 = someConnection();
 		Connection direct = directToStopWithNeighbour();
 
-		Arrival arrivalTimes = newScannedArrival(stop1);
+		SweeperData data = newScannedArrival(stop1);
 
-		arrivalTimes.updateArrival(viaStop2);
-		arrivalTimes.updateArrival(direct);
+		data.updateArrival(viaStop2);
+		data.updateArrival(direct);
 
-		Optional<PublicTransportRoute> tourToStop3 = arrivalTimes.createRoute(stop1, stop3, someTime());
-		Optional<PublicTransportRoute> tourToStop2 = arrivalTimes.createRoute(stop1, stop2, someTime());
+		Optional<PublicTransportRoute> tourToStop3 = data.createRoute(stop1, stop3, someTime());
+		Optional<PublicTransportRoute> tourToStop2 = data.createRoute(stop1, stop2, someTime());
 
 		Connection byFootFromStop2ToStop3 = footPathBetweenNeighbours();
 		PublicTransportRoute expectedTourToStop3 = new ScannedRoute(stop1, stop3, someTime(),
@@ -464,12 +464,12 @@ public class ScannedArrivalTest {
 	public void whenStopIsNotReachable() throws Exception {
 		Connection connection = someConnection();
 
-		Arrival arrivalTimes = newScannedArrival(stop1);
+		SweeperData data = newScannedArrival(stop1);
 
-		arrivalTimes.updateArrival(connection);
+		data.updateArrival(connection);
 
 		Stop unreachable = stop().withId(2).withName("unreachable").build();
-		Optional<PublicTransportRoute> tour = arrivalTimes.createRoute(stop1, unreachable, someTime());
+		Optional<PublicTransportRoute> tour = data.createRoute(stop1, unreachable, someTime());
 
 		assertThat(tour, isEmpty());
 	}
@@ -489,8 +489,8 @@ public class ScannedArrivalTest {
 				.with(asList(someLocation(), anotherLocation()))
 				.build();
 
-		Arrival arrivalTimes = newScannedArrival(start);
-		Optional<PublicTransportRoute> tourToStop2 = arrivalTimes.createRoute(start, neighbouringStop,
+		SweeperData data = newScannedArrival(start);
+		Optional<PublicTransportRoute> tourToStop2 = data.createRoute(start, neighbouringStop,
 				someTime());
 
 		PublicTransportRoute expectedTourToStop2 = new ScannedRoute(start, neighbouringStop, someTime(),
@@ -514,11 +514,11 @@ public class ScannedArrivalTest {
 				.partOf(someJourney)
 				.build();
 
-		Arrival arrivalTimes = newScannedArrival(start);
+		SweeperData data = newScannedArrival(start);
 
-		arrivalTimes.updateArrival(connection);
+		data.updateArrival(connection);
 
-		Optional<PublicTransportRoute> tour = arrivalTimes.createRoute(start, end, someTime());
+		Optional<PublicTransportRoute> tour = data.createRoute(start, end, someTime());
 
 		assertThat(tour, isPresent());
 		PublicTransportRoute expectedTour = new ScannedRoute(start, end, someTime(), oneMinuteLater(),
@@ -540,11 +540,11 @@ public class ScannedArrivalTest {
 				.partOf(someJourney)
 				.build();
 
-		Arrival arrivalTimes = newScannedArrival(start);
+		SweeperData data = newScannedArrival(start);
 
-		arrivalTimes.updateArrival(connection);
+		data.updateArrival(connection);
 
-		Optional<PublicTransportRoute> tour = arrivalTimes.createRoute(start, end, someTime());
+		Optional<PublicTransportRoute> tour = data.createRoute(start, end, someTime());
 
 		assertThat(tour, isPresent());
 		PublicTransportRoute expectedTour = new ScannedRoute(start, end, someTime(), oneMinuteLater(),
@@ -557,12 +557,12 @@ public class ScannedArrivalTest {
 			throws Exception {
 		RelativeTime changeTime = RelativeTime.of(2, MINUTES);
 
-		Arrival arrvalTimes = newScannedArrival(stop1);
-		arrvalTimes.updateArrival(someConnection());
-		arrvalTimes.updateArrival(toIntermediateStop(changeTime));
-		arrvalTimes.updateArrival(laterToIntermediateStop(changeTime));
-		arrvalTimes.updateArrival(toEndStop(changeTime));
-		Optional<PublicTransportRoute> tour = arrvalTimes.createRoute(stop1, otherStop(), someTime());
+		SweeperData data = newScannedArrival(stop1);
+		data.updateArrival(someConnection());
+		data.updateArrival(toIntermediateStop(changeTime));
+		data.updateArrival(laterToIntermediateStop(changeTime));
+		data.updateArrival(toEndStop(changeTime));
+		Optional<PublicTransportRoute> tour = data.createRoute(stop1, otherStop(), someTime());
 
 		assertThat(tour, isPresent());
 		PublicTransportRoute expectedTour = new ScannedRoute(stop1, otherStop(), someTime(),
@@ -588,9 +588,9 @@ public class ScannedArrivalTest {
 		when(usedConnections.buildUpConnection(start, endStop, scanTime))
 				.thenReturn(asList(someConnection));
 
-		Arrival arrival = newScannedArrival(times, usedConnections);
+		SweeperData data = newScannedArrival(times, usedConnections);
 
-		Optional<PublicTransportRoute> tour = arrival.createRoute(start, reachableEnd, scanTime);
+		Optional<PublicTransportRoute> tour = data.createRoute(start, reachableEnd, scanTime);
 
 		assertThat(tour, isPresent());
 		PublicTransportRoute expectedTour = new ScannedRoute(stop1, endStop, scanTime, oneMinuteLater(),
@@ -615,9 +615,9 @@ public class ScannedArrivalTest {
 		when(times.get(any())).thenReturn(scanTime);
 		when(times.stopWithEarliestArrival()).thenReturn(of(endStop));
 		when(usedConnections.buildUpConnection(start, endStop, scanTime)).thenReturn(emptyList());
-		Arrival arrival = newScannedArrival(times, usedConnections);
+		SweeperData data = newScannedArrival(times, usedConnections);
 
-		Optional<PublicTransportRoute> tour = arrival.createRoute(start, end, scanTime);
+		Optional<PublicTransportRoute> tour = data.createRoute(start, end, scanTime);
 
 		assertThat(tour, isEmpty());
 		verify(usedConnections).buildUpConnection(start, endStop, scanTime);
@@ -663,15 +663,15 @@ public class ScannedArrivalTest {
 				.build();
 	}
 
-	private Arrival newScannedArrival(Stop start) {
+	private SweeperData newScannedArrival(Stop start) {
 		Times times = SingleStart.from(start, dummyEnd, someTime(), maximumNumberOfStops);
 		UsedConnections usedConnections = new ArrivalConnections(maximumNumberOfStops);
-		return ScannedArrival.from(times, usedConnections);
+		return DefaultSweeperData.from(times, usedConnections);
 	}
 
-	private Arrival newScannedArrival(Times times, UsedConnections connections) {
+	private SweeperData newScannedArrival(Times times, UsedConnections connections) {
 		UsedJourneys usedJourney = mock(UsedJourneys.class);
-		return ScannedArrival.from(times, connections, usedJourney);
+		return DefaultSweeperData.from(times, connections, usedJourney);
 	}
 
 }
