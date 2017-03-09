@@ -5,6 +5,7 @@ import java.util.List;
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
+import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
 class RouteIncludingFootpaths implements PublicTransportRoute {
@@ -19,7 +20,22 @@ class RouteIncludingFootpaths implements PublicTransportRoute {
 		this.start = start;
 		this.end = end;
 	}
+	
+	@Override
+	public Stop start() {
+		return route.start();
+	}
+	
+	@Override
+	public Stop end() {
+		return route.end();
+	}
 
+	@Override
+	public Time arrival() {
+		return route.arrival().add(end.duration());
+	}
+	
 	@Override
 	public RelativeTime duration() {
 		return start.duration().plus(route.duration()).plus(end.duration());
@@ -28,17 +44,6 @@ class RouteIncludingFootpaths implements PublicTransportRoute {
 	@Override
 	public List<Connection> connections() {
 		return route.connections();
-	}
-
-	@Override
-	public PublicTransportRoute addFootpaths(
-			StopPaths reachableStart, StopPaths reachableEnd) {
-		return this;
-	}
-
-	@Override
-	public Time arrival() {
-		return route.arrival().add(end.duration());
 	}
 
 	@Override

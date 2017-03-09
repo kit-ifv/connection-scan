@@ -41,8 +41,13 @@ public class MultipleSweeperData extends BaseSweeperData {
 
 	@Override
 	public Optional<PublicTransportRoute> createRoute() {
-		Optional<PublicTransportRoute> found = super.createRoute();
-		return found.map(tour -> tour.addFootpaths(fromStarts, toEnds));
+		return super.createRoute().map(this::addFootpaths);
+	}
+	
+	private PublicTransportRoute addFootpaths(PublicTransportRoute route) {
+		StopPath distanceToStart = fromStarts.pathTo(route.start());
+		StopPath distanceToEnd = toEnds.pathTo(route.end());
+		return new RouteIncludingFootpaths(route, distanceToStart, distanceToEnd);
 	}
 
 	private Optional<Stop> stopWithEarliestArrival() {

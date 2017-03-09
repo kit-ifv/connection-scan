@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
-import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
@@ -26,6 +25,16 @@ public class ScannedRoute implements PublicTransportRoute {
 		this.arrival = arrival;
 		this.connections = connections;
 	}
+	
+	@Override
+	public Stop start() {
+		return start;
+	}
+	
+	@Override
+	public Stop end() {
+		return end;
+	}
 
 	@Override
 	public Time arrival() {
@@ -40,13 +49,6 @@ public class ScannedRoute implements PublicTransportRoute {
 	@Override
 	public List<Connection> connections() {
 		return Collections.unmodifiableList(connections);
-	}
-
-	@Override
-	public PublicTransportRoute addFootpaths(StopPaths fromStart, StopPaths toEnd) {
-		StopPath distanceToStart = fromStart.pathTo(start);
-		StopPath distanceToEnd = toEnd.pathTo(end);
-		return new RouteIncludingFootpaths(this, distanceToStart, distanceToEnd);
 	}
 
 	@Override
