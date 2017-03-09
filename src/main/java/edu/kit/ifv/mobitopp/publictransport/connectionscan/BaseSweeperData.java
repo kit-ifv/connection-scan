@@ -10,7 +10,7 @@ import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-public abstract class BaseSweeperData implements SweeperData {
+abstract class BaseSweeperData implements SweeperData {
 
 	private static final int firstConnection = 0;
 	
@@ -18,7 +18,7 @@ public abstract class BaseSweeperData implements SweeperData {
 	private final UsedConnections usedConnections;
 	private final UsedJourneys usedJourneys;
 
-	public BaseSweeperData(Times times, UsedConnections usedConnections, UsedJourneys usedJourneys) {
+	BaseSweeperData(Times times, UsedConnections usedConnections, UsedJourneys usedJourneys) {
 		super();
 		this.times = times;
 		this.usedConnections = usedConnections;

@@ -11,7 +11,7 @@ import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-public class MultipleSweeperData extends BaseSweeperData {
+class MultipleSweeperData extends BaseSweeperData {
 
 	private final StopPaths fromStarts;
 	private final StopPaths toEnds;
