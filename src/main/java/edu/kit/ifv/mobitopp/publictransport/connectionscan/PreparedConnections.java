@@ -14,7 +14,7 @@ import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Connections;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-public class PreparedConnections implements ConnectionSweeper {
+class PreparedConnections implements ConnectionSweeper {
 
 	private static final int defaultDistance = 100;
 	private static final Function<Time, Boolean> alwaysTooLate = (time) -> true;
@@ -33,7 +33,7 @@ public class PreparedConnections implements ConnectionSweeper {
 		distanceBetweenConnectionsToCheck = distanceToCancel;
 	}
 
-	public static PreparedConnections from(Connections connections) {
+	static PreparedConnections from(Connections connections) {
 		return from(connections, defaultDistance);
 	}
 
