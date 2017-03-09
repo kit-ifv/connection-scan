@@ -11,7 +11,6 @@ public class Connection {
 	private final Time departure;
 	private final RoutePoints points;
 	private final Journey journey;
-	private int positionInJourney;
 
 	private Connection(
 			int id, Stop start, Stop end, Time departure, Time arrival, Journey journey,
@@ -84,13 +83,9 @@ public class Connection {
 	}
 	
 	public int positionInJourney() {
-		return positionInJourney;
+		return journey.connections().positionOf(this);
 	}
 	
-	void setPositionInJourney(int position) {
-		positionInJourney = position;
-	}
-
 	public boolean isValid() {
 		return differentStartAndEnd() && departsBeforeOrAtSameTimeAsItArrives();
 	}

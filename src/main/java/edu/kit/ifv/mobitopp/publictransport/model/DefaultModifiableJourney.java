@@ -34,7 +34,6 @@ public class DefaultModifiableJourney implements ModifiableJourney {
 
 	@Override
 	public void add(Connection connection) {
-		connection.setPositionInJourney(connections.size());
 		connections.add(connection);
 	}
 

@@ -14,6 +14,9 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.awt.geom.Point2D;
 import java.time.LocalDateTime;
@@ -105,6 +108,25 @@ public class ConnectionTest {
 		
 		assertThat(duration, is(equalTo(RelativeTime.of(1, MINUTES))));
 	}
+	
+	@Test
+	public void calculatesConnectionInJourney() {
+		int positionByJourney = 1;
+		Journey journey = mock(Journey.class);
+		Connections connections = mock(Connections.class);
+		Connection connection = connection()
+				.startsAt(someStop())
+				.endsAt(anotherStop())
+				.partOf(journey)
+				.build();
+		when(journey.connections()).thenReturn(connections);
+		when(connections.positionOf(connection)).thenReturn(positionByJourney);
+		
+		int positionInJourney = connection.positionInJourney();
+		
+		assertThat(positionInJourney, is(positionByJourney));
+		verify(connections).positionOf(connection);
+	}
 
 	@Test
 	public void equalsAndHashCode() throws Exception {
@@ -120,7 +142,7 @@ public class ConnectionTest {
 				.withPrefabValues(Stop.class, oneStop, anotherStop)
 				.withPrefabValues(Journey.class, oneJourney, anotherJourney)
 				.withPrefabValues(Connection.class, oneConnection, anotherConnection)
-				.withIgnoredFields("points", "id", "positionInJourney")
+				.withIgnoredFields("points", "id")
 				.usingGetClass()
 				.verify();
 	}

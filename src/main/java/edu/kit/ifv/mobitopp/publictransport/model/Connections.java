@@ -62,6 +62,15 @@ public class Connections {
 		return null;
 	}
 
+	public int positionOf(Connection connection) {
+		for (int index = 0; index < connections.size(); index++) {
+			if (connections.get(index).equals(connection)) {
+				return index;
+			}
+		}
+		throw new IllegalArgumentException("Connection is not included: " + connection);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

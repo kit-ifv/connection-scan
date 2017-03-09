@@ -258,6 +258,32 @@ public class ConnectionsTest {
 		assertThat(nextAfterSecond, is(third));
 		assertThat(nextAfterThird, is(nullValue()));
 	}
+	
+	@Test
+	public void positionOfConnection() {
+		Connections connections = connections();
+		Connection first = connection().startsAt(someStop()).endsAt(anotherStop()).build();
+		Connection second = connection().startsAt(anotherStop()).endsAt(otherStop()).build();
+		Connection third = connection().startsAt(otherStop()).endsAt(yetAnotherStop()).build();
+		
+		connections.add(first);
+		connections.add(second);
+		connections.add(third);
+		int positionOfFirst = connections.positionOf(first);
+		int positionOfSecond = connections.positionOf(second);
+		int positionOfThird = connections.positionOf(third);
+		
+		assertThat(positionOfFirst, is(0));
+		assertThat(positionOfSecond, is(1));
+		assertThat(positionOfThird, is(2));
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void failWhenConnectionIsNotIncluded() {
+		Connection connection = connection().build();
+		
+		connections().positionOf(connection );
+	}
 
 	private Time someTime() {
 		return someTime;
