@@ -5,13 +5,10 @@ import static java.util.Comparator.comparing;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import edu.kit.ifv.mobitopp.network.Node;
@@ -20,13 +17,13 @@ public abstract class BaseStation implements Station {
 
 	private final int id;
 	private final Set<Stop> stops;
-	private final Set<Node> nodes;
+	private final List<Node> nodes;
 
 	public BaseStation(int id, Collection<Node> nodes) {
 		super();
 		this.id = id;
 		stops = new TreeSet<>(comparing(Stop::id));
-		this.nodes = new HashSet<>(nodes);
+		this.nodes = new ArrayList<>(nodes);
 	}
 
 	@Override
@@ -35,8 +32,10 @@ public abstract class BaseStation implements Station {
 	}
 
 	@Override
-	public List<Node> nodes() {
-		return new ArrayList<>(nodes);
+	public void forEachNode(Consumer<Node> consumer) {
+		for (Node node : nodes) {
+			consumer.accept(node);
+		}
 	}
 
 	@Override
@@ -59,17 +58,6 @@ public abstract class BaseStation implements Station {
 	@Override
 	public void forEach(Consumer<Stop> action) {
 		stops.forEach(action);
-	}
-
-	@Override
-	public <T> List<T> toEachOf(Station end, BiFunction<Stop, Stop, Optional<T>> function) {
-		List<T> results = new ArrayList<>();
-		for (Stop origin : stops) {
-			for (Stop destination : end.stops()) {
-				function.apply(origin, destination).ifPresent(results::add);
-			}
-		}
-		return results;
 	}
 
 }

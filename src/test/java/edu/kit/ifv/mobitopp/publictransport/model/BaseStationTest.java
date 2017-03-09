@@ -1,151 +1,85 @@
 package edu.kit.ifv.mobitopp.publictransport.model;
 
-import static java.util.Collections.emptyList;
-import static java.util.Optional.of;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.empty;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
+import static edu.kit.ifv.mobitopp.publictransport.model.Data.anotherStop;
+import static edu.kit.ifv.mobitopp.publictransport.model.Data.someStop;
+import static java.util.Arrays.asList;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.function.BiFunction;
+import java.util.Collection;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.kit.ifv.mobitopp.network.Node;
+
 public class BaseStationTest {
 
-	private BiFunction<Stop, Stop, Optional<Object>> function;
+	private static final int id = 0;
+	
+	private Collection<Node> nodes;
+	private Node someNode;
+	private Node anotherNode;
+	private Station station;
 	private Stop someStop;
 	private Stop anotherStop;
-	private Stop otherStop;
-	private Stop yetAnotherStop;
-	private Station station;
-	private Station otherStation;
-	private Object result1;
-	private Object result2;
-	private Object result3;
-	private Object result4;
 
-	@SuppressWarnings("unchecked")
 	@Before
 	public void initialise() throws Exception {
-		someStop = Data.someStop();
-		anotherStop = Data.anotherStop();
-		otherStop = Data.otherStop();
-		yetAnotherStop = Data.yetAnotherStop();
-		station = someStation();
-		otherStation = anotherStation();
-		function = mock(BiFunction.class);
-		result1 = new Object();
-		result2 = new Object();
-		result3 = new Object();
-		result4 = new Object();
-	}
-
-	@Test
-	public void doesNotCallFunctionWhenStationContainsOneStopButOtherStationDoesNot()
-			throws Exception {
-		station.add(someStop);
-
-		callToEachOf();
-
-		verifyNoFunctionCalls();
-	}
-
-	@Test
-	public void doesNotCallFunctionWhenStationDoesNotContainStopsButOtherStationContainsOneStop()
-			throws Exception {
-		otherStation.add(someStop);
-
-		callToEachOf();
-
-		verifyNoFunctionCalls();
-	}
-
-	@Test
-	public void doesNotCallFunctionWhenStationsDoNotContainStops() throws Exception {
-		callToEachOf();
-
-		verifyNoFunctionCalls();
-	}
-
-	private void verifyNoFunctionCalls() {
-		verifyZeroInteractions(function);
-	}
-
-	@Test
-	public void callsFunctionWhenBothStationsContainSeveralStopsButEmptyOptionalWillBeReturned() {
-		linkSeveralStopsAndStations();
-
-		when(function.apply(any(), any())).thenReturn(Optional.empty());
-
-		List<Object> tours = callToEachOf();
-
-		assertThat(tours, is(empty()));
-		verifySeveralFunctionCalls();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Test
-	public void callsFunctionWhenBothStationsContainSeveralStopsAndFunctionReturnsAResultForAll() {
-		linkSeveralStopsAndStations();
-
-		when(function.apply(any(), any())).thenReturn(of(result1), of(result2), of(result3),
-				of(result4));
-
-		List<Object> tours = callToEachOf();
-
-		assertThat(tours, contains(result1, result2, result3, result4));
-		verifySeveralFunctionCalls();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Test
-	public void callsFunctionWhenBothStationsContainSeveralStopsAndFunctionReturnsAResultForSome() {
-		linkSeveralStopsAndStations();
-
-		when(function.apply(any(), any())).thenReturn(of(result1), Optional.empty(), of(result2),
-				Optional.empty());
-
-		List<Object> tours = callToEachOf();
-
-		assertThat(tours, contains(result1, result2));
-		verifySeveralFunctionCalls();
-	}
-
-	private void linkSeveralStopsAndStations() {
+		someNode = mock(Node.class);
+		anotherNode = mock(Node.class);
+		nodes = asList(someNode, anotherNode);
+		station = newStation();
+		someStop = someStop();
+		anotherStop = anotherStop();
 		station.add(someStop);
 		station.add(anotherStop);
-		otherStation.add(otherStop);
-		otherStation.add(yetAnotherStop);
+	}
+	
+	@Test
+	public void callsConsumerForEachStop() {
+		Consumer<Stop> consumer = consumer();
+		
+		station.forEach(consumer);
+		
+		verify(consumer).accept(someStop);
+		verify(consumer).accept(anotherStop);
 	}
 
-	private void verifySeveralFunctionCalls() {
-		verify(function, times(4)).apply(any(), any());
+	@Test
+	public void callsConsumerForEachNode() {
+		Consumer<Node> consumer = consumer();
+
+		station.forEachNode(consumer);
+
+		verify(consumer).accept(someNode);
+		verify(consumer).accept(anotherNode);
 	}
 
-	private List<Object> callToEachOf() {
-		return station.toEachOf(otherStation, function);
+	@Test
+	public void callsBiConsumerForEachNode() {
+		BiConsumer<Node, Station> consumer = biConsumer();
+
+		station.forEachNode(consumer);
+
+		verify(consumer).accept(someNode, station);
+		verify(consumer).accept(anotherNode, station);
 	}
 
-	private static Station someStation() {
-		return newStation(0);
+	@SuppressWarnings("unchecked")
+	private <T> T consumer() {
+		return (T) mock(Consumer.class);
 	}
 
-	private static Station anotherStation() {
-		return newStation(1);
+	@SuppressWarnings("unchecked")
+	private BiConsumer<Node, Station> biConsumer() {
+		return (BiConsumer<Node, Station>) mock(BiConsumer.class);
 	}
 
-	private static BaseStation newStation(int id) {
-		return new BaseStation(id, emptyList()) {
+	private BaseStation newStation() {
+		return new BaseStation(id, nodes) {
 
 			@Override
 			public RelativeTime minimumChangeTime(int id) {
