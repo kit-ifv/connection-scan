@@ -1,5 +1,6 @@
 package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 
+import static com.github.npathai.hamcrestopt.OptionalMatchers.hasValue;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.oneMinuteLater;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.someTime;
 import static edu.kit.ifv.mobitopp.publictransport.model.StopBuilder.stop;
@@ -11,10 +12,12 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import org.junit.Test;
 
+import edu.kit.ifv.mobitopp.publictransport.model.Data;
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
@@ -24,6 +27,7 @@ public class SingleStartTest {
 	private static final RelativeTime changeTime = RelativeTime.of(1, MINUTES);
 	private static final RelativeTime defaultChangeTime = RelativeTime.of(0, MINUTES);
 	private static final int onlyStartStop = 1;
+	private static final int startAndEnd = 2;
 
 	@Test
 	public void returnsInfiniteWhenTimeHasNotBeenSet() throws Exception {
@@ -164,6 +168,17 @@ public class SingleStartTest {
 
 		verify(consumer).accept(someStop(), someTime());
 	}
+	
+	@Test
+	public void endIsStopWithEarliestArrival() {
+		Stop start = someStop();
+		Stop end = anotherStop();
+		Times times = times(start, end, someTime(), startAndEnd);
+		
+		Optional<Stop> earliestArrival = times.stopWithEarliestArrival();
+		
+		assertThat(earliestArrival , hasValue(end));
+	}
 
 	private Stop someStop() {
 		return someStop(defaultChangeTime);
@@ -187,6 +202,10 @@ public class SingleStartTest {
 	}
 
 	private Times times(Stop start, Time departure, int numberOfStops) {
-		return SingleStart.from(start, departure, numberOfStops);
+		Stop dummyEnd = Data.otherStop();
+		return times(start, dummyEnd , departure, numberOfStops);
+	}
+	private Times times(Stop start, Stop end, Time departure, int numberOfStops) {
+		return SingleStart.from(start, end, departure, numberOfStops);
 	}
 }

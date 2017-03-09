@@ -245,7 +245,7 @@ public class ConnectionScanTest {
 	private  ConnectionScan scan(Collection<Stop> stops, ConnectionSweeper sweeper) {
 		return new ConnectionScan(stops, sweeper) {
 			@Override
-			Arrival newArrival(StopPaths fromStarts, Time atTime) {
+			Arrival newArrival(StopPaths fromStarts, StopPaths toEnds, Time atTime) {
 				return arrival;
 			}
 		};

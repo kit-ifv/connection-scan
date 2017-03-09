@@ -1,14 +1,11 @@
 package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
@@ -53,29 +50,6 @@ public class DefaultStopPaths implements StopPaths {
 			return stopToPath.get(stop);
 		}
 		throw new IllegalArgumentException("Stop is not known: " + stop);
-	}
-
-	@Override
-	public Optional<Stop> stopWithEarliestArrival(Times times) {
-		if (stops.isEmpty()) {
-			return empty();
-		}
-		return earliestStop(times);
-	}
-
-	private Optional<Stop> earliestStop(Times times) {
-		Stop stop = null;
-		Time currentArrival = null;
-		for (StopPath stopDistance : stopPaths) {
-			Stop current = stopDistance.stop();
-			Time currentTime = times.get(current);
-			Time includingFootpath = stopDistance.arrivalTimeStartingAt(currentTime);
-			if (null == currentArrival || includingFootpath.isBefore(currentArrival)) {
-				stop = current;
-				currentArrival = currentTime;
-			}
-		}
-		return ofNullable(stop);
 	}
 
 	@Override

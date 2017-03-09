@@ -1,5 +1,8 @@
 package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 
+import static com.github.npathai.hamcrestopt.OptionalMatchers.hasValue;
+import static com.github.npathai.hamcrestopt.OptionalMatchers.isEmpty;
+import static com.github.npathai.hamcrestopt.OptionalMatchers.isPresent;
 import static edu.kit.ifv.mobitopp.publictransport.model.ConnectionBuilder.connection;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.fourMinutesLater;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.oneMinuteLater;
@@ -8,16 +11,13 @@ import static edu.kit.ifv.mobitopp.publictransport.model.Data.threeMinutesLater;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.twoMinutesLater;
 import static edu.kit.ifv.mobitopp.publictransport.model.JourneyBuilder.journey;
 import static edu.kit.ifv.mobitopp.publictransport.model.StopBuilder.stop;
-import static com.github.npathai.hamcrestopt.OptionalMatchers.hasValue;
-import static com.github.npathai.hamcrestopt.OptionalMatchers.isEmpty;
-import static com.github.npathai.hamcrestopt.OptionalMatchers.isPresent;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.of;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -46,6 +46,7 @@ public class ScannedArrivalTest {
 	private Stop stop2;
 	private Stop stop3;
 	private Stop otherStop;
+	private Stop dummyEnd;
 
 	@Before
 	public void initialise() throws Exception {
@@ -53,6 +54,7 @@ public class ScannedArrivalTest {
 		stop2 = stop().withId(1).withName("stop 2").build();
 		stop3 = stop().withId(2).withName("stop 3").with(anotherLocation()).build();
 		otherStop = stop().withId(2).withName("other stop").build();
+		dummyEnd = stop().withId(3).withName("dummy").build();
 	}
 
 	@Test
@@ -580,8 +582,8 @@ public class ScannedArrivalTest {
 		StopPaths start = mock(StopPaths.class);
 		StopPaths reachableEnd = mock(StopPaths.class);
 		when(start.stops()).thenReturn(startStops);
-		when(reachableEnd.stopWithEarliestArrival(times)).thenReturn(of(endStop));
 		when(times.get(endStop)).thenReturn(oneMinuteLater());
+		when(times.stopWithEarliestArrival()).thenReturn(of(endStop));
 		Time scanTime = someTime();
 		when(usedConnections.buildUpConnection(start, endStop, scanTime))
 				.thenReturn(asList(someConnection));
@@ -594,7 +596,7 @@ public class ScannedArrivalTest {
 		PublicTransportRoute expectedTour = new ScannedRoute(stop1, endStop, scanTime, oneMinuteLater(),
 				asList(someConnection()));
 		assertThat(tour, hasValue(expectedTour));
-		verify(reachableEnd).stopWithEarliestArrival(times);
+		verify(times).stopWithEarliestArrival();
 		verify(times).get(endStop);
 		verify(usedConnections).buildUpConnection(start, endStop, scanTime);
 	}
@@ -608,10 +610,10 @@ public class ScannedArrivalTest {
 		Stop startStop = stop2;
 		Stop endStop = stop1;
 		List<Stop> startStops = asList(startStop);
-		when(end.stopWithEarliestArrival(times)).thenReturn(of(endStop));
 		when(start.stops()).thenReturn(startStops);
 		Time scanTime = someTime();
 		when(times.get(any())).thenReturn(scanTime);
+		when(times.stopWithEarliestArrival()).thenReturn(of(endStop));
 		when(usedConnections.buildUpConnection(start, endStop, scanTime)).thenReturn(emptyList());
 		Arrival arrival = newScannedArrival(times, usedConnections);
 
@@ -619,6 +621,7 @@ public class ScannedArrivalTest {
 
 		assertThat(tour, isEmpty());
 		verify(usedConnections).buildUpConnection(start, endStop, scanTime);
+		verify(times).stopWithEarliestArrival();
 	}
 
 	private Connection toEndStop(RelativeTime changeTime) {
@@ -661,7 +664,7 @@ public class ScannedArrivalTest {
 	}
 
 	private Arrival newScannedArrival(Stop start) {
-		Times times = SingleStart.from(start, someTime(), maximumNumberOfStops);
+		Times times = SingleStart.from(start, dummyEnd, someTime(), maximumNumberOfStops);
 		UsedConnections usedConnections = new ArrivalConnections(maximumNumberOfStops);
 		return ScannedArrival.from(times, usedConnections);
 	}

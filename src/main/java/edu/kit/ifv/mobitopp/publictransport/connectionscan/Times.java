@@ -1,5 +1,6 @@
 package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
@@ -14,5 +15,7 @@ interface Times {
 	Time getConsideringMinimumChangeTime(Stop stop);
 
 	Time get(Stop stop);
+
+	Optional<Stop> stopWithEarliestArrival();
 
 }
