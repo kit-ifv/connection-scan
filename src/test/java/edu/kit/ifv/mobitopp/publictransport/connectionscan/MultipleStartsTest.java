@@ -3,8 +3,6 @@ package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 import static com.github.npathai.hamcrestopt.OptionalMatchers.hasValue;
 import static com.github.npathai.hamcrestopt.OptionalMatchers.isEmpty;
 import static com.github.npathai.hamcrestopt.OptionalMatchers.isPresent;
-import static edu.kit.ifv.mobitopp.publictransport.model.Data.anotherStop;
-import static edu.kit.ifv.mobitopp.publictransport.model.Data.someStop;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.someTime;
 import static edu.kit.ifv.mobitopp.publictransport.model.StopBuilder.stop;
 import static edu.kit.ifv.mobitopp.publictransport.model.Time.infinite;
@@ -36,6 +34,7 @@ public class MultipleStartsTest {
 	private static final int onlyStartStops = 2;
 	private static final int additionalStops = 4;
 	private static final RelativeTime changeTime = RelativeTime.of(1, MINUTES);
+	private static final RelativeTime noMinutes = RelativeTime.ZERO;
 	private static final RelativeTime oneMinute = RelativeTime.of(1, MINUTES);
 	private static final RelativeTime twoMinutes = RelativeTime.of(2, MINUTES);
 	
@@ -213,24 +212,24 @@ public class MultipleStartsTest {
 	}
 
 	private RelativeTime shortDuration() {
-		return RelativeTime.of(1, MINUTES);
+		return oneMinute;
 	}
 
 	private Stop nearStop() {
-		return someStop();
+		return targetStop();
 	}
 
 	private RelativeTime longDuration() {
-		return RelativeTime.of(2, MINUTES);
+		return twoMinutes;
 	}
 
 	private Stop farStop() {
-		return anotherStop();
+		return anotherTargetStop();
 	}
 
 	private List<StopPath> noWalkTime() {
-		return asList(pathTo(startStop(), RelativeTime.ZERO),
-				pathTo(anotherStartStop(), RelativeTime.ZERO));
+		return asList(pathTo(startStop(), noMinutes),
+				pathTo(anotherStartStop(), noMinutes));
 	}
 
 	private List<StopPath> someStartPaths() {
