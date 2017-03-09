@@ -12,7 +12,6 @@ import java.util.stream.Stream;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Connections;
-import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
 public class PreparedConnections implements ConnectionSweeper {
@@ -82,35 +81,17 @@ public class PreparedConnections implements ConnectionSweeper {
 	}
 
 	@Override
-	public Optional<PublicTransportRoute> sweep(SweeperData data, Stop start, Stop toEnd, Time time) {
-		int fromStartIndex = lookup.apply(time);
-		scanConnections(fromStartIndex, toEnd, data);
-		return data.createRoute(start, toEnd, time);
+	public Optional<PublicTransportRoute> sweep(SweeperData data) {
+		Time atTime = data.atTime();
+		int fromStartIndex = lookup.apply(atTime);
+		scanConnections(fromStartIndex, data);
+		return data.createRoute();
 	}
 
-	private void scanConnections(int startIndex, Stop toEnd, SweeperData data) {
+	private void scanConnections(int startIndex, SweeperData data) {
 		for (int index = startIndex; index < connections.size(); index++) {
 			Connection connection = connections.get(index);
-			if (data.isTooLate(connection, toEnd)) {
-				break;
-			}
-			data.updateArrival(connection);
-		}
-	}
-
-	@Override
-	public Optional<PublicTransportRoute> sweep(
-			SweeperData data, StopPaths startStops, StopPaths reachableEnds, Time time) {
-		int fromIndex = lookup.apply(time);
-		List<Stop> tillOneEnd = reachableEnds.stops();
-		scanConnections(fromIndex, tillOneEnd, data);
-		return data.createRoute(startStops, reachableEnds, time);
-	}
-
-	private void scanConnections(int startIndex, List<Stop> endStops, SweeperData data) {
-		for (int index = startIndex; index < connections.size(); index++) {
-			Connection connection = connections.get(index);
-			if (shouldCheck(index) && data.isTooLateAtOne(connection, endStops)) {
+			if (shouldCheck(index) && data.isTooLate(connection)) {
 				break;
 			}
 			data.updateArrival(connection);

@@ -13,7 +13,6 @@ import static java.util.Optional.of;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -69,7 +68,7 @@ public class ConnectionScanTest {
 		PublicTransportRoute route = mock(PublicTransportRoute.class);
 		Time searchTime = someTime();
 		when(connections.isTooLate(searchTime)).thenReturn(false);
-		when(connections.sweep(any(), eq(start), eq(end), eq(searchTime))).thenReturn(of(route));
+		when(connections.sweep(any())).thenReturn(of(route));
 
 		ConnectionScan connectionScan = scan(stops, connections);
 
@@ -78,7 +77,7 @@ public class ConnectionScanTest {
 		assertThat(startToStop, isPresent());
 		assertThat(startToStop, hasValue(equalTo(route)));
 		verify(connections).isTooLate(searchTime);
-		verify(connections).sweep(any(), eq(start), eq(end), eq(searchTime));
+		verify(connections).sweep(any());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -132,7 +131,7 @@ public class ConnectionScanTest {
 		when(starts.stops()).thenReturn(startStops);
 		when(ends.stops()).thenReturn(endStops);
 		when(vehicleRoute.addFootpaths(starts, ends)).thenReturn(tourIncludingFootpath);
-		when(connections.sweep(sweeperData, starts, ends, time)).thenReturn(of(vehicleRoute));
+		when(connections.sweep(sweeperData)).thenReturn(of(vehicleRoute));
 
 		ConnectionScan scan = scan(stops, connections);
 
@@ -140,7 +139,7 @@ public class ConnectionScanTest {
 
 		assertThat(startToEnd, isPresent());
 		assertThat(startToEnd, hasValue(tourIncludingFootpath));
-		verify(connections).sweep(sweeperData, starts, ends, time);
+		verify(connections).sweep(sweeperData);
 		verify(vehicleRoute).addFootpaths(starts, ends);
 	}
 

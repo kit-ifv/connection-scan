@@ -44,7 +44,7 @@ public class ConnectionScan implements RouteSearch {
 			return Optional.empty();
 		}
 		SweeperData data = newSweeperData(fromStart, toEnd, atTime);
-		return connections.sweep(data, fromStart, toEnd, atTime);
+		return connections.sweep(data);
 	}
 
 	private boolean scanNotNeeded(Stop start, Stop end, Time time) {
@@ -56,7 +56,7 @@ public class ConnectionScan implements RouteSearch {
 	}
 	
 	private SweeperData newSweeperData(Stop fromStart, Stop toEnd, Time atTime) {
-		return DefaultSweeperData.from(fromStart, toEnd, atTime, arrivalSize());
+		return SingleSweeperData.from(fromStart, toEnd, atTime, arrivalSize());
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class ConnectionScan implements RouteSearch {
 			return Optional.empty();
 		}
 		SweeperData data = newSweeperData(fromStarts, toEnds, atTime);
-		Optional<PublicTransportRoute> found = connections.sweep(data, fromStarts, toEnds, atTime);
+		Optional<PublicTransportRoute> found = connections.sweep(data);
 		return found.map(tour -> tour.addFootpaths(fromStarts, toEnds));
 	}
 
@@ -84,7 +84,7 @@ public class ConnectionScan implements RouteSearch {
 	}
 
 	SweeperData newSweeperData(StopPaths fromStarts, StopPaths toEnds, Time atTime) {
-		return DefaultSweeperData.from(fromStarts, toEnds, atTime, arrivalSize());
+		return MultipleSweeperData.from(fromStarts, toEnds, atTime, arrivalSize());
 	}
 	
 	private int arrivalSize() {
