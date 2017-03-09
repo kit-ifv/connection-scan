@@ -9,7 +9,7 @@ import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-class SingleSweeperData extends BaseSweeperData implements SweeperData {
+class SingleSweeperData extends BaseSweeperData {
 
 	private final Stop start;
 	private final Stop end;
