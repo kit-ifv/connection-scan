@@ -9,29 +9,34 @@ import edu.kit.ifv.mobitopp.publictransport.model.Time;
 class SingleStart extends BasicTimes implements Times {
 
 	private final Stop start;
-	private final Time departure;
+	private final Time startTime;
 	private final Stop end;
 
-	private SingleStart(Stop start, Stop end, Time departure, int numberOfStops) {
+	private SingleStart(Stop start, Stop end, Time startTime, int numberOfStops) {
 		super(numberOfStops);
 		this.start = start;
 		this.end = end;
-		this.departure = departure;
+		this.startTime = startTime;
 		initialise();
 	}
 
 	static Times from(Stop start, Stop end, Time departure, int numberOfStops) {
 		return new SingleStart(start, end, departure, numberOfStops);
 	}
+	
+	@Override
+	public Time startTime() {
+		return startTime;
+	}
 
 	@Override
 	protected void initialiseStart() {
-		set(start, departure);
+		set(start, startTime);
 	}
 
 	@Override
 	public void initialise(BiConsumer<Stop, Time> consumer) {
-		consumer.accept(start, departure);
+		consumer.accept(start, startTime);
 	}
 
 	@Override
@@ -42,6 +47,11 @@ class SingleStart extends BasicTimes implements Times {
 	@Override
 	public Optional<Stop> stopWithEarliestArrival() {
 		return Optional.of(end);
+	}
+	
+	@Override
+	public boolean isAfterArrivalAtEnd(Time departure) {
+		return isTooLateAt(departure, end);
 	}
 
 }

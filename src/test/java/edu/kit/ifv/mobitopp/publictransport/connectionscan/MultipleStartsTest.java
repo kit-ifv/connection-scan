@@ -11,9 +11,12 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
@@ -203,6 +206,28 @@ public class MultipleStartsTest {
 		assertThat(stop, isEmpty());
 	}
 	
+
+	@Test
+	public void isAfterArrivalAtOneOfSeveralEndStops() throws Exception {
+		StopPaths starts = mock(StopPaths.class);
+		StopPaths ends = mock(StopPaths.class);
+		when(starts.stopPaths()).thenReturn(emptyList());
+		when(ends.stopPaths()).thenReturn(asList(shortDistance(), longDistance()));
+		when(ends.stops()).thenReturn(asList(nearStop(), farStop()));
+		Time atTime = someTime();
+		Times times = timesFromPaths(starts, ends, atTime, additionalStops);
+		Time beforeArrival = someTime();
+		Time arrival = oneMinuteLater();
+		Time afterArrival = twoMinutesLater();
+		
+		times.set(nearStop(), arrival);
+		times.set(farStop(), afterArrival);
+		
+		assertFalse(times.isAfterArrivalAtEnd(beforeArrival));
+		assertFalse(times.isAfterArrivalAtEnd(arrival));
+		assertTrue(times.isAfterArrivalAtEnd(afterArrival));
+	}
+
 	private StopPath shortDistance() {
 		return new StopPath(nearStop(), shortDuration());
 	}
@@ -257,11 +282,11 @@ public class MultipleStartsTest {
 	}
 
 	private StopBuilder buildTargetStop() {
-		return stop().withId(2).withName("no start stop");
+		return stop().withId(2).withName("target stop");
 	}
 
 	private Stop anotherTargetStop() {
-		return stop().withId(3).withName("another no start stop").build();
+		return stop().withId(3).withName("another target stop").build();
 	}
 
 	private static Time oneMinuteLater() {
@@ -283,7 +308,7 @@ public class MultipleStartsTest {
 
 	private Times timesFromPaths(List<StopPath> fromStarts, Time departure, int numberOfStops) {
 		StopPaths starts = DefaultStopPaths.from(fromStarts);
-		return MultipleStarts.from(starts , ends, departure, numberOfStops);
+		return MultipleStarts.from(starts, ends, departure, numberOfStops);
 	}
 
 	private Times timesFromPaths(

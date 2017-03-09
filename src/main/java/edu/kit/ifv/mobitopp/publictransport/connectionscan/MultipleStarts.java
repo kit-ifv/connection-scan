@@ -12,33 +12,38 @@ import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
 class MultipleStarts extends BasicTimes implements Times {
 
-	private final Time departure;
+	private final Time startTime;
 	private final List<StopPath> startPaths;
-	private final List<StopPath> endPaths;
+	private final StopPaths toEnds;
 
-	private MultipleStarts(List<StopPath> startPaths, List<StopPath> endPaths, Time departure, int numberOfStops) {
+	private MultipleStarts(List<StopPath> startPaths, StopPaths toEnds, Time startTime, int numberOfStops) {
 		super(numberOfStops);
 		this.startPaths = startPaths;
-		this.endPaths = endPaths;
-		this.departure = departure;
+		this.toEnds = toEnds;
+		this.startTime = startTime;
 		initialise();
 	}
 
-	static Times from(StopPaths fromStarts, StopPaths toEnds, Time departure, int numberOfStops) {
-		return new MultipleStarts(fromStarts.stopPaths(), toEnds.stopPaths(), departure, numberOfStops);
+	static Times from(StopPaths fromStarts, StopPaths toEnds, Time startTime, int numberOfStops) {
+		return new MultipleStarts(fromStarts.stopPaths(), toEnds, startTime, numberOfStops);
+	}
+
+	@Override
+	public Time startTime() {
+		return startTime;
 	}
 
 	@Override
 	protected void initialiseStart() {
 		for (StopPath pathToStop : startPaths) {
-			set(pathToStop.stop(), departure.add(pathToStop.duration()));
+			set(pathToStop.stop(), startTime.add(pathToStop.duration()));
 		}
 	}
 
 	@Override
 	public void initialise(BiConsumer<Stop, Time> consumer) {
 		for (StopPath pathToStop : startPaths) {
-			consumer.accept(pathToStop.stop(), departure.add(pathToStop.duration()));
+			consumer.accept(pathToStop.stop(), startTime.add(pathToStop.duration()));
 		}
 	}
 
@@ -56,7 +61,7 @@ class MultipleStarts extends BasicTimes implements Times {
 	public Optional<Stop> stopWithEarliestArrival() {
 		Stop stop = null;
 		Time currentArrival = null;
-		for (StopPath path : endPaths) {
+		for (StopPath path : toEnds.stopPaths()) {
 			Stop current = path.stop();
 			Time currentTime = get(current);
 			Time includingFootpath = path.arrivalTimeStartingAt(currentTime);
@@ -66,6 +71,16 @@ class MultipleStarts extends BasicTimes implements Times {
 			}
 		}
 		return ofNullable(stop);
+	}
+	
+	@Override
+	public boolean isAfterArrivalAtEnd(Time departure) {
+		for (Stop stop : toEnds.stops()) {
+			if (isTooLateAt(departure, stop)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

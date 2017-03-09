@@ -18,4 +18,8 @@ interface Times {
 
 	Optional<Stop> stopWithEarliestArrival();
 
+	Time startTime();
+
+	boolean isAfterArrivalAtEnd(Time departure);
+
 }

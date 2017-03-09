@@ -49,4 +49,9 @@ abstract class BasicTimes implements Times {
 		return times[internal];
 	}
 
+	protected boolean isTooLateAt(Time departure, Stop end) {
+		Time arrival = getConsideringMinimumChangeTime(end);
+		return arrival.isBefore(departure);
+	}
+
 }
