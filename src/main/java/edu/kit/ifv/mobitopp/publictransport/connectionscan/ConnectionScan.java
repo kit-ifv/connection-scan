@@ -44,7 +44,7 @@ public class ConnectionScan implements RouteSearch {
 			return Optional.empty();
 		}
 		SweeperData data = newSweeperData(fromStart, toEnd, atTime);
-		return connections.sweep(data);
+		return sweepOver(data);
 	}
 
 	private boolean scanNotNeeded(Stop start, Stop end, Time time) {
@@ -66,9 +66,12 @@ public class ConnectionScan implements RouteSearch {
 			return Optional.empty();
 		}
 		SweeperData data = newSweeperData(fromStarts, toEnds, atTime);
-		return connections.sweep(data);
+		return sweepOver(data);
 	}
 
+	private Optional<PublicTransportRoute> sweepOver(SweeperData data) {
+		return connections.sweep(data);
+	}
 
 	private boolean scanNotNeeded(StopPaths startStops, StopPaths endStops, Time time) {
 		return connections.isTooLate(time) || notAvailable(startStops, endStops);
