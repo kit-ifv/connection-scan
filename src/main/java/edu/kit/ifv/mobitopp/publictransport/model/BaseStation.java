@@ -4,7 +4,6 @@ import static java.util.Comparator.comparing;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -33,11 +32,6 @@ public abstract class BaseStation implements Station {
 	@Override
 	public void add(Stop newStop) {
 		stops.add(newStop);
-	}
-
-	@Override
-	public Collection<Stop> stops() {
-		return Collections.unmodifiableCollection(stops);
 	}
 
 	@Override
