@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import edu.kit.ifv.mobitopp.network.Node;
@@ -32,20 +31,6 @@ public abstract class BaseStation implements Station {
 	}
 
 	@Override
-	public void forEachNode(Consumer<Node> consumer) {
-		for (Node node : nodes) {
-			consumer.accept(node);
-		}
-	}
-
-	@Override
-	public void forEachNode(BiConsumer<Node, Station> consumer) {
-		for (Node node : nodes) {
-			consumer.accept(node, this);
-		}
-	}
-	
-	@Override
 	public void add(Stop newStop) {
 		stops.add(newStop);
 	}
@@ -58,6 +43,13 @@ public abstract class BaseStation implements Station {
 	@Override
 	public void forEach(Consumer<Stop> action) {
 		stops.forEach(action);
+	}
+
+	@Override
+	public void forEachNode(Consumer<Node> consumer) {
+		for (Node node : nodes) {
+			consumer.accept(node);
+		}
 	}
 
 }

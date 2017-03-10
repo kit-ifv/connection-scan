@@ -7,7 +7,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import java.util.Collection;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import org.junit.Before;
@@ -58,24 +57,9 @@ public class BaseStationTest {
 		verify(consumer).accept(anotherNode);
 	}
 
-	@Test
-	public void callsBiConsumerForEachNode() {
-		BiConsumer<Node, Station> consumer = biConsumer();
-
-		station.forEachNode(consumer);
-
-		verify(consumer).accept(someNode, station);
-		verify(consumer).accept(anotherNode, station);
-	}
-
 	@SuppressWarnings("unchecked")
 	private <T> T consumer() {
 		return (T) mock(Consumer.class);
-	}
-
-	@SuppressWarnings("unchecked")
-	private BiConsumer<Node, Station> biConsumer() {
-		return (BiConsumer<Node, Station>) mock(BiConsumer.class);
 	}
 
 	private BaseStation newStation() {

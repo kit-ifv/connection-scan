@@ -1,7 +1,6 @@
 package edu.kit.ifv.mobitopp.publictransport.model;
 
 import java.util.Collection;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import edu.kit.ifv.mobitopp.network.Node;
@@ -20,6 +19,4 @@ public interface Station {
 
 	void forEachNode(Consumer<Node> consumer);
 	
-	void forEachNode(BiConsumer<Node, Station> consumer);
-
 }
