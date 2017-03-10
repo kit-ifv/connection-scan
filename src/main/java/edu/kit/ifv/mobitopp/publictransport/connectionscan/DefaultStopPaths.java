@@ -63,36 +63,6 @@ public class DefaultStopPaths implements StopPaths {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((stopPaths == null) ? 0 : stopPaths.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		DefaultStopPaths other = (DefaultStopPaths) obj;
-		if (stopPaths == null) {
-			if (other.stopPaths != null) {
-				return false;
-			}
-		} else if (!stopPaths.equals(other.stopPaths)) {
-			return false;
-		}
-		return true;
-	}
-
-	@Override
 	public String toString() {
 		return "DefaultStopPaths [stopPaths=" + stopPaths + "]";
 	}
