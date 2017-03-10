@@ -18,7 +18,7 @@ public class RoutePoints {
 		super();
 		this.start = start;
 		this.end = end;
-		this.points = new ArrayList<>(points);
+		this.points = Collections.unmodifiableList(points);
 	}
 
 	public static RoutePoints from(Stop stop, Stop neighbour) {
