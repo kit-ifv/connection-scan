@@ -81,7 +81,6 @@ class MultipleSearchRequest extends BaseSearchRequest {
 	}
 	
 	private boolean isAfterArrivalAtEnd(Time departure) {
-		// TODO Fußweg berücksichtigen
 		for (Stop stop : toEnds.stops()) {
 			if (isAfterArrivalAt(departure, stop)) {
 				return true;
