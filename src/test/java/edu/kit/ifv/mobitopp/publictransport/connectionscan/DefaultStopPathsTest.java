@@ -22,6 +22,7 @@ import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class DefaultStopPathsTest {
 
@@ -53,6 +54,16 @@ public class DefaultStopPathsTest {
 
 		assertTrue(stops.isConnectionReachableAt(nearStop(), time, connection));
 		assertFalse(stops.isConnectionReachableAt(farStop(), time, connection));
+	}
+	
+	@Test
+	public void equalsAndHashCode() {
+		EqualsVerifier
+				.forClass(DefaultStopPaths.class)
+				.withPrefabValues(Stop.class, someStop(), anotherStop())
+				.withOnlyTheseFields("stopPaths")
+				.usingGetClass()
+				.verify();
 	}
 
 	private static StopPaths stops(List<StopPath> stops) {
