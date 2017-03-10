@@ -43,6 +43,10 @@ public class Data {
 		return new Point2D.Float(x, y);
 	}
 
+	public static Time oneMinuteEarlier() {
+		return someTime().minus(RelativeTime.of(1, MINUTES));
+	}
+
 	public static Time someTime() {
 		return time(0, 0);
 	}
