@@ -12,16 +12,16 @@ class SingleSweeperData extends BaseSweeperData {
 	private final Stop end;
 
 	private SingleSweeperData(
-			Stop start, Stop end, Times times, UsedConnections usedConnections, UsedJourneys usedJourneys) {
+			Stop start, Stop end, ArrivalTimes times, UsedConnections usedConnections, UsedJourneys usedJourneys) {
 		super(times, usedConnections, usedJourneys);
 		this.start = start;
 		this.end = end;
 	}
 
 	static SweeperData from(Stop start, Stop end, Time atTime, int numberOfStops) {
-		Times times = SingleStart.create(start, atTime, numberOfStops);
-		UsedConnections usedConnections = new ArrivalConnections(numberOfStops);
-		UsedJourneys usedJourneys = new ScannedJourneys();
+		ArrivalTimes times = SingleStart.create(start, atTime, numberOfStops);
+		UsedConnections usedConnections = new DefaultUsedConnections(numberOfStops);
+		UsedJourneys usedJourneys = new DefaultUsedJourneys();
 		BaseSweeperData data = new SingleSweeperData(start, end, times, usedConnections, usedJourneys);
 		times.initialise(data::initialise);
 		return data;

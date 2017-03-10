@@ -5,7 +5,7 @@ import java.util.function.BiConsumer;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-class SingleStart extends BasicTimes {
+class SingleStart extends BaseTimes {
 
 	private final Stop start;
 	private final Time startTime;
@@ -17,7 +17,7 @@ class SingleStart extends BasicTimes {
 		initialise();
 	}
 
-	static Times create(Stop start, Time departure, int numberOfStops) {
+	static ArrivalTimes create(Stop start, Time departure, int numberOfStops) {
 		return new SingleStart(start, departure, numberOfStops);
 	}
 	

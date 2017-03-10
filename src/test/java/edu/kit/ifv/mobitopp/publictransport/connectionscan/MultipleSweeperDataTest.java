@@ -18,13 +18,13 @@ import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
 public class MultipleSweeperDataTest {
 
-	private Times times;
+	private ArrivalTimes times;
 	private UsedConnections usedConnections;
 	private UsedJourneys usedJourneys;
 	
 	@Before
 	public void initialise() {
-		times = mock(Times.class);
+		times = mock(ArrivalTimes.class);
 		usedConnections = mock(UsedConnections.class);
 		usedJourneys = mock(UsedJourneys.class);
 	}

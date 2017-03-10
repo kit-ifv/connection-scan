@@ -5,7 +5,7 @@ import java.util.function.BiConsumer;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-interface Times {
+interface ArrivalTimes {
 
 	void initialise(BiConsumer<Stop, Time> consumer);
 

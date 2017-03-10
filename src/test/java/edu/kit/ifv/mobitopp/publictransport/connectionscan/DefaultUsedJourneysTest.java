@@ -10,13 +10,13 @@ import org.junit.Test;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Journey;
 
-public class ScannedJourneysTest {
+public class DefaultUsedJourneysTest {
 
 	@Test
 	public void returnsTrueIfJourneyWasUsed() throws Exception {
 		Journey journey = journey().build();
 
-		ScannedJourneys scannedJourneys = scannedJourneys();
+		DefaultUsedJourneys scannedJourneys = scannedJourneys();
 		scannedJourneys.use(journey);
 
 		assertThat(scannedJourneys, used(journey));
@@ -26,17 +26,17 @@ public class ScannedJourneysTest {
 	public void returnsFalseWhenJourneyWasNotUsed() throws Exception {
 		Journey journey =  journey().build();
 
-		ScannedJourneys scannedJourneys = scannedJourneys();
+		DefaultUsedJourneys scannedJourneys = scannedJourneys();
 
 		assertThat(scannedJourneys, notUsed(journey));
 	}
 
-	private ScannedJourneys scannedJourneys() {
-		return new ScannedJourneys();
+	private DefaultUsedJourneys scannedJourneys() {
+		return new DefaultUsedJourneys();
 	}
 
-	private static Matcher<ScannedJourneys> used(Journey journey) {
-		return new TypeSafeMatcher<ScannedJourneys>() {
+	private static Matcher<UsedJourneys> used(Journey journey) {
+		return new TypeSafeMatcher<UsedJourneys>() {
 
 			@Override
 			public void describeTo(Description description) {
@@ -45,20 +45,20 @@ public class ScannedJourneysTest {
 			}
 
 			@Override
-			protected boolean matchesSafely(ScannedJourneys journeys) {
+			protected boolean matchesSafely(UsedJourneys journeys) {
 				return journeys.used(journey);
 			}
 
 			@Override
-			protected void describeMismatchSafely(ScannedJourneys item, Description mismatchDescription) {
+			protected void describeMismatchSafely(UsedJourneys item, Description mismatchDescription) {
 				mismatchDescription.appendText("not used");
 				mismatchDescription.appendValue(journey);
 			}
 		};
 	}
 
-	private static Matcher<ScannedJourneys> notUsed(Journey journey) {
-		return new TypeSafeMatcher<ScannedJourneys>() {
+	private static Matcher<UsedJourneys> notUsed(Journey journey) {
+		return new TypeSafeMatcher<UsedJourneys>() {
 
 			@Override
 			public void describeTo(Description description) {
@@ -67,12 +67,12 @@ public class ScannedJourneysTest {
 			}
 
 			@Override
-			protected boolean matchesSafely(ScannedJourneys journeys) {
+			protected boolean matchesSafely(UsedJourneys journeys) {
 				return !journeys.used(journey);
 			}
 
 			@Override
-			protected void describeMismatchSafely(ScannedJourneys item, Description mismatchDescription) {
+			protected void describeMismatchSafely(UsedJourneys item, Description mismatchDescription) {
 				mismatchDescription.appendText("used");
 				mismatchDescription.appendValue(journey);
 			}

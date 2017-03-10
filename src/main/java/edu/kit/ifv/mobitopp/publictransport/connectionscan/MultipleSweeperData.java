@@ -17,21 +17,21 @@ class MultipleSweeperData extends BaseSweeperData {
 	private final StopPaths toEnds;
 	
 	private MultipleSweeperData(
-			StopPaths starts, StopPaths toEnds, Times times, UsedConnections usedConnections, UsedJourneys usedJourneys) {
+			StopPaths starts, StopPaths toEnds, ArrivalTimes times, UsedConnections usedConnections, UsedJourneys usedJourneys) {
 		super(times, usedConnections, usedJourneys);
 		this.fromStarts = starts;
 		this.toEnds = toEnds;
 	}
 
 	static SweeperData from(StopPaths fromStarts, StopPaths toEnds, Time atTime, int numberOfStops) {
-		Times times = MultipleStarts.create(fromStarts, atTime, numberOfStops);
-		UsedConnections usedConnections = new ArrivalConnections(numberOfStops);
-		UsedJourneys usedJourneys = new ScannedJourneys();
+		ArrivalTimes times = MultipleStarts.create(fromStarts, atTime, numberOfStops);
+		UsedConnections usedConnections = new DefaultUsedConnections(numberOfStops);
+		UsedJourneys usedJourneys = new DefaultUsedJourneys();
 		return from(fromStarts, toEnds, times, usedConnections, usedJourneys);
 	}
 
 	static SweeperData from(
-			StopPaths fromStarts, StopPaths toEnds, Times times, UsedConnections usedConnections,
+			StopPaths fromStarts, StopPaths toEnds, ArrivalTimes times, UsedConnections usedConnections,
 			UsedJourneys usedJourneys) {
 		BaseSweeperData data = new MultipleSweeperData(fromStarts, toEnds, times, usedConnections,
 				usedJourneys);

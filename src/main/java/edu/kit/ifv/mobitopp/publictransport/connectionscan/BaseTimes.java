@@ -3,11 +3,11 @@ package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-abstract class BasicTimes implements Times {
+abstract class BaseTimes implements ArrivalTimes {
 
 	private final Time[] times;
 
-	BasicTimes(int numberOfStops) {
+	BaseTimes(int numberOfStops) {
 		super();
 		times = new Time[numberOfStops];
 	}

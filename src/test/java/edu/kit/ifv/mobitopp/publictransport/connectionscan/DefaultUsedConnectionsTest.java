@@ -25,7 +25,7 @@ import org.junit.rules.ExpectedException;
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.ConnectionBuilder;
 
-public class ArrivalConnectionsTest {
+public class DefaultUsedConnectionsTest {
 
 	private static final int maximumNumberOfStops = 4;
 	@Rule
@@ -33,7 +33,7 @@ public class ArrivalConnectionsTest {
 
 	@Test
 	public void connectionsFromStartToEndWithOneAvailableConnection() throws Exception {
-		UsedConnections arrivals = new ArrivalConnections(maximumNumberOfStops);
+		UsedConnections arrivals = new DefaultUsedConnections(maximumNumberOfStops);
 		arrivals.update(anotherStop(), from1To2());
 
 		List<Connection> connections = arrivals.collectConnections(someStop(), anotherStop());
@@ -43,7 +43,7 @@ public class ArrivalConnectionsTest {
 
 	@Test
 	public void connectionsFromStartToEndWithMultipleAvailableConnections() throws Exception {
-		UsedConnections arrivals = new ArrivalConnections(maximumNumberOfStops);
+		UsedConnections arrivals = new DefaultUsedConnections(maximumNumberOfStops);
 		arrivals.update(anotherStop(), from1To2());
 		arrivals.update(otherStop(), from2To3());
 
@@ -54,7 +54,7 @@ public class ArrivalConnectionsTest {
 
 	@Test
 	public void connectionsFromStartToEndWithUnusedConnections() throws Exception {
-		UsedConnections arrivals = new ArrivalConnections(maximumNumberOfStops);
+		UsedConnections arrivals = new DefaultUsedConnections(maximumNumberOfStops);
 		arrivals.update(anotherStop(), from1To2());
 		arrivals.update(otherStop(), from2To3());
 		arrivals.update(yetAnotherStop(), from3To4());
@@ -70,7 +70,7 @@ public class ArrivalConnectionsTest {
 		when(start.isConnectionReachableAt(someStop(), someTime(), from1To2())).thenReturn(true);
 		when(start.isConnectionReachableAt(yetAnotherStop(), someTime(), from4To2())).thenReturn(false);
 		when(start.stops()).thenReturn(asList(someStop(), yetAnotherStop()));
-		UsedConnections arrivals = new ArrivalConnections(maximumNumberOfStops);
+		UsedConnections arrivals = new DefaultUsedConnections(maximumNumberOfStops);
 		arrivals.update(anotherStop(), from1To2());
 		arrivals.update(otherStop(), from2To3());
 
@@ -85,7 +85,7 @@ public class ArrivalConnectionsTest {
 		when(start.stops()).thenReturn(asList(yetAnotherStop(), someStop()));
 		when(start.isConnectionReachableAt(someStop(), someTime(), from1To2())).thenReturn(true);
 		when(start.isConnectionReachableAt(yetAnotherStop(), someTime(), from4To2())).thenReturn(false);
-		UsedConnections arrivals = new ArrivalConnections(maximumNumberOfStops);
+		UsedConnections arrivals = new DefaultUsedConnections(maximumNumberOfStops);
 		arrivals.update(anotherStop(), from1To2());
 		arrivals.update(otherStop(), from2To3());
 
@@ -100,7 +100,7 @@ public class ArrivalConnectionsTest {
 		when(start.stops()).thenReturn(asList(yetAnotherStop(), someStop()));
 		when(start.isConnectionReachableAt(yetAnotherStop(), someTime(), from4To1WithFootpath())).thenReturn(true);
 		when(start.isConnectionReachableAt(someStop(), someTime(), from1To2WithFootpath())).thenReturn(false);
-		UsedConnections arrivals = new ArrivalConnections(maximumNumberOfStops);
+		UsedConnections arrivals = new DefaultUsedConnections(maximumNumberOfStops);
 		arrivals.update(anotherStop(), from1To2WithFootpath());
 		arrivals.update(otherStop(), from2To3());
 		arrivals.update(someStop(), from4To1WithFootpath());
@@ -158,7 +158,7 @@ public class ArrivalConnectionsTest {
 	@Test
 	public void noConnectionAvailable() throws Exception {
 		int numberOfStops = 2;
-		UsedConnections arrivals = new ArrivalConnections(numberOfStops);
+		UsedConnections arrivals = new DefaultUsedConnections(numberOfStops);
 
 		expected.expect(StopNotReachable.class);
 		arrivals.collectConnections(someStop(), anotherStop());

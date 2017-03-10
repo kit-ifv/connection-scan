@@ -5,11 +5,11 @@ import java.util.Set;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Journey;
 
-class ScannedJourneys implements UsedJourneys {
+class DefaultUsedJourneys implements UsedJourneys {
 
 	private final Set<Journey> used;
 
-	public ScannedJourneys() {
+	public DefaultUsedJourneys() {
 		super();
 		used = new HashSet<>();
 	}

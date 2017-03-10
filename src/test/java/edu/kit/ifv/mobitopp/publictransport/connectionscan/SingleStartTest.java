@@ -27,7 +27,7 @@ public class SingleStartTest {
 
 	@Test
 	public void returnsInfiniteWhenTimeHasNotBeenSet() throws Exception {
-		Times times = times(onlyStartStop);
+		ArrivalTimes times = times(onlyStartStop);
 
 		Time time = times.getConsideringMinimumChangeTime(anotherStop());
 
@@ -36,7 +36,7 @@ public class SingleStartTest {
 
 	@Test
 	public void returnsSetTimeAfterTimeHasBeenSet() throws Exception {
-		Times times = times(onlyStartStop);
+		ArrivalTimes times = times(onlyStartStop);
 
 		Stop stop = someStop();
 		Time timeToSet = someTime();
@@ -54,7 +54,7 @@ public class SingleStartTest {
 		Time timeToSetForStop1 = oneMinuteLater();
 		int numberOfStops = 2;
 
-		Times times = times(numberOfStops);
+		ArrivalTimes times = times(numberOfStops);
 		times.set(stop0, timeToSetForStop0);
 		times.set(stop1, timeToSetForStop1);
 		Time timeForStop0 = times.getConsideringMinimumChangeTime(stop0);
@@ -68,7 +68,7 @@ public class SingleStartTest {
 	public void returnsInfiniteForStopsExceptStartStop() throws Exception {
 		Stop stop = anotherStop();
 
-		Times times = times(someStop(), someTime(), onlyStartStop);
+		ArrivalTimes times = times(someStop(), someTime(), onlyStartStop);
 		Time time = times.getConsideringMinimumChangeTime(stop);
 
 		assertThat(time, is(equalTo(infinite)));
@@ -79,7 +79,7 @@ public class SingleStartTest {
 		int tooHighIndex = 1;
 		Stop stop = stop().withId(tooHighIndex).build();
 
-		Times times = times(onlyStartStop);
+		ArrivalTimes times = times(onlyStartStop);
 		Time time = times.getConsideringMinimumChangeTime(stop);
 
 		assertThat(time, is(equalTo(Time.infinite)));
@@ -90,7 +90,7 @@ public class SingleStartTest {
 		int tooLowIndex = -1;
 		Stop stop = stop().withId(tooLowIndex).build();
 
-		Times times = times(onlyStartStop);
+		ArrivalTimes times = times(onlyStartStop);
 		Time time = times.getConsideringMinimumChangeTime(stop);
 
 		assertThat(time, is(equalTo(Time.infinite)));
@@ -100,7 +100,7 @@ public class SingleStartTest {
 	public void doesNotConsiderMinimumChangeTimeAtStartStop() throws Exception {
 		Stop start = someStop(changeTime);
 		Time timeAtStart = oneMinuteLater();
-		Times times = times(start, timeAtStart, 2);
+		ArrivalTimes times = times(start, timeAtStart, 2);
 		times.set(start, timeAtStart);
 
 		assertThat(times.getConsideringMinimumChangeTime(start), is(equalTo(timeAtStart)));
@@ -112,7 +112,7 @@ public class SingleStartTest {
 		Stop otherStop = anotherStop(changeTime);
 		Time timeAtStart = someTime();
 		Time timeAtOther = oneMinuteLater();
-		Times times = times(start, timeAtStart, 2);
+		ArrivalTimes times = times(start, timeAtStart, 2);
 		times.set(start, timeAtStart);
 		times.set(otherStop, timeAtOther);
 
@@ -125,7 +125,7 @@ public class SingleStartTest {
 	public void doesNotConsiderMinimumChangeTimeOnGetAtStartStop() throws Exception {
 		Stop start = someStop(changeTime);
 		Time timeAtStart = someTime();
-		Times times = times(start, timeAtStart, 2);
+		ArrivalTimes times = times(start, timeAtStart, 2);
 		times.set(start, timeAtStart);
 
 		assertThat(times.get(start), is(equalTo(timeAtStart)));
@@ -137,7 +137,7 @@ public class SingleStartTest {
 		Stop otherStop = anotherStop(changeTime);
 		Time timeAtStart = someTime();
 		Time timeAtOther = oneMinuteLater();
-		Times times = times(start, timeAtStart, 2);
+		ArrivalTimes times = times(start, timeAtStart, 2);
 		times.set(start, timeAtStart);
 		times.set(otherStop, timeAtOther);
 
@@ -147,7 +147,7 @@ public class SingleStartTest {
 	@Test
 	public void initialisesTimeAtStart() throws Exception {
 		Stop start = someStop();
-		Times times = times(start, someTime(), onlyStartStop);
+		ArrivalTimes times = times(start, someTime(), onlyStartStop);
 
 		Time time = times.get(someStop());
 
@@ -158,7 +158,7 @@ public class SingleStartTest {
 	@Test
 	public void initialisesOtherStops() throws Exception {
 		BiConsumer<Stop, Time> consumer = mock(BiConsumer.class);
-		Times times = times(someStop(), someTime(), onlyStartStop);
+		ArrivalTimes times = times(someStop(), someTime(), onlyStartStop);
 
 		times.initialise(consumer);
 
@@ -181,12 +181,12 @@ public class SingleStartTest {
 		return stop().withId(1).minimumChangeTime(minimumChangeTime).build();
 	}
 
-	private Times times(int numberOfStops) {
+	private ArrivalTimes times(int numberOfStops) {
 		Stop stop = stop().minimumChangeTime(defaultChangeTime).build();
 		return times(stop, someTime(), numberOfStops);
 	}
 
-	private Times times(Stop start, Time departure, int numberOfStops) {
+	private ArrivalTimes times(Stop start, Time departure, int numberOfStops) {
 		return SingleStart.create(start, departure, numberOfStops);
 	}
 }

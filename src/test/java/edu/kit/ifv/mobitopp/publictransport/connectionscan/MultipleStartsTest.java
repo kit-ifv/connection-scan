@@ -34,7 +34,7 @@ public class MultipleStartsTest {
 	@Test
 	public void initialisesTimeAtStart() throws Exception {
 		List<StopPath> starts = someStartPaths();
-		Times times = timesFromPaths(starts, someTime(), onlyStartStops);
+		ArrivalTimes times = timesFromPaths(starts, someTime(), onlyStartStops);
 
 		Time time = times.get(startStop());
 
@@ -45,7 +45,7 @@ public class MultipleStartsTest {
 	@Test
 	public void initialisesOtherStops() throws Exception {
 		BiConsumer<Stop, Time> consumer = mock(BiConsumer.class);
-		Times times = timesFromPaths(someStartPaths(), someTime(), onlyStartStops);
+		ArrivalTimes times = timesFromPaths(someStartPaths(), someTime(), onlyStartStops);
 
 		times.initialise(consumer);
 
@@ -55,7 +55,7 @@ public class MultipleStartsTest {
 
 	@Test
 	public void returnsInfiniteWhenTimeHasNotBeenSet() throws Exception {
-		Times times = times(onlyStartStops);
+		ArrivalTimes times = times(onlyStartStops);
 
 		Time time = times.getConsideringMinimumChangeTime(targetStop());
 
@@ -64,7 +64,7 @@ public class MultipleStartsTest {
 
 	@Test
 	public void returnsSetTimeAfterTimeHasBeenSet() throws Exception {
-		Times times = times(additionalStops);
+		ArrivalTimes times = times(additionalStops);
 
 		Stop stop = targetStop();
 		Time timeToSet = someTime();
@@ -82,7 +82,7 @@ public class MultipleStartsTest {
 		Time timeToSetForStop1 = oneMinuteLater();
 		int numberOfStops = additionalStops;
 
-		Times times = times(numberOfStops);
+		ArrivalTimes times = times(numberOfStops);
 		times.set(stop0, timeToSetForStop0);
 		times.set(stop1, timeToSetForStop1);
 		Time timeForStop0 = times.getConsideringMinimumChangeTime(stop0);
@@ -96,7 +96,7 @@ public class MultipleStartsTest {
 	public void returnsInfiniteForStopsExceptStartStop() throws Exception {
 		Stop stop = targetStop();
 
-		Times times = timesFromPaths(noWalkTime(), someTime(), onlyStartStops);
+		ArrivalTimes times = timesFromPaths(noWalkTime(), someTime(), onlyStartStops);
 		Time time = times.getConsideringMinimumChangeTime(stop);
 
 		assertThat(time, is(equalTo(infinite)));
@@ -107,7 +107,7 @@ public class MultipleStartsTest {
 		int tooHighIndex = 2;
 		Stop stop = buildTargetStop().withId(tooHighIndex).build();
 
-		Times times = times(onlyStartStops);
+		ArrivalTimes times = times(onlyStartStops);
 		Time time = times.getConsideringMinimumChangeTime(stop);
 
 		assertThat(time, is(equalTo(Time.infinite)));
@@ -118,7 +118,7 @@ public class MultipleStartsTest {
 		int tooLowIndex = -1;
 		Stop stop = stop().withId(tooLowIndex).build();
 
-		Times times = times(onlyStartStops);
+		ArrivalTimes times = times(onlyStartStops);
 		Time time = times.getConsideringMinimumChangeTime(stop);
 
 		assertThat(time, is(equalTo(Time.infinite)));
@@ -127,7 +127,7 @@ public class MultipleStartsTest {
 	@Test
 	public void doesNotConsiderMinimumChangeTimeAtStartStops() throws Exception {
 		Time timeAtStart = oneMinuteLater();
-		Times times = timesFromPaths(noWalkTime(), timeAtStart, onlyStartStops);
+		ArrivalTimes times = timesFromPaths(noWalkTime(), timeAtStart, onlyStartStops);
 		times.set(startStop(), timeAtStart);
 
 		assertThat(times.getConsideringMinimumChangeTime(startStop()), is(equalTo(timeAtStart)));
@@ -139,7 +139,7 @@ public class MultipleStartsTest {
 		Stop otherStop = targetStop(changeTime);
 		Time timeAtStart = someTime();
 		Time timeAtOther = oneMinuteLater();
-		Times times = timesFromPaths(noWalkTime(), timeAtStart, additionalStops);
+		ArrivalTimes times = timesFromPaths(noWalkTime(), timeAtStart, additionalStops);
 		times.set(otherStop, timeAtOther);
 
 		Time timeAtOtherIncludingChangeTime = oneMinuteLater().add(changeTime);
@@ -150,7 +150,7 @@ public class MultipleStartsTest {
 	@Test
 	public void doesNotConsiderMinimumChangeTimeOnGetWithStartStop() throws Exception {
 		Time timeAtStart = someTime();
-		Times times = timesFromPaths(noWalkTime(), timeAtStart, onlyStartStops);
+		ArrivalTimes times = timesFromPaths(noWalkTime(), timeAtStart, onlyStartStops);
 
 		assertThat(times.get(startStop()), is(equalTo(timeAtStart)));
 	}
@@ -160,7 +160,7 @@ public class MultipleStartsTest {
 		Stop otherStop = targetStop();
 		Time timeAtStart = someTime();
 		Time timeAtOther = oneMinuteLater();
-		Times times = timesFromPaths(noWalkTime(), timeAtStart, additionalStops);
+		ArrivalTimes times = timesFromPaths(noWalkTime(), timeAtStart, additionalStops);
 		times.set(otherStop, timeAtOther);
 
 		assertThat(times.get(otherStop), is(equalTo(timeAtOther)));
@@ -211,21 +211,21 @@ public class MultipleStartsTest {
 		return someTime().add(twoMinutes);
 	}
 
-	private Times times(int numberOfStops) {
+	private ArrivalTimes times(int numberOfStops) {
 		Time someTime = someTime();
 		return times(someTime, numberOfStops);
 	}
 
-	private Times times(Time departure, int numberOfStops) {
+	private ArrivalTimes times(Time departure, int numberOfStops) {
 		return timesFromPaths(someStartPaths(), departure, numberOfStops);
 	}
 
-	private Times timesFromPaths(List<StopPath> fromStarts, Time departure, int numberOfStops) {
+	private ArrivalTimes timesFromPaths(List<StopPath> fromStarts, Time departure, int numberOfStops) {
 		StopPaths starts = DefaultStopPaths.from(fromStarts);
 		return timesFromPaths(starts, departure, numberOfStops);
 	}
 
-	private Times timesFromPaths(
+	private ArrivalTimes timesFromPaths(
 			StopPaths starts, Time timeAtStart, int totalNumberOfStops) {
 		return MultipleStarts.create(starts, timeAtStart, totalNumberOfStops);
 	}

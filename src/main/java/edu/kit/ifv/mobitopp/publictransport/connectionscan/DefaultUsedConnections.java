@@ -9,11 +9,11 @@ import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-class ArrivalConnections implements UsedConnections {
+class DefaultUsedConnections implements UsedConnections {
 
 	private final Connection[] arrivals;
 
-	ArrivalConnections(int numberOfStops) {
+	DefaultUsedConnections(int numberOfStops) {
 		super();
 		arrivals = new Connection[numberOfStops];
 	}

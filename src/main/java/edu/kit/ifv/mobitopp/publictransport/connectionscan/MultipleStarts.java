@@ -7,7 +7,7 @@ import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-class MultipleStarts extends BasicTimes {
+class MultipleStarts extends BaseTimes {
 
 	private final Time startTime;
 	private final List<StopPath> startPaths;
@@ -19,7 +19,7 @@ class MultipleStarts extends BasicTimes {
 		initialise();
 	}
 
-	static Times create(StopPaths fromStarts, Time startTime, int numberOfStops) {
+	static ArrivalTimes create(StopPaths fromStarts, Time startTime, int numberOfStops) {
 		return new MultipleStarts(fromStarts.stopPaths(), startTime, numberOfStops);
 	}
 

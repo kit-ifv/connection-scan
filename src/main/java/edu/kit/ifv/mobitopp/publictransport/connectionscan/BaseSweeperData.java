@@ -14,11 +14,11 @@ abstract class BaseSweeperData implements SweeperData {
 
 	private static final int firstConnection = 0;
 	
-	private final Times times;
+	private final ArrivalTimes times;
 	private final UsedConnections usedConnections;
 	private final UsedJourneys usedJourneys;
 
-	BaseSweeperData(Times times, UsedConnections usedConnections, UsedJourneys usedJourneys) {
+	BaseSweeperData(ArrivalTimes times, UsedConnections usedConnections, UsedJourneys usedJourneys) {
 		super();
 		this.times = times;
 		this.usedConnections = usedConnections;
