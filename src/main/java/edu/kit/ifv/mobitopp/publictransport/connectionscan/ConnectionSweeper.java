@@ -6,7 +6,7 @@ import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
 interface ConnectionSweeper {
 
-	boolean allAreDepartedAt(Time time);
+	boolean areDepartedBefore(Time time);
 
 	Optional<PublicTransportRoute> sweep(SweeperData data);
 	

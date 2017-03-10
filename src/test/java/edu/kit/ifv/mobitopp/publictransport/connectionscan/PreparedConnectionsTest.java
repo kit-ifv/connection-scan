@@ -248,7 +248,7 @@ public class PreparedConnectionsTest {
 
 			@Override
 			protected boolean matchesSafely(PreparedConnections connections) {
-				return connections.allAreDepartedAt(time);
+				return connections.areDepartedBefore(time);
 			}
 		};
 	}
