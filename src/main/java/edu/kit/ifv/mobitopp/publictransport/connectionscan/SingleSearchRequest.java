@@ -6,30 +6,30 @@ import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-class SingleSweeperData extends BaseSweeperData {
+class SingleSearchRequest extends BaseSearchRequest {
 
 	private final Stop start;
 	private final Stop end;
 
-	private SingleSweeperData(
+	private SingleSearchRequest(
 			Stop start, Stop end, ArrivalTimes times, UsedConnections usedConnections, UsedJourneys usedJourneys) {
 		super(times, usedConnections, usedJourneys);
 		this.start = start;
 		this.end = end;
 	}
 
-	static SweeperData from(Stop start, Stop end, Time atTime, int numberOfStops) {
-		ArrivalTimes times = SingleStart.create(start, atTime, numberOfStops);
-		UsedConnections usedConnections = new DefaultUsedConnections(numberOfStops);
+	static PreparedSearchRequest from(Stop start, Stop end, Time atTime, int totalNumberOfStopsInNetwork) {
+		ArrivalTimes times = SingleStart.create(start, atTime, totalNumberOfStopsInNetwork);
+		UsedConnections usedConnections = new DefaultUsedConnections(totalNumberOfStopsInNetwork);
 		UsedJourneys usedJourneys = new DefaultUsedJourneys();
-		BaseSweeperData data = new SingleSweeperData(start, end, times, usedConnections, usedJourneys);
-		times.initialise(data::initialise);
-		return data;
+		BaseSearchRequest searchRequest = new SingleSearchRequest(start, end, times, usedConnections, usedJourneys);
+		times.initialise(searchRequest::initialise);
+		return searchRequest;
 	}
 
 	@Override
-	public boolean isAfterArrivalAtEnd(Connection connection) {
-		return isTooLateAt(connection.departure(), end);
+	public boolean departsAfterArrivalAtEnd(Connection connection) {
+		return isAfterArrivalAt(connection.departure(), end);
 	}
 
 	@Override

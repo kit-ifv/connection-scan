@@ -34,12 +34,12 @@ import edu.kit.ifv.mobitopp.publictransport.model.Time;
 public class ConnectionScanTest {
 
 	private ConnectionSweeper connections;
-	private SweeperData sweeperData;
+	private PreparedSearchRequest searchRequest;
 
 	@Before
 	public void initialise() throws Exception {
 		connections = mock(ConnectionSweeper.class);
-		sweeperData = mock(SweeperData.class);
+		searchRequest = mock(PreparedSearchRequest.class);
 	}
 
 	@Test
@@ -129,7 +129,7 @@ public class ConnectionScanTest {
 		PublicTransportRoute vehicleRoute = mock(PublicTransportRoute.class);
 		when(starts.stops()).thenReturn(startStops);
 		when(ends.stops()).thenReturn(endStops);
-		when(connections.sweep(sweeperData)).thenReturn(of(vehicleRoute));
+		when(connections.sweep(searchRequest)).thenReturn(of(vehicleRoute));
 
 		ConnectionScan scan = scan(stops, connections);
 
@@ -137,7 +137,7 @@ public class ConnectionScanTest {
 
 		assertThat(startToEnd, isPresent());
 		assertThat(startToEnd, hasValue(vehicleRoute));
-		verify(connections).sweep(sweeperData);
+		verify(connections).sweep(searchRequest);
 	}
 
 	@Test
@@ -241,8 +241,8 @@ public class ConnectionScanTest {
 	private  ConnectionScan scan(Collection<Stop> stops, ConnectionSweeper sweeper) {
 		return new ConnectionScan(stops, sweeper) {
 			@Override
-			SweeperData newSweeperData(StopPaths fromStarts, StopPaths toEnds, Time atTime) {
-				return sweeperData;
+			PreparedSearchRequest newSearchRequest(StopPaths fromStarts, StopPaths toEnds, Time atTime) {
+				return searchRequest;
 			}
 		};
 	}

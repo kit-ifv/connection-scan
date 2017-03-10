@@ -23,7 +23,7 @@ public class ConnectionScan implements RouteSearch {
 
 	public static RouteSearch create(Collection<Stop> stops, Connections connections) {
 		assertIdsOf(stops);
-		ConnectionSweeper prepareConnections = PreparedConnections.from(connections);
+		ConnectionSweeper prepareConnections = DefaultConnectionSweeper.from(connections);
 		return new ConnectionScan(stops, prepareConnections);
 	}
 
@@ -43,8 +43,8 @@ public class ConnectionScan implements RouteSearch {
 		if (scanNotNeeded(fromStart, toEnd, atTime)) {
 			return Optional.empty();
 		}
-		SweeperData data = newSweeperData(fromStart, toEnd, atTime);
-		return sweepOver(data);
+		PreparedSearchRequest searchRequest = newSweeperData(fromStart, toEnd, atTime);
+		return sweepOver(searchRequest);
 	}
 
 	private boolean scanNotNeeded(Stop start, Stop end, Time time) {
@@ -55,8 +55,8 @@ public class ConnectionScan implements RouteSearch {
 		return !stops.contains(fromStart) || !stops.contains(toEnd);
 	}
 	
-	private SweeperData newSweeperData(Stop fromStart, Stop toEnd, Time atTime) {
-		return SingleSweeperData.from(fromStart, toEnd, atTime, arrivalSize());
+	private PreparedSearchRequest newSweeperData(Stop fromStart, Stop toEnd, Time atTime) {
+		return SingleSearchRequest.from(fromStart, toEnd, atTime, arrivalSize());
 	}
 
 	@Override
@@ -65,12 +65,12 @@ public class ConnectionScan implements RouteSearch {
 		if (scanNotNeeded(fromStarts, toEnds, atTime)) {
 			return Optional.empty();
 		}
-		SweeperData data = newSweeperData(fromStarts, toEnds, atTime);
-		return sweepOver(data);
+		PreparedSearchRequest searchRequest = newSearchRequest(fromStarts, toEnds, atTime);
+		return sweepOver(searchRequest);
 	}
 
-	private Optional<PublicTransportRoute> sweepOver(SweeperData data) {
-		return connections.sweep(data);
+	private Optional<PublicTransportRoute> sweepOver(PreparedSearchRequest searchRequest) {
+		return connections.sweep(searchRequest);
 	}
 
 	private boolean scanNotNeeded(StopPaths startStops, StopPaths endStops, Time time) {
@@ -85,8 +85,8 @@ public class ConnectionScan implements RouteSearch {
 		return requested.stops().isEmpty() || !stops.containsAll(requested.stops());
 	}
 
-	SweeperData newSweeperData(StopPaths fromStarts, StopPaths toEnds, Time atTime) {
-		return MultipleSweeperData.from(fromStarts, toEnds, atTime, arrivalSize());
+	PreparedSearchRequest newSearchRequest(StopPaths fromStarts, StopPaths toEnds, Time atTime) {
+		return MultipleSearchRequest.from(fromStarts, toEnds, atTime, arrivalSize());
 	}
 	
 	private int arrivalSize() {

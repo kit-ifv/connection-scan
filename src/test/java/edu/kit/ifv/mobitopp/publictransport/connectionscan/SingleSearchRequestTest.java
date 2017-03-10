@@ -29,7 +29,7 @@ import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-public class SingleSweeperDataTest {
+public class SingleSearchRequestTest {
 
 	private static final int maximumNumberOfStops = 4;
 	private static final RelativeTime defaultTransferTime = RelativeTime.of(0, MINUTES);
@@ -51,11 +51,11 @@ public class SingleSweeperDataTest {
 	public void whenOneConnectionHasBeenUpdated() throws Exception {
 		Connection connection = someConnection();
 
-		SweeperData data = newScannedArrival(stop1, stop2, someTime());
+		PreparedSearchRequest searchRequest = newScannedArrival(stop1, stop2, someTime());
 
-		data.updateArrival(connection);
+		searchRequest.updateArrival(connection);
 
-		Optional<PublicTransportRoute> tour = data.createRoute();
+		Optional<PublicTransportRoute> tour = searchRequest.createRoute();
 
 		PublicTransportRoute expectedTour = new ScannedRoute(stop1, stop2, someTime(), oneMinuteLater(),
 				asList(connection));
@@ -77,12 +77,12 @@ public class SingleSweeperDataTest {
 		Connection connection1 = longConnection();
 		Connection connection2 = shortConnection();
 
-		SweeperData data = newScannedArrival(stop1, stop2, someTime());
+		PreparedSearchRequest searchRequest = newScannedArrival(stop1, stop2, someTime());
 
-		data.updateArrival(connection1);
-		data.updateArrival(connection2);
+		searchRequest.updateArrival(connection1);
+		searchRequest.updateArrival(connection2);
 
-		Optional<PublicTransportRoute> route = data.createRoute();
+		Optional<PublicTransportRoute> route = searchRequest.createRoute();
 
 		PublicTransportRoute expectedRoute = new ScannedRoute(stop1, stop2, someTime(),
 				threeMinutesLater(), asList(connection1));
@@ -127,12 +127,12 @@ public class SingleSweeperDataTest {
 				.partOf(sameJourney)
 				.build();
 
-		SweeperData data = newScannedArrival(stop1, otherStop(), someTime());
+		PreparedSearchRequest searchRequest = newScannedArrival(stop1, otherStop(), someTime());
 
-		data.updateArrival(connection1);
-		data.updateArrival(connection2);
+		searchRequest.updateArrival(connection1);
+		searchRequest.updateArrival(connection2);
 
-		Optional<PublicTransportRoute> route = data.createRoute();
+		Optional<PublicTransportRoute> route = searchRequest.createRoute();
 
 		assertThat(route, isPresent());
 		PublicTransportRoute expectedRoute = new ScannedRoute(stop1, otherStop(), someTime(),
@@ -145,15 +145,15 @@ public class SingleSweeperDataTest {
 		Stop start = stop1;
 		Stop end = stop2;
 		Time time = someTime();
-		SweeperData data = newScannedArrival(start, end, time);
+		PreparedSearchRequest searchRequest = newScannedArrival(start, end, time);
 		
-		assertFalse(data.isAfterArrivalAtEnd(reachableConnection()));
-		assertFalse(data.isAfterArrivalAtEnd(tooLateConnection()));
+		assertFalse(searchRequest.departsAfterArrivalAtEnd(reachableConnection()));
+		assertFalse(searchRequest.departsAfterArrivalAtEnd(tooLateConnection()));
 		
-		data.updateArrival(someConnection());
+		searchRequest.updateArrival(someConnection());
 		
-		assertFalse(data.isAfterArrivalAtEnd(reachableConnection()));
-		assertTrue(data.isAfterArrivalAtEnd(tooLateConnection()));
+		assertFalse(searchRequest.departsAfterArrivalAtEnd(reachableConnection()));
+		assertTrue(searchRequest.departsAfterArrivalAtEnd(tooLateConnection()));
 	}
 	
 	private Connection reachableConnection() {
@@ -166,13 +166,13 @@ public class SingleSweeperDataTest {
 
 	@Test
 	public void whenConnectionIsNotReachable() throws Exception {
-		SweeperData data = newScannedArrival(stop1, otherStop(), someTime());
+		PreparedSearchRequest searchRequest = newScannedArrival(stop1, otherStop(), someTime());
 
-		data.updateArrival(someConnection());
-		data.updateArrival(notReachable());
-		data.updateArrival(reachable());
+		searchRequest.updateArrival(someConnection());
+		searchRequest.updateArrival(notReachable());
+		searchRequest.updateArrival(reachable());
 
-		Optional<PublicTransportRoute> route = data.createRoute();
+		Optional<PublicTransportRoute> route = searchRequest.createRoute();
 
 		PublicTransportRoute expectedRoute = new ScannedRoute(stop1, otherStop(), someTime(),
 				twoMinutesLater(), asList(someConnection(), reachable()));
@@ -205,12 +205,12 @@ public class SingleSweeperDataTest {
 		Connection viaStop2 = someConnection();
 		Connection direct = direct();
 
-		SweeperData data = newScannedArrival(stop1, stop3, someTime());
+		PreparedSearchRequest searchRequest = newScannedArrival(stop1, stop3, someTime());
 
-		data.updateArrival(viaStop2);
-		data.updateArrival(direct);
+		searchRequest.updateArrival(viaStop2);
+		searchRequest.updateArrival(direct);
 
-		Optional<PublicTransportRoute> routeToNeighbour = data.createRoute();
+		Optional<PublicTransportRoute> routeToNeighbour = searchRequest.createRoute();
 
 		PublicTransportRoute expectedRouteToNeighbour = new ScannedRoute(stop1, stop3, someTime(),
 				oneMinuteLater(), asList(viaStop2, laterByFootFrom2To3()));
@@ -245,12 +245,12 @@ public class SingleSweeperDataTest {
 		Connection viaStop3 = viaStop3();
 		Connection viaStop2 = viaStop2();
 
-		SweeperData data = newScannedArrival(stop1, stop2, someTime());
+		PreparedSearchRequest searchRequest = newScannedArrival(stop1, stop2, someTime());
 
-		data.updateArrival(viaStop3);
-		data.updateArrival(viaStop2);
+		searchRequest.updateArrival(viaStop3);
+		searchRequest.updateArrival(viaStop2);
 
-		Optional<PublicTransportRoute> routeToNeighbour = data.createRoute();
+		Optional<PublicTransportRoute> routeToNeighbour = searchRequest.createRoute();
 
 		PublicTransportRoute expectedRouteToNeighbour = new ScannedRoute(stop1, stop2, someTime(),
 				oneMinuteLater(), asList(viaStop3, laterByFootFrom3To2()));
@@ -295,12 +295,12 @@ public class SingleSweeperDataTest {
 		Connection directToStop3 = viaStop3();
 		Connection directToStop2 = someConnection();
 
-		SweeperData data = newScannedArrival(stop1, stop3, someTime());
+		PreparedSearchRequest searchRequest = newScannedArrival(stop1, stop3, someTime());
 
-		data.updateArrival(directToStop3);
-		data.updateArrival(directToStop2);
+		searchRequest.updateArrival(directToStop3);
+		searchRequest.updateArrival(directToStop2);
 
-		Optional<PublicTransportRoute> directRoute = data.createRoute();
+		Optional<PublicTransportRoute> directRoute = searchRequest.createRoute();
 
 		PublicTransportRoute expectedRoute = new ScannedRoute(stop1, stop3, someTime(),
 				oneMinuteLater(), asList(directToStop3));
@@ -316,12 +316,12 @@ public class SingleSweeperDataTest {
 		Connection direct = from2To1();
 		Connection transferToStop3 = byFootFrom2To3();
 
-		SweeperData data = newScannedArrival(stop2, stop1, someTime());
+		PreparedSearchRequest searchRequest = newScannedArrival(stop2, stop1, someTime());
 
-		data.updateArrival(viaStop3);
-		data.updateArrival(direct);
+		searchRequest.updateArrival(viaStop3);
+		searchRequest.updateArrival(direct);
 
-		Optional<PublicTransportRoute> routeViaNeighbour = data.createRoute();
+		Optional<PublicTransportRoute> routeViaNeighbour = searchRequest.createRoute();
 
 		PublicTransportRoute expectedRoute = new ScannedRoute(stop2, stop1, someTime(),
 				oneMinuteLater(), asList(transferToStop3, viaStop3));
@@ -337,12 +337,12 @@ public class SingleSweeperDataTest {
 		Connection direct = from2To1();
 		Connection transferToStop3 = byFootFrom2To3();
 
-		SweeperData data = newScannedArrival(stop2, stop3, someTime());
+		PreparedSearchRequest searchRequest = newScannedArrival(stop2, stop3, someTime());
 
-		data.updateArrival(viaStop3);
-		data.updateArrival(direct);
+		searchRequest.updateArrival(viaStop3);
+		searchRequest.updateArrival(direct);
 
-		Optional<PublicTransportRoute> routeToNeighbour = data.createRoute();
+		Optional<PublicTransportRoute> routeToNeighbour = searchRequest.createRoute();
 
 		PublicTransportRoute expectedRouteToNeighbour = new ScannedRoute(stop2, stop3, someTime(),
 				someTime(), asList(transferToStop3));
@@ -383,11 +383,11 @@ public class SingleSweeperDataTest {
 	public void whenStopIsNotReachable() throws Exception {
 		Stop unreachable = stop().withId(2).withName("unreachable").build();
 		Connection connection = someConnection();
-		SweeperData data = newScannedArrival(stop1, unreachable, someTime());
+		PreparedSearchRequest searchRequest = newScannedArrival(stop1, unreachable, someTime());
 
-		data.updateArrival(connection);
+		searchRequest.updateArrival(connection);
 
-		Optional<PublicTransportRoute> route = data.createRoute();
+		Optional<PublicTransportRoute> route = searchRequest.createRoute();
 
 		assertThat(route, isEmpty());
 	}
@@ -406,8 +406,8 @@ public class SingleSweeperDataTest {
 				.partOf(FootJourney.footJourney)
 				.build();
 
-		SweeperData data = newScannedArrival(start, neighbouringStop, someTime());
-		Optional<PublicTransportRoute> routeToNeighbour = data.createRoute();
+		PreparedSearchRequest searchRequest = newScannedArrival(start, neighbouringStop, someTime());
+		Optional<PublicTransportRoute> routeToNeighbour = searchRequest.createRoute();
 
 		PublicTransportRoute expectedRoute = new ScannedRoute(start, neighbouringStop, someTime(),
 				oneMinuteLater(), asList(transferToStop2));
@@ -430,11 +430,11 @@ public class SingleSweeperDataTest {
 				.partOf(someJourney)
 				.build();
 
-		SweeperData data = newScannedArrival(start, end, someTime());
+		PreparedSearchRequest searchRequest = newScannedArrival(start, end, someTime());
 
-		data.updateArrival(connection);
+		searchRequest.updateArrival(connection);
 
-		Optional<PublicTransportRoute> route = data.createRoute();
+		Optional<PublicTransportRoute> route = searchRequest.createRoute();
 
 		PublicTransportRoute expectedRoute = new ScannedRoute(start, end, someTime(), oneMinuteLater(),
 				asList(connection));
@@ -455,11 +455,11 @@ public class SingleSweeperDataTest {
 				.partOf(someJourney)
 				.build();
 
-		SweeperData data = newScannedArrival(start, end, someTime());
+		PreparedSearchRequest searchRequest = newScannedArrival(start, end, someTime());
 
-		data.updateArrival(connection);
+		searchRequest.updateArrival(connection);
 
-		Optional<PublicTransportRoute> route = data.createRoute();
+		Optional<PublicTransportRoute> route = searchRequest.createRoute();
 
 		PublicTransportRoute expectedRoute = new ScannedRoute(start, end, someTime(), oneMinuteLater(),
 				asList(connection));
@@ -470,13 +470,13 @@ public class SingleSweeperDataTest {
 	public void usesMinimumChangeTimeOnlyForReachabilityCheckNotToCompareArrivalTimes()
 			throws Exception {
 		RelativeTime changeTime = RelativeTime.of(2, MINUTES);
-		SweeperData data = newScannedArrival(stop1, otherStop(), someTime());
+		PreparedSearchRequest searchRequest = newScannedArrival(stop1, otherStop(), someTime());
 
-		data.updateArrival(someConnection());
-		data.updateArrival(toIntermediateStop(changeTime));
-		data.updateArrival(laterToIntermediateStop(changeTime));
-		data.updateArrival(toEndStop(changeTime));
-		Optional<PublicTransportRoute> route = data.createRoute();
+		searchRequest.updateArrival(someConnection());
+		searchRequest.updateArrival(toIntermediateStop(changeTime));
+		searchRequest.updateArrival(laterToIntermediateStop(changeTime));
+		searchRequest.updateArrival(toEndStop(changeTime));
+		Optional<PublicTransportRoute> route = searchRequest.createRoute();
 
 		PublicTransportRoute expectedRoute = new ScannedRoute(stop1, otherStop(), someTime(),
 				fourMinutesLater(),
@@ -525,15 +525,15 @@ public class SingleSweeperDataTest {
 
 	@Test
 	public void doesNotCreateRouteWhenNoConnectionsHaveBeenProcessed() throws Exception {
-		SweeperData data = newScannedArrival(stop1, stop2, someTime());
+		PreparedSearchRequest searchRequest = newScannedArrival(stop1, stop2, someTime());
 		
-		Optional<PublicTransportRoute> route = data.createRoute();
+		Optional<PublicTransportRoute> route = searchRequest.createRoute();
 
 		assertThat(route, isEmpty());
 	}
 
-	private SweeperData newScannedArrival(Stop start, Stop end, Time time) {
-		return SingleSweeperData.from(start, end, time, maximumNumberOfStops);
+	private PreparedSearchRequest newScannedArrival(Stop start, Stop end, Time time) {
+		return SingleSearchRequest.from(start, end, time, maximumNumberOfStops);
 	}
 	
 }

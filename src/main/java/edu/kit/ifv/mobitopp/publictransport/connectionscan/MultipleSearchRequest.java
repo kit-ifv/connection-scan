@@ -11,32 +11,32 @@ import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-class MultipleSweeperData extends BaseSweeperData {
+class MultipleSearchRequest extends BaseSearchRequest {
 
 	private final StopPaths fromStarts;
 	private final StopPaths toEnds;
 	
-	private MultipleSweeperData(
+	private MultipleSearchRequest(
 			StopPaths starts, StopPaths toEnds, ArrivalTimes times, UsedConnections usedConnections, UsedJourneys usedJourneys) {
 		super(times, usedConnections, usedJourneys);
 		this.fromStarts = starts;
 		this.toEnds = toEnds;
 	}
 
-	static SweeperData from(StopPaths fromStarts, StopPaths toEnds, Time atTime, int numberOfStops) {
+	static PreparedSearchRequest from(StopPaths fromStarts, StopPaths toEnds, Time atTime, int numberOfStops) {
 		ArrivalTimes times = MultipleStarts.create(fromStarts, atTime, numberOfStops);
 		UsedConnections usedConnections = new DefaultUsedConnections(numberOfStops);
 		UsedJourneys usedJourneys = new DefaultUsedJourneys();
 		return from(fromStarts, toEnds, times, usedConnections, usedJourneys);
 	}
 
-	static SweeperData from(
+	static PreparedSearchRequest from(
 			StopPaths fromStarts, StopPaths toEnds, ArrivalTimes times, UsedConnections usedConnections,
 			UsedJourneys usedJourneys) {
-		BaseSweeperData data = new MultipleSweeperData(fromStarts, toEnds, times, usedConnections,
+		BaseSearchRequest searchRequest = new MultipleSearchRequest(fromStarts, toEnds, times, usedConnections,
 				usedJourneys);
-		times.initialise(data::initialise);
-		return data;
+		times.initialise(searchRequest::initialise);
+		return searchRequest;
 	}
 
 	@Override
@@ -45,9 +45,19 @@ class MultipleSweeperData extends BaseSweeperData {
 	}
 	
 	private PublicTransportRoute addFootpaths(PublicTransportRoute route) {
-		StopPath distanceToStart = fromStarts.pathTo(route.start());
-		StopPath distanceToEnd = toEnds.pathTo(route.end());
-		return new RouteIncludingFootpaths(route, distanceToStart, distanceToEnd);
+		StopPath pathToStart = fromStarts.pathTo(route.start());
+		StopPath pathFromEnd = toEnds.pathTo(route.end());
+		return new RouteIncludingFootpaths(route, pathToStart, pathFromEnd);
+	}
+
+	@Override
+	protected List<Connection> collectConnections(UsedConnections usedConnections, Time time)
+			throws StopNotReachable {
+		Optional<Stop> toEnd = stopWithEarliestArrival();
+		if (toEnd.isPresent()) {
+			return usedConnections.collectConnections(fromStarts, toEnd.get(), time);
+		}
+		return emptyList();
 	}
 
 	private Optional<Stop> stopWithEarliestArrival() {
@@ -66,23 +76,14 @@ class MultipleSweeperData extends BaseSweeperData {
 	}
 
 	@Override
-	protected List<Connection> collectConnections(UsedConnections usedConnections, Time time)
-			throws StopNotReachable {
-		Optional<Stop> toEnd = stopWithEarliestArrival();
-		if (toEnd.isPresent()) {
-			return usedConnections.collectConnections(fromStarts, toEnd.get(), time);
-		}
-		return emptyList();
-	}
-
-	@Override
-	public boolean isAfterArrivalAtEnd(Connection connection) {
+	public boolean departsAfterArrivalAtEnd(Connection connection) {
 		return isAfterArrivalAtEnd(connection.departure());
 	}
 	
 	private boolean isAfterArrivalAtEnd(Time departure) {
+		// TODO Fußweg berücksichtigen
 		for (Stop stop : toEnds.stops()) {
-			if (isTooLateAt(departure, stop)) {
+			if (isAfterArrivalAt(departure, stop)) {
 				return true;
 			}
 		}

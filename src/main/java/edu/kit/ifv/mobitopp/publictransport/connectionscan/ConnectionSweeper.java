@@ -8,6 +8,6 @@ interface ConnectionSweeper {
 
 	boolean areDepartedBefore(Time time);
 
-	Optional<PublicTransportRoute> sweep(SweeperData data);
+	Optional<PublicTransportRoute> sweep(PreparedSearchRequest searchRequest);
 	
 }

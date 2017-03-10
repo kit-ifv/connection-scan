@@ -16,7 +16,7 @@ import edu.kit.ifv.mobitopp.publictransport.model.Data;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-public class MultipleSweeperDataTest {
+public class MultipleSearchRequestTest {
 
 	private ArrivalTimes times;
 	private UsedConnections usedConnections;
@@ -34,7 +34,7 @@ public class MultipleSweeperDataTest {
 		StopPaths starts = mock(StopPaths.class);
 		StopPaths ends = mock(StopPaths.class);
 		when(ends.stops()).thenReturn(asList(nearStop(), farStop()));
-		SweeperData data = dataFromPaths(starts, ends);
+		PreparedSearchRequest searchRequest = dataFromPaths(starts, ends);
 		Time beforeArrival = someTime();
 		Time atArrival = Data.oneMinuteLater();
 		Time afterArrival = Data.twoMinutesLater();
@@ -45,9 +45,9 @@ public class MultipleSweeperDataTest {
 		arrivingAt(nearStop(), atArrival);
 		arrivingAt(farStop(), afterArrival);
 
-		assertFalse(data.isAfterArrivalAtEnd(beforeArrivalConnection));
-		assertFalse(data.isAfterArrivalAtEnd(arrivalConnection));
-		assertTrue(data.isAfterArrivalAtEnd(afterArrivalConnection));
+		assertFalse(searchRequest.departsAfterArrivalAtEnd(beforeArrivalConnection));
+		assertFalse(searchRequest.departsAfterArrivalAtEnd(arrivalConnection));
+		assertTrue(searchRequest.departsAfterArrivalAtEnd(afterArrivalConnection));
 	}
 
 	private void arrivingAt(Stop stop, Time atArrival) {
@@ -66,7 +66,7 @@ public class MultipleSweeperDataTest {
 		return Data.anotherStop();
 	}
 	
-	private SweeperData dataFromPaths(StopPaths starts, StopPaths ends) {
-		return MultipleSweeperData.from(starts, ends, times, usedConnections, usedJourneys);
+	private PreparedSearchRequest dataFromPaths(StopPaths starts, StopPaths ends) {
+		return MultipleSearchRequest.from(starts, ends, times, usedConnections, usedJourneys);
 	}
 }

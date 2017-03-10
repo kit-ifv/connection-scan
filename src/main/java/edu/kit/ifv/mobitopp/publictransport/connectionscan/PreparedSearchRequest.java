@@ -5,11 +5,11 @@ import java.util.Optional;
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-interface SweeperData {
+interface PreparedSearchRequest {
 
 	Time startTime();
 	
-	boolean isAfterArrivalAtEnd(Connection connection);
+	boolean departsAfterArrivalAtEnd(Connection connection);
 
 	void updateArrival(Connection connection);
 

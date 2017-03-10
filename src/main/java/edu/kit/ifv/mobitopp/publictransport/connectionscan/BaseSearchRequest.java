@@ -10,7 +10,7 @@ import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-abstract class BaseSweeperData implements SweeperData {
+abstract class BaseSearchRequest implements PreparedSearchRequest {
 
 	private static final int firstConnection = 0;
 	
@@ -18,7 +18,7 @@ abstract class BaseSweeperData implements SweeperData {
 	private final UsedConnections usedConnections;
 	private final UsedJourneys usedJourneys;
 
-	BaseSweeperData(ArrivalTimes times, UsedConnections usedConnections, UsedJourneys usedJourneys) {
+	BaseSearchRequest(ArrivalTimes times, UsedConnections usedConnections, UsedJourneys usedJourneys) {
 		super();
 		this.times = times;
 		this.usedConnections = usedConnections;
@@ -94,12 +94,7 @@ abstract class BaseSweeperData implements SweeperData {
 		}
 	}
 
-	private Optional<PublicTransportRoute> createRoute(Stop start, Stop end, Time time, List<Connection> connections) {
-		Time arrivalTime = times.get(end);
-		return of(new ScannedRoute(start, end, time, arrivalTime, connections));
-	}
-
-	protected boolean isTooLateAt(Time departure, Stop end) {
+	protected boolean isAfterArrivalAt(Time departure, Stop end) {
 		Time arrival = times.getConsideringMinimumChangeTime(end);
 		return arrival.isBefore(departure);
 	}
@@ -128,6 +123,11 @@ abstract class BaseSweeperData implements SweeperData {
 	
 	private Stop lastStopOf(List<Connection> connections) {
 		return connections.get(connections.size() - 1).end();
+	}
+
+	private Optional<PublicTransportRoute> createRoute(Stop start, Stop end, Time time, List<Connection> connections) {
+		Time arrivalTime = times.get(end);
+		return of(new ScannedRoute(start, end, time, arrivalTime, connections));
 	}
 
 }

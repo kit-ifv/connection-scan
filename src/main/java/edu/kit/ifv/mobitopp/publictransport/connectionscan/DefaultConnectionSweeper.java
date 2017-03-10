@@ -14,36 +14,36 @@ import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Connections;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
-class PreparedConnections implements ConnectionSweeper {
+class DefaultConnectionSweeper implements ConnectionSweeper {
 
 	private static final int defaultDistance = 100;
 	private static final Function<Time, Boolean> alwaysTooLate = (time) -> true;
 	private final List<Connection> connections;
 	private final Function<Time, Integer> lookup;
 	private final Function<Time, Boolean> isTooLate;
-	private final int distanceBetweenConnectionsToCheck;
+	private final int intervalToCheckArrivalAtEnd;
 
-	private PreparedConnections(
+	private DefaultConnectionSweeper(
 			List<Connection> connections, Function<Time, Integer> lookup,
-			Function<Time, Boolean> isTooLate, int distanceToCancel) {
+			Function<Time, Boolean> isTooLate, int intervalToCheckArrivalAtEnd) {
 		super();
 		this.connections = connections;
 		this.lookup = lookup;
 		this.isTooLate = isTooLate;
-		distanceBetweenConnectionsToCheck = distanceToCancel;
+		this.intervalToCheckArrivalAtEnd = intervalToCheckArrivalAtEnd;
 	}
 
-	static PreparedConnections from(Connections connections) {
+	static DefaultConnectionSweeper from(Connections connections) {
 		return from(connections, defaultDistance);
 	}
 
-	static PreparedConnections from(Connections connections, int distanceToCancel) {
+	static DefaultConnectionSweeper from(Connections connections, int intervalToCheckArrivalAtEnd) {
 		Stream<Connection> stream = connections.asCollection().stream();
 		List<Connection> sorted = stream.sorted(new ConnectionComparator()).collect(toList());
 		List<Connection> fixedConnections = Collections.unmodifiableList(sorted);
 		Function<Time, Integer> lookup = initialiseLookup(fixedConnections);
 		Function<Time, Boolean> isTooLate = createIsTooLate(fixedConnections);
-		return new PreparedConnections(fixedConnections, lookup, isTooLate, distanceToCancel);
+		return new DefaultConnectionSweeper(fixedConnections, lookup, isTooLate, intervalToCheckArrivalAtEnd);
 	}
 
 	private static Function<Time, Integer> initialiseLookup(List<Connection> connections) {
@@ -81,21 +81,25 @@ class PreparedConnections implements ConnectionSweeper {
 	}
 
 	@Override
-	public Optional<PublicTransportRoute> sweep(SweeperData data) {
-		Time atTime = data.startTime();
+	public Optional<PublicTransportRoute> sweep(PreparedSearchRequest searchRequest) {
+		Time atTime = searchRequest.startTime();
 		int fromStartIndex = lookup.apply(atTime);
-		scanConnections(fromStartIndex, data);
-		return data.createRoute();
+		scanConnections(fromStartIndex, searchRequest);
+		return searchRequest.createRoute();
 	}
 
-	private void scanConnections(int startIndex, SweeperData data) {
+	private void scanConnections(int startIndex, PreparedSearchRequest searchRequest) {
 		for (int index = startIndex; index < connections.size(); index++) {
 			Connection connection = connections.get(index);
-			if (shouldCheck(index) && data.isAfterArrivalAtEnd(connection)) {
+			if (sweepCanBeCancled(searchRequest, index, connection)) {
 				break;
 			}
-			data.updateArrival(connection);
+			searchRequest.updateArrival(connection);
 		}
+	}
+
+	private boolean sweepCanBeCancled(PreparedSearchRequest searchRequest, int index, Connection connection) {
+		return checkOnlyAtInterval(index) && searchRequest.departsAfterArrivalAtEnd(connection);
 	}
 
 	/**
@@ -104,14 +108,14 @@ class PreparedConnections implements ConnectionSweeper {
 	 * @param index
 	 * @return
 	 */
-	private boolean shouldCheck(int index) {
-		return 0 == index % distanceBetweenConnectionsToCheck;
+	private boolean checkOnlyAtInterval(int index) {
+		return 0 == index % intervalToCheckArrivalAtEnd;
 	}
 
 	@Override
 	public String toString() {
 		return "PreparedConnections [connections=" + connections
-				+ ", distanceBetweenConnectionsToCheck=" + distanceBetweenConnectionsToCheck + "]";
+				+ ", distanceBetweenConnectionsToCheck=" + intervalToCheckArrivalAtEnd + "]";
 	}
 
 }
