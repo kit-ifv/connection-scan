@@ -27,7 +27,7 @@ public class Connection {
 	public Connection(Connection other) {
 		id = other.id();
 		start = other.start();
-		end = other.start();
+		end = other.end();
 		departure = other.departure();
 		arrival = other.arrival();
 		points = other.points();
@@ -43,11 +43,6 @@ public class Connection {
 	public static Connection byFootFrom(Stop stop, Stop neighbour, Time departure, Time arrival) {
 		RoutePoints route = RoutePoints.from(stop, neighbour);
 		return Connection.from(footId, stop, neighbour, departure, arrival, FootJourney.footJourney, route);
-	}
-
-	public static Connection byFootFrom(Stop stop, Stop neighbour, Time departure) {
-		Time walkTime = stop.arrivalAt(neighbour, departure).get();
-		return byFootFrom(stop, neighbour, departure, walkTime);
 	}
 
 	public int id() {

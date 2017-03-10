@@ -9,6 +9,7 @@ import static edu.kit.ifv.mobitopp.publictransport.model.Data.someStop;
 import static edu.kit.ifv.mobitopp.publictransport.model.JourneyBuilder.journey;
 import static java.time.temporal.ChronoUnit.HOURS;
 import static java.time.temporal.ChronoUnit.MINUTES;
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
@@ -20,6 +21,7 @@ import static org.mockito.Mockito.when;
 
 import java.awt.geom.Point2D;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -126,6 +128,27 @@ public class ConnectionTest {
 		
 		assertThat(positionInJourney, is(positionByJourney));
 		verify(connections).positionOf(connection);
+	}
+	
+	@Test
+	public void copiesExisting() {
+		Journey someJourney = journey().withId(1).build();
+		List<Point2D> points = asList(coordinate(1, 2));
+		Connection original = connection()
+				.withId(1)
+				.startsAt(someStop())
+				.endsAt(anotherStop())
+				.departsAt(someTime())
+				.arrivesAt(oneMinuteLater())
+				.partOf(someJourney)
+				.with(points)
+				.build();
+		
+		Connection copied = new Connection(original);
+		
+		assertThat(original, is(equalTo(copied)));
+		assertThat(original.id(), is(equalTo(copied.id())));
+		assertThat(original.points(), is(equalTo(copied.points())));
 	}
 
 	@Test
