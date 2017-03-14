@@ -18,6 +18,25 @@ dependencies {
         'nl.jqno.equalsverifier:equalsverifier:2.2.+'
 }
 
+sourceSets {
+    integrationTest {
+        // Needed only for eclipse to update project settings
+        java.srcDirs = ['src/integration-test/java']
+        resources.srcDirs = ['src/integration-test/resource']
+        
+        compileClasspath += sourceSets.test.runtimeClasspath
+        runtimeClasspath += sourceSets.test.runtimeClasspath
+    }
+}
+
+task integrationTest(type: Test) {
+    testClassesDir = sourceSets.integrationTest.output.classesDir
+    classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+integrationTest.dependsOn test
+check.dependsOn integrationTest
+
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
     from sourceSets.main.allSource
