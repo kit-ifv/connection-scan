@@ -11,6 +11,7 @@ import java.util.Collection;
 
 import edu.kit.ifv.mobitopp.publictransport.connectionscan.ConnectionScan;
 import edu.kit.ifv.mobitopp.publictransport.connectionscan.RouteSearch;
+import edu.kit.ifv.mobitopp.publictransport.connectionscan.TransitNetwork;
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Connections;
 import edu.kit.ifv.mobitopp.publictransport.model.DefaultModifiableJourney;
@@ -82,7 +83,11 @@ public class SimpleNetwork {
 	}
 
 	public RouteSearch connectionScan() {
-		return ConnectionScan.create(stops(), connections());
+		return new ConnectionScan(timetable());
+	}
+
+	private TransitNetwork timetable() {
+		return TransitNetwork.createOf(stops(), connections());
 	}
 
 	private Collection<Stop> stops() {

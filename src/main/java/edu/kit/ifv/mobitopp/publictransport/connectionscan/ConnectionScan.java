@@ -1,41 +1,18 @@
 package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 
-import static java.util.Comparator.comparing;
-
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
-import edu.kit.ifv.mobitopp.publictransport.model.Connections;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
 public class ConnectionScan implements RouteSearch {
 
-	private final Collection<Stop> stops;
-	private final ConnectionSweeper connections;
+	private final TransitNetwork transitNetwork;
 
-	ConnectionScan(Collection<Stop> stops, ConnectionSweeper connections) {
+	public ConnectionScan(TransitNetwork transitNetwork) {
 		super();
-		this.stops = stops;
-		this.connections = connections;
-	}
-
-	public static RouteSearch create(Collection<Stop> stops, Connections connections) {
-		assertIdsOf(stops);
-		ConnectionSweeper prepareConnections = DefaultConnectionSweeper.from(connections);
-		return new ConnectionScan(stops, prepareConnections);
-	}
-
-	private static void assertIdsOf(Collection<Stop> stops) {
-		ArrayList<Stop> internalStops = new ArrayList<>(stops);
-		internalStops.sort(comparing(Stop::id));
-		for (int index = 0; index < internalStops.size(); index++) {
-			Stop stop = internalStops.get(index);
-			if (index != stop.id()) {
-				throw new IllegalArgumentException("Ids of stops must be consecutive starting at 0. Wrong id at stop: " + stop);
-			}
-		}
+		this.transitNetwork = transitNetwork;
 	}
 
 	@Override
@@ -48,11 +25,11 @@ public class ConnectionScan implements RouteSearch {
 	}
 
 	private boolean scanNotNeeded(Stop start, Stop end, Time time) {
-		return connections.areDepartedBefore(time) || notAvailable(start, end);
+		return connections().areDepartedBefore(time) || notAvailable(start, end);
 	}
 
 	private boolean notAvailable(Stop fromStart, Stop toEnd) {
-		return !stops.contains(fromStart) || !stops.contains(toEnd);
+		return !stops().contains(fromStart) || !stops().contains(toEnd);
 	}
 	
 	private PreparedSearchRequest newSweeperData(Stop fromStart, Stop toEnd, Time atTime) {
@@ -70,11 +47,11 @@ public class ConnectionScan implements RouteSearch {
 	}
 
 	private Optional<PublicTransportRoute> sweepOver(PreparedSearchRequest searchRequest) {
-		return connections.sweep(searchRequest);
+		return connections().sweep(searchRequest);
 	}
 
 	private boolean scanNotNeeded(StopPaths startStops, StopPaths endStops, Time time) {
-		return connections.areDepartedBefore(time) || notAvailable(startStops, endStops);
+		return connections().areDepartedBefore(time) || notAvailable(startStops, endStops);
 	}
 
 	private boolean notAvailable(StopPaths startStops, StopPaths endStops) {
@@ -82,7 +59,7 @@ public class ConnectionScan implements RouteSearch {
 	}
 
 	private boolean notAvailable(StopPaths requested) {
-		return requested.stops().isEmpty() || !stops.containsAll(requested.stops());
+		return requested.stops().isEmpty() || !stops().containsAll(requested.stops());
 	}
 
 	PreparedSearchRequest newSearchRequest(StopPaths fromStarts, StopPaths toEnds, Time atTime) {
@@ -90,12 +67,20 @@ public class ConnectionScan implements RouteSearch {
 	}
 	
 	private int arrivalSize() {
-		return stops.size();
+		return stops().size();
+	}
+	
+	private Collection<Stop> stops() {
+		return transitNetwork.stops();
+	}
+	
+	private ConnectionSweeper connections() {
+		return transitNetwork.connections();
 	}
 
 	@Override
 	public String toString() {
-		return "ConnectionScan [stops=" + stops + ", connections=" + connections + "]";
+		return "ConnectionScan [transitNetwork=" + transitNetwork + "]";
 	}
 
 }
