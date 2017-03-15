@@ -53,4 +53,16 @@ public class TransitNetwork {
 		return !stops.contains(fromStart) || !stops.contains(toEnd);
 	}
 
+	public boolean scanNotNeeded(StopPaths starts, StopPaths ends, Time time) {
+		return connections.areDepartedBefore(time) || notAvailable(starts, ends);
+	}
+
+	private boolean notAvailable(StopPaths startStops, StopPaths endStops) {
+		return notAvailable(startStops) || notAvailable(endStops);
+	}
+
+	private boolean notAvailable(StopPaths requested) {
+		return requested.stops().isEmpty() || !stops().containsAll(requested.stops());
+	}
+
 }
