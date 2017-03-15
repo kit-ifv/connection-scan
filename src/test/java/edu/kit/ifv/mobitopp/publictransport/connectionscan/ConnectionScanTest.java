@@ -33,17 +33,17 @@ public class ConnectionScanTest {
 
 	private ConnectionSweeper connections;
 	private PreparedSearchRequest searchRequest;
-	private TransitNetwork timetable;
+	private TransitNetwork transitNetwork;
 	private ConnectionScan scan;
 
 	@Before
 	public void initialise() throws Exception {
-		timetable = mock(TransitNetwork.class);
+		transitNetwork = mock(TransitNetwork.class);
 		connections = mock(ConnectionSweeper.class);
 		searchRequest = mock(PreparedSearchRequest.class);
 		
-		when(timetable.connections()).thenReturn(connections);
-		scan = scan(timetable);
+		when(transitNetwork.connections()).thenReturn(connections);
+		scan = scan(transitNetwork);
 	}
 
 	private ConnectionScan scan(TransitNetwork timetable) {
@@ -78,7 +78,7 @@ public class ConnectionScanTest {
 	}
 
 	private void use(Collection<Stop> stops) {
-		when(timetable.stops()).thenReturn(stops);
+		when(transitNetwork.stops()).thenReturn(stops);
 	}
 
 	@Test
