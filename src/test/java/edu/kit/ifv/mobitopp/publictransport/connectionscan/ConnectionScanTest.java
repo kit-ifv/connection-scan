@@ -3,11 +3,10 @@ package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 import static com.github.npathai.hamcrestopt.OptionalMatchers.hasValue;
 import static com.github.npathai.hamcrestopt.OptionalMatchers.isEmpty;
 import static com.github.npathai.hamcrestopt.OptionalMatchers.isPresent;
-import static edu.kit.ifv.mobitopp.publictransport.model.Data.anotherStop;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.otherStop;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.someStop;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.someTime;
-import static java.util.Collections.emptyList;
+import static java.util.Arrays.asList;
 import static java.util.Optional.of;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -17,8 +16,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -35,12 +32,22 @@ public class ConnectionScanTest {
 	private PreparedSearchRequest searchRequest;
 	private TransitNetwork transitNetwork;
 	private ConnectionScan scan;
+	private Time searchTime;
+	private Stop start;
+	private Stop end;
+	private StopPaths starts;
+	private StopPaths ends;
 
 	@Before
 	public void initialise() throws Exception {
 		transitNetwork = mock(TransitNetwork.class);
 		connections = mock(ConnectionSweeper.class);
 		searchRequest = mock(PreparedSearchRequest.class);
+		searchTime = someTime();
+		start = someStop();
+		end = otherStop();
+		starts = mock(StopPaths.class);
+		ends = mock(StopPaths.class);
 
 		when(transitNetwork.connections()).thenReturn(connections);
 		scan = scan(transitNetwork);
@@ -58,15 +65,12 @@ public class ConnectionScanTest {
 
 	@Test
 	public void scanNotNeededFromStopToStop() throws Exception {
-		Stop start = someStop();
-		Stop end = anotherStop();
-		Time searchTime = someTime();
 		scanNotNeeded(start, end, searchTime);
 
 		Optional<PublicTransportRoute> route = scan.findRoute(start, end, searchTime);
 
 		assertThat(route, isEmpty());
-		verifyScanNotNeeded(start, end, searchTime);
+		verifyScanNotNeededBetweenSingleStops();
 		verifyNoSweep();
 	}
 
@@ -74,149 +78,72 @@ public class ConnectionScanTest {
 		when(transitNetwork.scanNotNeeded(start, end, atTime)).thenReturn(true);
 	}
 
-	private void scanNeeded(Stop start, Stop end, Time atTime) {
-		when(transitNetwork.scanNotNeeded(start, end, atTime)).thenReturn(false);
+	private void verifyScanNotNeededBetweenSingleStops() {
+		verify(transitNetwork).scanNotNeeded(start, end, searchTime);
+	}
+
+	@Test
+	public void fromOneStopToAnotherStop() throws Exception {
+		List<Stop> stops = asList(start, end);
+		use(stops);
+
+		PublicTransportRoute sweepedRoute = mock(PublicTransportRoute.class);
+		scanNeeded(start, end, searchTime);
+		when(connections.sweep(any())).thenReturn(of(sweepedRoute));
+
+		Optional<PublicTransportRoute> route = scan.findRoute(start, end, searchTime);
+
+		assertThat(route, isPresent());
+		assertThat(route, hasValue(equalTo(sweepedRoute)));
+		verify(connections).sweep(any());
 	}
 
 	private void use(Collection<Stop> stops) {
 		when(transitNetwork.stops()).thenReturn(stops);
 	}
 
-	@Test
-	public void fromOneStopToAnotherStop() throws Exception {
-		Stop start = someStop();
-		Stop end = otherStop();
-		List<Stop> stops = asList(start, end);
-		use(stops);
-
-		PublicTransportRoute route = mock(PublicTransportRoute.class);
-		Time searchTime = someTime();
-		scanNeeded(start, end, searchTime);
-		when(connections.sweep(any())).thenReturn(of(route));
-
-		Optional<PublicTransportRoute> startToStop = scan.findRoute(start, end, searchTime);
-
-		assertThat(startToStop, isPresent());
-		assertThat(startToStop, hasValue(equalTo(route)));
-		verify(connections).sweep(any());
-	}
-
-	@SuppressWarnings("unchecked")
-	private <T> List<T> asList(T... elements) {
-		return new ArrayList<>(Arrays.asList(elements));
+	private void scanNeeded(Stop start, Stop end, Time atTime) {
+		when(transitNetwork.scanNotNeeded(start, end, atTime)).thenReturn(false);
 	}
 
 	private void verifyNoSweep() {
 		verifyZeroInteractions(connections);
 	}
 
-	private void verifyScanNotNeeded(Stop anotherStart, Stop end, Time searchTime) {
-		verify(transitNetwork).scanNotNeeded(anotherStart, end, searchTime);
-	}
-
-	private void departsAfterLastConnection(Time searchTime) {
-		when(connections.areDepartedBefore(searchTime)).thenReturn(true);
-	}
-
 	@Test
 	public void findsRouteBetweenSeveralStops() throws Exception {
-		Time time = someTime();
-		List<Stop> startStops = asList(someStop());
-		List<Stop> endStops = asList(anotherStop());
-		List<Stop> stops = asList(someStop(), anotherStop());
-		use(stops);
-		StopPaths starts = mock(StopPaths.class);
-		StopPaths ends = mock(StopPaths.class);
-		PublicTransportRoute vehicleRoute = mock(PublicTransportRoute.class);
-		when(starts.stops()).thenReturn(startStops);
-		when(ends.stops()).thenReturn(endStops);
-		when(connections.sweep(searchRequest)).thenReturn(of(vehicleRoute));
+		PublicTransportRoute sweepedRoute = mock(PublicTransportRoute.class);
+		scanNeeded(starts, ends, searchTime);
+		when(connections.sweep(searchRequest)).thenReturn(of(sweepedRoute));
 
-		Optional<PublicTransportRoute> startToEnd = scan.findRoute(starts, ends, time);
+		Optional<PublicTransportRoute> route = scan.findRoute(starts, ends, searchTime);
 
-		assertThat(startToEnd, isPresent());
-		assertThat(startToEnd, hasValue(vehicleRoute));
+		assertThat(route, isPresent());
+		assertThat(route, hasValue(sweepedRoute));
 		verify(connections).sweep(searchRequest);
 	}
 
-	@Test
-	public void findsNoRouteBetweenSeveralStopsWhenStartTimeIsTooLate() throws Exception {
-		Time time = someTime();
-		List<Stop> stops = asList(someStop(), anotherStop());
-		use(stops);
-		StopPaths reachableStart = mock(StopPaths.class);
-		StopPaths reachableEnd = mock(StopPaths.class);
-		departsAfterLastConnection(time);
-
-		Optional<PublicTransportRoute> startToEnd = scan.findRoute(reachableStart, reachableEnd, time);
-
-		assertThat(startToEnd, isEmpty());
+	private void scanNeeded(StopPaths starts, StopPaths ends, Time searchTime) {
+		when(transitNetwork.scanNotNeeded(starts, ends, searchTime)).thenReturn(false);
 	}
 
 	@Test
-	public void findsNoRouteBetweenSeveralStopsWhenStartStopsAreNotAvailable() throws Exception {
-		Time time = someTime();
-		List<Stop> startStops = asList(someStop());
-		List<Stop> endStops = asList(anotherStop());
-		List<Stop> stops = endStops;
-		use(stops);
-		StopPaths reachableStart = mock(StopPaths.class);
-		StopPaths reachableEnd = mock(StopPaths.class);
-		when(reachableStart.stops()).thenReturn(startStops);
-		when(reachableEnd.stops()).thenReturn(endStops);
+	public void scanNotNeededBetweenSeveralStops() throws Exception {
+		scanNotNeeded(starts, ends, searchTime);
 
-		Optional<PublicTransportRoute> startToEnd = scan.findRoute(reachableStart, reachableEnd, time);
+		Optional<PublicTransportRoute> route = scan.findRoute(starts, ends, searchTime);
 
-		assertThat(startToEnd, isEmpty());
+		assertThat(route, isEmpty());
+		verifyScanNotNeededBetweenSeveralStops();
+		verifyNoSweep();
 	}
 
-	@Test
-	public void findsNoRouteBetweenSeveralStopsWhenEndStopsAreNotAvailable() throws Exception {
-		Time time = someTime();
-		List<Stop> startStops = asList(someStop());
-		List<Stop> endStops = asList(anotherStop());
-		List<Stop> stops = startStops;
-		use(stops);
-		StopPaths reachableStart = mock(StopPaths.class);
-		StopPaths reachableEnd = mock(StopPaths.class);
-		when(reachableStart.stops()).thenReturn(startStops);
-		when(reachableEnd.stops()).thenReturn(endStops);
-
-		Optional<PublicTransportRoute> startToEnd = scan.findRoute(reachableStart, reachableEnd, time);
-
-		assertThat(startToEnd, isEmpty());
+	private void verifyScanNotNeededBetweenSeveralStops() {
+		verify(transitNetwork).scanNotNeeded(starts, ends, searchTime);
 	}
 
-	@Test
-	public void findsNoRouteBetweenSeveralStopsWhenNoEndStopsAreGiven() throws Exception {
-		Time time = someTime();
-		List<Stop> startStops = asList(someStop());
-		List<Stop> endStops = emptyList();
-		List<Stop> stops = asList(someStop());
-		use(stops);
-		StopPaths reachableStart = mock(StopPaths.class);
-		StopPaths reachableEnd = mock(StopPaths.class);
-		when(reachableStart.stops()).thenReturn(startStops);
-		when(reachableEnd.stops()).thenReturn(endStops);
-
-		Optional<PublicTransportRoute> startToEnd = scan.findRoute(reachableStart, reachableEnd, time);
-
-		assertThat(startToEnd, isEmpty());
-	}
-
-	@Test
-	public void findsNoRouteBetweenSeveralStopsWhenNoStartStopsAreGiven() throws Exception {
-		Time time = someTime();
-		List<Stop> startStops = emptyList();
-		List<Stop> stops = asList(someStop(), anotherStop());
-		use(stops);
-		StopPaths reachableStart = mock(StopPaths.class);
-		StopPaths reachableEnd = mock(StopPaths.class);
-		when(reachableStart.stops()).thenReturn(startStops);
-
-		Optional<PublicTransportRoute> startToEnd = scan.findRoute(reachableStart, reachableEnd, time);
-
-		assertThat(startToEnd, isEmpty());
+	private void scanNotNeeded(StopPaths starts, StopPaths ends, Time time) {
+		when(transitNetwork.scanNotNeeded(starts, ends, time)).thenReturn(true);
 	}
 
 }

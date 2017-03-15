@@ -1,6 +1,5 @@
 package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 
-import java.util.Collection;
 import java.util.Optional;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
@@ -43,19 +42,11 @@ public class ConnectionScan implements RouteSearch {
 	}
 
 	private Optional<PublicTransportRoute> sweepOver(PreparedSearchRequest searchRequest) {
-		return connections().sweep(searchRequest);
+		return transitNetwork.connections().sweep(searchRequest);
 	}
 
 	private boolean scanNotNeeded(StopPaths startStops, StopPaths endStops, Time time) {
-		return connections().areDepartedBefore(time) || notAvailable(startStops, endStops);
-	}
-
-	private boolean notAvailable(StopPaths startStops, StopPaths endStops) {
-		return notAvailable(startStops) || notAvailable(endStops);
-	}
-
-	private boolean notAvailable(StopPaths requested) {
-		return requested.stops().isEmpty() || !stops().containsAll(requested.stops());
+		return transitNetwork.scanNotNeeded(startStops, endStops, time);
 	}
 
 	PreparedSearchRequest newSearchRequest(StopPaths fromStarts, StopPaths toEnds, Time atTime) {
@@ -63,17 +54,9 @@ public class ConnectionScan implements RouteSearch {
 	}
 	
 	private int arrivalSize() {
-		return stops().size();
+		return transitNetwork.stops().size();
 	}
 	
-	private Collection<Stop> stops() {
-		return transitNetwork.stops();
-	}
-	
-	private ConnectionSweeper connections() {
-		return transitNetwork.connections();
-	}
-
 	@Override
 	public String toString() {
 		return "ConnectionScan [transitNetwork=" + transitNetwork + "]";
