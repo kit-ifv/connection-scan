@@ -2,7 +2,6 @@ package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 
 import static edu.kit.ifv.mobitopp.publictransport.model.ConnectionBuilder.connection;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.anotherStop;
-import static edu.kit.ifv.mobitopp.publictransport.model.Data.oneMinuteEarlier;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.oneMinuteLater;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.otherStop;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.someStop;
@@ -32,8 +31,10 @@ public class TransitNetworkTest {
 	private Stop start;
 	private Stop end;
 	private Stop unreachableStop;
-	private TransitNetwork correctNetwork;
+	private TransitNetwork transitNetwork;
 	private Time tooLate;
+	private StopPaths starts;
+	private StopPaths ends;
 	
 	@Before
 	public void initialise() {
@@ -43,7 +44,21 @@ public class TransitNetworkTest {
 		end = anotherStop();
 		unreachableStop = otherStop();
 		List<Stop> stops = asList(start, end);
-		correctNetwork = correctNetwork(stops);
+		transitNetwork = transitNetwork(stops);
+		starts = mock(StopPaths.class);
+		ends = mock(StopPaths.class);
+		when(starts.stops()).thenReturn(asList(start));
+		when(ends.stops()).thenReturn(asList(end));
+	}
+
+	private TransitNetwork transitNetwork(List<Stop> stops) {
+		Connections connections = new Connections();
+		connections.add(usableConnection(start, end));
+		return TransitNetwork.createOf(stops, connections);
+	}
+
+	private Connection usableConnection(Stop start, Stop end) {
+		return connection().startsAt(start).endsAt(end).departsAt(searchTime).build();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -63,24 +78,14 @@ public class TransitNetworkTest {
 	public void missingEndStop() {
 		Stop unreachableEnd = otherStop();
 
-		boolean scanNotNeeded = correctNetwork.scanNotNeeded(start, unreachableEnd, searchTime);
+		boolean scanNotNeeded = transitNetwork.scanNotNeeded(start, unreachableEnd, searchTime);
 
 		assertTrue(scanNotNeeded);
 	}
 
-	private TransitNetwork correctNetwork(List<Stop> stops) {
-		Connections connections = new Connections();
-		connections.add(usableConnection(start, end));
-		return TransitNetwork.createOf(stops, connections);
-	}
-
-	private Connection usableConnection(Stop start, Stop end) {
-		return connection().startsAt(start).endsAt(end).departsAt(searchTime).build();
-	}
-
 	@Test
 	public void correctSearchRequest() {
-		boolean scanNotNeeded = correctNetwork.scanNotNeeded(start, end, searchTime);
+		boolean scanNotNeeded = transitNetwork.scanNotNeeded(start, end, searchTime);
 
 		assertFalse(scanNotNeeded);
 	}
@@ -89,112 +94,86 @@ public class TransitNetworkTest {
 	public void missingStartStop() {
 		Stop anotherStart = otherStop();
 
-		boolean scanNotNeeded = correctNetwork.scanNotNeeded(anotherStart, end, searchTime);
+		boolean scanNotNeeded = transitNetwork.scanNotNeeded(anotherStart, end, searchTime);
 
 		assertTrue(scanNotNeeded);
 	}
 
 	@Test
 	public void whenTimeIsAfterLatestDeparture() {
-		Collection<Stop> stops = asList(start, end);
-		TransitNetwork transitNetwork = tooLateSearchTime(stops);
-
-		boolean scanNotNeeded = transitNetwork.scanNotNeeded(start, end, searchTime);
+		boolean scanNotNeeded = transitNetwork.scanNotNeeded(start, end, tooLate);
 
 		assertTrue(scanNotNeeded);
 	}
 
-	private TransitNetwork tooLateSearchTime(Collection<Stop> stops) {
-		Connections connections = new Connections();
-		connections.add(tooEarlyConnection(start, end));
-		TransitNetwork transitNetwork = TransitNetwork.createOf(stops, connections);
-		return transitNetwork;
-	}
-
-	private Connection tooEarlyConnection(Stop start, Stop end) {
-		return connection().startsAt(start).endsAt(end).departsAt(oneMinuteEarlier()).build();
-	}
-	
 	@Test
 	public void correctSearchRequestBetweenSeveralStops() {
-		List<Stop> startStops = asList(start);
-		List<Stop> endStops = asList(end);
-		StopPaths starts = mock(StopPaths.class);
-		StopPaths ends = mock(StopPaths.class);
-		when(starts.stops()).thenReturn(startStops);
-		when(ends.stops()).thenReturn(endStops);
-		
-		boolean scanNotNeeded = correctNetwork.scanNotNeeded(starts, ends, searchTime);
+		boolean scanNotNeeded = transitNetwork.scanNotNeeded(starts, ends, searchTime);
 
 		assertFalse(scanNotNeeded);
 	}
 
 	@Test
 	public void tooEarlySearchRequestBetweenSeveralStops() {
-		StopPaths reachableStart = mock(StopPaths.class);
-		StopPaths reachableEnd = mock(StopPaths.class);
-		when(reachableStart.stops()).thenReturn(asList(start));
-		when(reachableEnd.stops()).thenReturn(asList(end));
-
-		boolean scanNotNeeded = correctNetwork.scanNotNeeded(reachableStart, reachableEnd, tooLate);
+		boolean scanNotNeeded = transitNetwork.scanNotNeeded(starts, ends, tooLate);
 
 		assertTrue(scanNotNeeded);
 	}
 
 	@Test
 	public void missingStartStopsOnSearchRequestBetweenSeveralStops() {
-		List<Stop> startStops = asList(unreachableStop);
-		List<Stop> endStops = asList(end);
-		StopPaths reachableStart = mock(StopPaths.class);
-		StopPaths reachableEnd = mock(StopPaths.class);
-		when(reachableStart.stops()).thenReturn(startStops);
-		when(reachableEnd.stops()).thenReturn(endStops);
+		startsAt(unreachableStop);
 
-		boolean scanNotNeeded = correctNetwork.scanNotNeeded(reachableStart, reachableEnd, searchTime);
+		boolean scanNotNeeded = transitNetwork.scanNotNeeded(starts, ends, searchTime);
 
 		assertTrue(scanNotNeeded);
+	}
+
+	private void startsAt(Stop stop) {
+		List<Stop> startStops = asList(stop);
+		when(starts.stops()).thenReturn(startStops);
 	}
 
 	@Test
 	public void missingEndStopsOnSearchRequestBetweenSeveralStops() throws Exception {
-		List<Stop> startStops = asList(start);
-		List<Stop> endStops = asList(unreachableStop);
-		StopPaths reachableStart = mock(StopPaths.class);
-		StopPaths reachableEnd = mock(StopPaths.class);
-		when(reachableStart.stops()).thenReturn(startStops);
-		when(reachableEnd.stops()).thenReturn(endStops);
+		endsAt(unreachableStop);
 
-		boolean scanNotNeeded = correctNetwork.scanNotNeeded(reachableStart, reachableEnd, searchTime);
+		boolean scanNotNeeded = transitNetwork.scanNotNeeded(starts, ends, searchTime);
 
 		assertTrue(scanNotNeeded);
+	}
+
+	private void endsAt(Stop stop) {
+		List<Stop> endStops = asList(stop);
+		when(this.ends.stops()).thenReturn(endStops);
 	}
 
 	@Test
 	public void noEndStopsInSearchRequest() throws Exception {
-		List<Stop> startStops = asList(start);
-		List<Stop> endStops = emptyList();
-		StopPaths reachableStart = mock(StopPaths.class);
-		StopPaths reachableEnd = mock(StopPaths.class);
-		when(reachableStart.stops()).thenReturn(startStops);
-		when(reachableEnd.stops()).thenReturn(endStops);
+		endsNowhere();
 
-		boolean scanNotNeeded = correctNetwork.scanNotNeeded(reachableStart, reachableEnd, searchTime);
+		boolean scanNotNeeded = transitNetwork.scanNotNeeded(starts, ends, searchTime);
 
 		assertTrue(scanNotNeeded);
 	}
 
+	private void endsNowhere() {
+		List<Stop> endStops = emptyList();
+		when(ends.stops()).thenReturn(endStops);
+	}
+
 	@Test
 	public void noStartStopsInSearchRequest() throws Exception {
-		List<Stop> startStops = emptyList();
-		List<Stop> endStops = asList(end);
-		StopPaths reachableStart = mock(StopPaths.class);
-		StopPaths reachableEnd = mock(StopPaths.class);
-		when(reachableStart.stops()).thenReturn(startStops);
-		when(reachableEnd.stops()).thenReturn(endStops);
+		startsNowhere();
 
-		boolean scanNotNeeded = correctNetwork.scanNotNeeded(reachableStart, reachableEnd, searchTime);
+		boolean scanNotNeeded = transitNetwork.scanNotNeeded(starts, ends, searchTime);
 
 		assertTrue(scanNotNeeded);
+	}
+
+	private void startsNowhere() {
+		List<Stop> startStops = emptyList();
+		when(starts.stops()).thenReturn(startStops);
 	}
 
 }
