@@ -7,21 +7,23 @@ import java.util.Collection;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connections;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
+import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
 public class TransitNetwork {
 
 	private final Collection<Stop> stops;
-	private final Connections connections;
+	private final ConnectionSweeper connections;
 
-	private TransitNetwork(Collection<Stop> stops, Connections connections) {
+	private TransitNetwork(Collection<Stop> stops, ConnectionSweeper sweeper) {
 		super();
 		this.stops = stops;
-		this.connections = connections;
+		this.connections = sweeper;
 	}
 
 	public static TransitNetwork createOf(Collection<Stop> stops, Connections connections) {
 		assertIdsOf(stops);
-		return new TransitNetwork(stops, connections);
+		DefaultConnectionSweeper sweeper = DefaultConnectionSweeper.from(connections);
+		return new TransitNetwork(stops, sweeper);
 	}
 
 	private static void assertIdsOf(Collection<Stop> stops) {
@@ -36,11 +38,19 @@ public class TransitNetwork {
 	}
 
 	ConnectionSweeper connections() {
-		return DefaultConnectionSweeper.from(connections);
+		return connections;
 	}
 
 	Collection<Stop> stops() {
 		return stops;
+	}
+
+	boolean scanNotNeeded(Stop start, Stop end, Time time) {
+		return connections.areDepartedBefore(time) || notAvailable(start, end);
+	}
+
+	private boolean notAvailable(Stop fromStart, Stop toEnd) {
+		return !stops.contains(fromStart) || !stops.contains(toEnd);
 	}
 
 }

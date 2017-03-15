@@ -25,11 +25,7 @@ public class ConnectionScan implements RouteSearch {
 	}
 
 	private boolean scanNotNeeded(Stop start, Stop end, Time time) {
-		return connections().areDepartedBefore(time) || notAvailable(start, end);
-	}
-
-	private boolean notAvailable(Stop fromStart, Stop toEnd) {
-		return !stops().contains(fromStart) || !stops().contains(toEnd);
+		return transitNetwork.scanNotNeeded(start, end, time);
 	}
 	
 	private PreparedSearchRequest newSweeperData(Stop fromStart, Stop toEnd, Time atTime) {

@@ -14,7 +14,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class ConnectionScanTest {
 		transitNetwork = mock(TransitNetwork.class);
 		connections = mock(ConnectionSweeper.class);
 		searchRequest = mock(PreparedSearchRequest.class);
-		
+
 		when(transitNetwork.connections()).thenReturn(connections);
 		scan = scan(transitNetwork);
 	}
@@ -57,24 +57,25 @@ public class ConnectionScanTest {
 	}
 
 	@Test
-	public void missingStop() throws Exception {
+	public void scanNotNeededFromStopToStop() throws Exception {
 		Stop start = someStop();
-		Stop end = otherStop();
-		Stop unreachableEnd = anotherStop();
-		List<Stop> stops = asList(start, end);
-		use(stops);
-
+		Stop end = anotherStop();
 		Time searchTime = someTime();
-		departsBeforeLastConnection(searchTime);
-		Optional<PublicTransportRoute> route = scan.findRoute(start, unreachableEnd, searchTime);
+		scanNotNeeded(start, end, searchTime);
+
+		Optional<PublicTransportRoute> route = scan.findRoute(start, end, searchTime);
 
 		assertThat(route, isEmpty());
-		verifyDepartureCheck(searchTime);
-		verifyNoMoreInteractions(connections);
+		verifyScanNotNeeded(start, end, searchTime);
+		verifyNoSweep();
 	}
 
-	private void departsBeforeLastConnection(Time searchTime) {
-		when(connections.areDepartedBefore(searchTime)).thenReturn(false);
+	private void scanNotNeeded(Stop start, Stop end, Time atTime) {
+		when(transitNetwork.scanNotNeeded(start, end, atTime)).thenReturn(true);
+	}
+
+	private void scanNeeded(Stop start, Stop end, Time atTime) {
+		when(transitNetwork.scanNotNeeded(start, end, atTime)).thenReturn(false);
 	}
 
 	private void use(Collection<Stop> stops) {
@@ -90,14 +91,13 @@ public class ConnectionScanTest {
 
 		PublicTransportRoute route = mock(PublicTransportRoute.class);
 		Time searchTime = someTime();
-		departsBeforeLastConnection(searchTime);
+		scanNeeded(start, end, searchTime);
 		when(connections.sweep(any())).thenReturn(of(route));
 
 		Optional<PublicTransportRoute> startToStop = scan.findRoute(start, end, searchTime);
 
 		assertThat(startToStop, isPresent());
 		assertThat(startToStop, hasValue(equalTo(route)));
-		verifyDepartureCheck(searchTime);
 		verify(connections).sweep(any());
 	}
 
@@ -106,41 +106,12 @@ public class ConnectionScanTest {
 		return new ArrayList<>(Arrays.asList(elements));
 	}
 
-	@Test
-	public void missingStopWhenPassengerIsNotOnATrip() throws Exception {
-		Stop start = someStop();
-		Stop anotherStart = anotherStop();
-		Stop end = otherStop();
-		List<Stop> stops = asList(start, end);
-		use(stops);
-		Time searchTime = someTime();
-		departsBeforeLastConnection(searchTime);
-		
-		Optional<PublicTransportRoute> route = scan.findRoute(anotherStart, end, searchTime);
-
-		assertThat(route, isEmpty());
-		verifyDepartureCheck(searchTime);
-		verifyNoMoreInteractions(connections);
+	private void verifyNoSweep() {
+		verifyZeroInteractions(connections);
 	}
 
-	@Test
-	public void whenTimeIsAfterLatestDeparture() throws Exception {
-		Stop start = someStop();
-		Stop end = otherStop();
-		Collection<Stop> stops = asList(start, end);
-		use(stops);
-		Time searchTime = someTime();
-		departsAfterLastConnection(searchTime);
-
-		Optional<PublicTransportRoute> route = scan.findRoute(start, end, searchTime);
-
-		assertThat(route, isEmpty());
-		verifyDepartureCheck(searchTime);
-		verifyNoMoreInteractions(connections);
-	}
-
-	private void verifyDepartureCheck(Time searchTime) {
-		verify(connections).areDepartedBefore(searchTime);
+	private void verifyScanNotNeeded(Stop anotherStart, Stop end, Time searchTime) {
+		verify(transitNetwork).scanNotNeeded(anotherStart, end, searchTime);
 	}
 
 	private void departsAfterLastConnection(Time searchTime) {
