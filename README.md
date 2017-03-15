@@ -11,3 +11,4 @@ To search routes via the connection scan, you have to initialise it with a trans
 3. Connections are not allowed to arrive before they depart. Due to this, travelling back in time is not possible.
 
 [SimpleTransitExampleTest](https://github.com/mobitopp/connection-scan/blob/master/src/integration-test/java/edu/kit/ifv/mobitopp/publictransport/example/SimpleTransitExampleTest.java) shows how the connection scan can be used.
+Route search requests can be made from single stops to single stops or from many to many stops. In case the request is from many to many, the access and egress paths have to be provided. Those paths will be considered during route search to find the earliest arrival at the target.
