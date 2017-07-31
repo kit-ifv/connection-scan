@@ -7,7 +7,6 @@ import static edu.kit.ifv.mobitopp.publictransport.model.Data.otherStop;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.someStop;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.yetAnotherStop;
 import static edu.kit.ifv.mobitopp.publictransport.model.JourneyBuilder.journey;
-import static edu.kit.ifv.mobitopp.publictransport.model.StopBuilder.stop;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.contains;
@@ -21,10 +20,9 @@ import static org.mockito.Mockito.mock;
 
 import java.awt.geom.Point2D;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 
@@ -36,94 +34,66 @@ public class ConnectionsTest {
 	private static final Time someTime = new Time(LocalDateTime.of(1971, 1, 1, 0, 0));
 	private static final RelativeTime anotherRelativeTime = RelativeTime.of(1, MINUTES);
 	private static final RelativeTime otherRelativeTime = RelativeTime.of(2, MINUTES);
+	private Connections connections;
+	private Stop stop1;
+	private Stop stop2;
+	private Connection stop1ToStop2;
+	private Connection stop2ToStop3;
+	private Connection stop3ToStop4;
 
-	@Test
-	public void calculateSingleConnection() throws Exception {
-		Stop start = someStop();
-		Stop end = anotherStop();
-		Connection connection = connection()
-				.startsAt(start)
-				.endsAt(end)
-				.departsAt(someTime())
-				.arrivesAt(oneMinuteLater())
-				.build();
-
-		Connections connections = connections();
-		connections.add(connection);
-		Collection<Connection> listedConnections = connections.asCollection();
-
-		assertThat(listedConnections, contains(connection));
-	}
-
-	@Test
-	public void creationWithSeveralStopPointsOnRoute() throws Exception {
-		Stop stop1 = someStop();
-		Stop stop2 = anotherStop();
+	@Before
+	public void initialise() {
+		stop1 = someStop();
+		stop2 = anotherStop();
 		Stop stop3 = otherStop();
 
-		Journey journey = mock(Journey.class);
-		Connection stop1ToStop2 = connection()
+		stop1ToStop2 = connection()
 				.withId(1)
 				.startsAt(stop1)
 				.endsAt(stop2)
 				.departsAt(someTime())
 				.arrivesAt(oneMinuteLater())
-				.partOf(journey)
-				.with(routeInVisum())
 				.build();
-		Connection stop2ToStop3 = connection()
+		stop2ToStop3 = connection()
 				.withId(2)
 				.startsAt(stop2)
 				.endsAt(stop3)
 				.departsAt(oneMinuteLater())
 				.arrivesAt(twoMinutesLater())
-				.partOf(journey)
-				.with(routeInVisum())
 				.build();
+		stop3ToStop4 = connection().startsAt(otherStop()).endsAt(yetAnotherStop()).build();
+		connections = new Connections();
+	}
 
-		Connections connections = connections();
+	@Test
+	public void calculateSingleConnection() throws Exception {
+		connections.add(stop1ToStop2);
 
+		Collection<Connection> listedConnections = connections.asCollection();
+
+		assertThat(listedConnections, contains(stop1ToStop2));
+	}
+
+	@Test
+	public void creationWithSeveralStopPointsOnRoute() throws Exception {
 		connections.add(stop1ToStop2);
 		connections.add(stop2ToStop3);
+
 		Collection<Connection> listedConnections = connections.asCollection();
 
 		assertThat(listedConnections, hasItems(stop1ToStop2, stop2ToStop3));
 	}
 
-	private static List<Point2D> routeInVisum() {
-		ArrayList<Point2D> points = new ArrayList<>();
-		points.add(new Point2D.Float());
-		points.add(new Point2D.Float());
-		points.add(new Point2D.Float());
-		points.add(new Point2D.Float());
-		return points;
-	}
-
 	@Test
 	public void creationWithSameStopPointTwiceOnRoute() throws Exception {
-		Stop stop1 = stop().withId(1).withName("1").build();
-		Stop stop2 = stop().withId(2).withName("2").build();
-		Journey journey = mock(Journey.class);
-		Connection stop1ToStop2 = connection()
-				.withId(1)
-				.startsAt(stop1)
-				.endsAt(stop2)
-				.departsAt(someTime())
-				.arrivesAt(oneMinuteLater())
-				.partOf(journey)
-				.with(routeInVisum())
-				.build();
 		Connection stop2ToStop1 = connection()
 				.withId(2)
 				.startsAt(stop2)
 				.endsAt(stop1)
 				.departsAt(oneMinuteLater())
 				.arrivesAt(twoMinutesLater())
-				.partOf(journey)
-				.with(routeInVisum())
 				.build();
 
-		Connections connections = connections();
 		connections.add(stop1ToStop2);
 		connections.add(stop2ToStop1);
 		Collection<Connection> listedConnections = connections.asCollection();
@@ -133,7 +103,7 @@ public class ConnectionsTest {
 
 	@Test
 	public void doesNotFilterConnectionsWhenNoConnectionIsAdded() throws Exception {
-		Collection<Connection> listedConnections = connections().asCollection();
+		Collection<Connection> listedConnections = connections.asCollection();
 
 		assertThat(listedConnections, is(empty()));
 	}
@@ -141,44 +111,27 @@ public class ConnectionsTest {
 	@Test
 	public void doesNotFilterConnectionWithDifferentStartAndEndAndWhichArrivesAfterItDeparts()
 			throws Exception {
-		Time someTime = someTime();
-		Time notEarlier = oneMinuteLater();
-		Connection validConnection = connection()
-				.startsAt(someStop())
-				.endsAt(anotherStop())
-				.departsAt(someTime)
-				.arrivesAt(notEarlier)
-				.build();
-		Connections connections = connections();
-		connections.add(validConnection);
+		connections.add(stop1ToStop2);
 
 		Collection<Connection> listedConnections = connections.asCollection();
 
-		assertThat(listedConnections, contains(validConnection));
+		assertThat(listedConnections, contains(stop1ToStop2));
 	}
 
 	@Test
 	public void filtersConnectionWithSameStartAndEnd() throws Exception {
-		Connections connections = connections();
-
 		Stop sameStop = someStop();
-		Connection differentStartAndEnd = connection()
-				.startsAt(someStop())
-				.endsAt(anotherStop())
-				.build();
 		Connection sameStartAndEnd = connection().startsAt(someStop()).endsAt(sameStop).build();
-		connections.add(differentStartAndEnd);
+		connections.add(stop1ToStop2);
 		connections.add(sameStartAndEnd);
 
 		Collection<Connection> listedConnections = connections.asCollection();
 
-		assertThat(listedConnections, contains(differentStartAndEnd));
+		assertThat(listedConnections, contains(stop1ToStop2));
 	}
 
 	@Test
 	public void filtersConnectionWhichArrivesBeforeItDeparts() throws Exception {
-		Connections connections = connections();
-
 		Time earlierTime = someTime();
 		Time laterTime = oneMinuteLater();
 		ConnectionBuilder differentStartAndEnd = connection()
@@ -205,84 +158,64 @@ public class ConnectionsTest {
 	public void appliesAllConnections() throws Exception {
 		ConnectionConsumer consumer = mock(ConnectionConsumer.class);
 		InOrder inOrder = inOrder(consumer);
-		
-		Connections connections = connections();
-		Connection connection = connection()
-				.startsAt(someStop())
-				.endsAt(anotherStop())
-				.departsAt(someTime())
-				.arrivesAt(oneMinuteLater())
-				.build();
-		connections.add(connection);
-		Connection connection2 = connection()
-				.startsAt(anotherStop())
-				.endsAt(otherStop())
-				.departsAt(oneMinuteLater())
-				.arrivesAt(twoMinutesLater()).build();
-		connections.add(connection2);
+
+		connections.add(stop1ToStop2);
+		connections.add(stop2ToStop3);
 
 		connections.apply(consumer);
 
-		inOrder.verify(consumer).accept(connection);
-		inOrder.verify(consumer).accept(connection2);
+		inOrder.verify(consumer).accept(stop1ToStop2);
+		inOrder.verify(consumer).accept(stop2ToStop3);
 	}
-	
+
 	@Test
 	public void addAllConnections() throws Exception {
 		int id = 0;
-		Connection connection = connection().withId(id ).build();
+		Connection connection = connection().withId(id).build();
 		Connections newOnes = new Connections();
 		newOnes.add(connection);
 		Connections all = new Connections();
-		
+
 		all.addAll(newOnes);
-		
+
 		assertThat(all.get(id), is(equalTo(connection)));
 	}
-	
+
 	@Test
 	public void nextAfterIsAvailable() {
-		Connections connections = connections();
-		Connection first = connection().startsAt(someStop()).endsAt(anotherStop()).build();
-		Connection second = connection().startsAt(anotherStop()).endsAt(otherStop()).build();
-		Connection third = connection().startsAt(otherStop()).endsAt(yetAnotherStop()).build();
-		
-		connections.add(first);
-		connections.add(second);
-		connections.add(third);
-		Connection nextAfterFirst = connections.nextAfter(first);
-		Connection nextAfterSecond = connections.nextAfter(second);
-		Connection nextAfterThird = connections.nextAfter(third);
-		
-		assertThat(nextAfterFirst, is(second));
-		assertThat(nextAfterSecond, is(third));
+		connections.add(stop1ToStop2);
+		connections.add(stop2ToStop3);
+		connections.add(stop3ToStop4);
+
+		Connection nextAfterFirst = connections.nextAfter(stop1ToStop2);
+		Connection nextAfterSecond = connections.nextAfter(stop2ToStop3);
+		Connection nextAfterThird = connections.nextAfter(stop3ToStop4);
+
+		assertThat(nextAfterFirst, is(stop2ToStop3));
+		assertThat(nextAfterSecond, is(stop3ToStop4));
 		assertThat(nextAfterThird, is(nullValue()));
 	}
-	
+
 	@Test
 	public void positionOfConnection() {
-		Connections connections = connections();
-		Connection first = connection().startsAt(someStop()).endsAt(anotherStop()).build();
-		Connection second = connection().startsAt(anotherStop()).endsAt(otherStop()).build();
-		Connection third = connection().startsAt(otherStop()).endsAt(yetAnotherStop()).build();
-		
-		connections.add(first);
-		connections.add(second);
-		connections.add(third);
-		int positionOfFirst = connections.positionOf(first);
-		int positionOfSecond = connections.positionOf(second);
-		int positionOfThird = connections.positionOf(third);
-		
+		connections.add(stop1ToStop2);
+		connections.add(stop2ToStop3);
+		connections.add(stop3ToStop4);
+
+		int positionOfFirst = connections.positionOf(stop1ToStop2);
+		int positionOfSecond = connections.positionOf(stop2ToStop3);
+		int positionOfThird = connections.positionOf(stop3ToStop4);
+
 		assertThat(positionOfFirst, is(0));
 		assertThat(positionOfSecond, is(1));
 		assertThat(positionOfThird, is(2));
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void failWhenConnectionIsNotIncluded() {
 		Connection connection = connection().build();
-		
-		connections().positionOf(connection );
+
+		connections.positionOf(connection);
 	}
 
 	private Time someTime() {
@@ -295,10 +228,6 @@ public class ConnectionsTest {
 
 	private Time twoMinutesLater() {
 		return someTime.add(otherRelativeTime);
-	}
-
-	private static Connections connections() {
-		return new Connections();
 	}
 
 	@Test
