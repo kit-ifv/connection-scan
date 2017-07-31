@@ -13,7 +13,6 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -182,6 +181,28 @@ public class ConnectionsTest {
 	}
 
 	@Test
+	public void noConnectionAtAll() {
+		assertThat(connections.hasNextAfter(stop1ToStop2), is(false));
+	}
+
+	@Test
+	public void noConnectionAfterCurrent() {
+		connections.add(stop1ToStop2);
+
+		assertThat(connections.hasNextAfter(stop1ToStop2), is(false));
+	}
+
+	@Test
+	public void hasConnectionAfterCurrent() {
+		connections.add(stop1ToStop2);
+		connections.add(stop2ToStop3);
+		connections.add(stop3ToStop4);
+
+		assertThat(connections.hasNextAfter(stop1ToStop2), is(true));
+		assertThat(connections.hasNextAfter(stop2ToStop3), is(true));
+	}
+
+	@Test
 	public void nextAfterIsAvailable() {
 		connections.add(stop1ToStop2);
 		connections.add(stop2ToStop3);
@@ -189,11 +210,23 @@ public class ConnectionsTest {
 
 		Connection nextAfterFirst = connections.nextAfter(stop1ToStop2);
 		Connection nextAfterSecond = connections.nextAfter(stop2ToStop3);
-		Connection nextAfterThird = connections.nextAfter(stop3ToStop4);
 
 		assertThat(nextAfterFirst, is(stop2ToStop3));
 		assertThat(nextAfterSecond, is(stop3ToStop4));
-		assertThat(nextAfterThird, is(nullValue()));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void throwsExceptionWhenConnectionIsNotInCollection() {
+		connections.add(stop1ToStop2);
+		
+		connections.nextAfter(stop2ToStop3);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void throwsExceptionOnMissingNextConnection() {
+		connections.add(stop1ToStop2);
+
+		connections.nextAfter(stop1ToStop2);
 	}
 
 	@Test

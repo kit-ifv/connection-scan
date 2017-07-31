@@ -47,6 +47,17 @@ public class Connections {
 	int size() {
 		return connections.size();
 	}
+	
+	public boolean hasNextAfter(Connection connection) {
+		Iterator<Connection> iterator = connections.iterator();
+		while (iterator.hasNext()) {
+			Connection current = iterator.next();
+			if (current.equals(connection)) {
+				return iterator.hasNext();
+			}
+		}
+		return false;
+	}
 
 	public Connection nextAfter(Connection connection) {
 		Iterator<Connection> iterator = connections.iterator();
@@ -56,10 +67,10 @@ public class Connections {
 				if (iterator.hasNext()) {
 					return iterator.next();
 				}
-				return null;
+				throw new IllegalArgumentException("There is no connection after: " + connection);
 			}
 		}
-		return null;
+		throw new IllegalArgumentException("There is no matching connection to: " + connection);
 	}
 
 	public int positionOf(Connection connection) {
