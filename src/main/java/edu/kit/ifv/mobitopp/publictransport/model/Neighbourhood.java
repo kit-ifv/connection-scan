@@ -7,17 +7,33 @@ import java.util.Optional;
 
 public class Neighbourhood implements Iterable<Stop> {
 
+	private final Stop self;
 	private final Map<Stop, RelativeTime> neighbours;
 
-	public Neighbourhood() {
+	public Neighbourhood(Stop self) {
 		super();
+		this.self = self;
 		neighbours = new HashMap<>();
 	}
 
-	void add(Stop stop, RelativeTime duration) {
-		neighbours.put(stop, duration);
+	void add(Stop neighbour, RelativeTime duration) {
+		Neighbourhood otherNeighbourhood = neighbour.neighbours();
+		Optional<RelativeTime> walkTimeToSelf = otherNeighbourhood.walkTimeTo(self);
+		neighbours.put(neighbour, duration);
+		if (walkTimeToSelf.isPresent()) {
+			if (!walkTimeToSelf.get().equals(duration)) {
+				System.out.println("Asymmetric walk time detected. From " + self + " to " + neighbour);
+				System.out.println("Using symmetric walk time.");
+				RelativeTime symmetric = minimumOf(walkTimeToSelf.get(), duration);
+				neighbours.put(neighbour, symmetric);
+			}
+		}
 	}
 
+	private static RelativeTime minimumOf(RelativeTime first, RelativeTime second) {
+		return first.compareTo(second) < 0 ? first : second;
+	}
+	
 	public Optional<RelativeTime> walkTimeTo(Stop stop) {
 		if (neighbours.containsKey(stop)) {
 			return Optional.of(neighbours.get(stop));

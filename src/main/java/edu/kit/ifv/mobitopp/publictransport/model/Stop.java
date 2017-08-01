@@ -21,9 +21,9 @@ public class Stop {
 		this.name = name;
 		this.coordinate = coordinate;
 		this.minimumChangeTime = minimumChangeTime;
-		neighbours = new Neighbourhood();
 		this.station = station;
 		this.externalId = externalId;
+		neighbours = new Neighbourhood(this);
 	}
 	
 	public int id() {
