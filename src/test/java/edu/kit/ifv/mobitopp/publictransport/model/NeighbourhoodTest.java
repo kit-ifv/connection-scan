@@ -11,24 +11,29 @@ import static org.junit.Assert.assertThat;
 
 import java.util.Optional;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public class NeighbourhoodTest {
 
+	private Neighbourhood neighbourhood;
+	private Stop neighbour;
+	
+	@Before
+	public void initialise() {
+		neighbourhood = new Neighbourhood();
+		neighbour = someStop();
+	}
+
 	@Test
 	public void returnsEmptyWalkTimeWhenNeighbourhoodIsEmpty() throws Exception {
-		Neighbourhood neighbourhood = new Neighbourhood();
-
-		Stop stop = someStop();
-		Optional<RelativeTime> walkTime = neighbourhood.walkTimeTo(stop);
+		Optional<RelativeTime> walkTime = neighbourhood.walkTimeTo(neighbour);
 
 		assertThat(walkTime, isEmpty());
 	}
 
 	@Test
 	public void returnsDurationForStopWhichIsInNeighbourhood() throws Exception {
-		Stop neighbour = someStop();
-		Neighbourhood neighbourhood = new Neighbourhood();
 		neighbourhood.add(neighbour, RelativeTime.of(1, MINUTES));
 
 		Optional<RelativeTime> walkTime = neighbourhood.walkTimeTo(neighbour);
@@ -39,12 +44,10 @@ public class NeighbourhoodTest {
 
 	@Test
 	public void returnsEmptyWalkTimeWhenStopIsNotANeighbour() throws Exception {
-		Stop neighbour = someStop();
-		Neighbourhood neighbourhood = new Neighbourhood();
 		neighbourhood.add(neighbour, RelativeTime.of(1, MINUTES));
 
-		Stop stop = anotherStop();
-		Optional<RelativeTime> walkTime = neighbourhood.walkTimeTo(stop);
+		Stop noNeighbour = anotherStop();
+		Optional<RelativeTime> walkTime = neighbourhood.walkTimeTo(noNeighbour);
 
 		assertThat(walkTime, isEmpty());
 	}
