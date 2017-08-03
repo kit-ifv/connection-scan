@@ -17,17 +17,26 @@ public class Neighbourhood implements Iterable<Stop> {
 	}
 
 	void add(Stop neighbour, RelativeTime duration) {
+		RelativeTime symmetricWalkTime = calculateSymmetricWalkTime(neighbour, duration);
+		neighbours.put(neighbour, symmetricWalkTime);
+		neighbour.neighbours().neighbours.put(self, symmetricWalkTime);
+	}
+
+	private RelativeTime calculateSymmetricWalkTime(Stop neighbour, RelativeTime duration) {
 		Neighbourhood otherNeighbourhood = neighbour.neighbours();
 		Optional<RelativeTime> walkTimeToSelf = otherNeighbourhood.walkTimeTo(self);
-		neighbours.put(neighbour, duration);
 		if (walkTimeToSelf.isPresent()) {
 			if (!walkTimeToSelf.get().equals(duration)) {
-				System.out.println("Asymmetric walk time detected. From " + self + " to " + neighbour);
-				System.out.println("Using symmetric walk time.");
-				RelativeTime symmetric = minimumOf(walkTimeToSelf.get(), duration);
-				neighbours.put(neighbour, symmetric);
+				logAsymmetric(neighbour);
+				return minimumOf(walkTimeToSelf.get(), duration);
 			}
 		}
+		return duration;
+	}
+
+	private void logAsymmetric(Stop neighbour) {
+		System.out.println("Asymmetric walk time detected. From " + self + " to " + neighbour);
+		System.out.println("Using symmetric walk time.");
 	}
 
 	private static RelativeTime minimumOf(RelativeTime first, RelativeTime second) {

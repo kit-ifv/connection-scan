@@ -58,14 +58,27 @@ public class NeighbourhoodTest {
 	}
 
 	@Test
-	public void ensureSymmetricWalkTimes() {
+	public void ensureSymmetricWalkTimesShorterBeforeLonger() {
 		RelativeTime anotherTime = someTime.plus(1, MINUTES);
 		ownNeighbourhood.add(neighbour, someTime);
 		neighbour.addNeighbour(self, anotherTime);
-		
+
 		Optional<RelativeTime> neighbourToMe = neighbour.neighbours().walkTimeTo(self);
 		Optional<RelativeTime> meToNeighbour = ownNeighbourhood.walkTimeTo(neighbour);
-		
+
+		assertThat(neighbourToMe, isPresent());
+		assertThat(meToNeighbour, is(equalTo(neighbourToMe)));
+	}
+
+	@Test
+	public void ensureSymmetricWalkTimesLongerBeforeShorter() {
+		RelativeTime anotherTime = someTime.plus(1, MINUTES);
+		ownNeighbourhood.add(neighbour, anotherTime);
+		neighbour.addNeighbour(self, someTime);
+
+		Optional<RelativeTime> neighbourToMe = neighbour.neighbours().walkTimeTo(self);
+		Optional<RelativeTime> meToNeighbour = ownNeighbourhood.walkTimeTo(neighbour);
+
 		assertThat(neighbourToMe, isPresent());
 		assertThat(meToNeighbour, is(equalTo(neighbourToMe)));
 	}
