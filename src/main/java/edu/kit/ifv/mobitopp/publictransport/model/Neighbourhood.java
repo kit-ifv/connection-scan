@@ -25,18 +25,10 @@ public class Neighbourhood implements Iterable<Stop> {
 	private RelativeTime calculateSymmetricWalkTime(Stop neighbour, RelativeTime duration) {
 		Neighbourhood otherNeighbourhood = neighbour.neighbours();
 		Optional<RelativeTime> walkTimeToSelf = otherNeighbourhood.walkTimeTo(self);
-		if (walkTimeToSelf.isPresent()) {
-			if (!walkTimeToSelf.get().equals(duration)) {
-				logAsymmetric(neighbour);
-				return minimumOf(walkTimeToSelf.get(), duration);
-			}
-		}
-		return duration;
-	}
-
-	private void logAsymmetric(Stop neighbour) {
-		System.out.println("Asymmetric walk time detected. From " + self + " to " + neighbour);
-		System.out.println("Using symmetric walk time.");
+		return walkTimeToSelf
+				.filter(walkTime -> !walkTime.equals(duration))
+				.map(walkTime -> minimumOf(walkTime, duration))
+				.orElse(duration);
 	}
 
 	private static RelativeTime minimumOf(RelativeTime first, RelativeTime second) {
