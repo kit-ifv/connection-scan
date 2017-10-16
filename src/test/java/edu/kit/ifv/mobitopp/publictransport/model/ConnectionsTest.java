@@ -36,6 +36,8 @@ public class ConnectionsTest {
 	private Connections connections;
 	private Stop stop1;
 	private Stop stop2;
+	private Stop stop3;
+	private Stop stop4;
 	private Connection stop1ToStop2;
 	private Connection stop2ToStop3;
 	private Connection stop3ToStop4;
@@ -44,7 +46,8 @@ public class ConnectionsTest {
 	public void initialise() {
 		stop1 = someStop();
 		stop2 = anotherStop();
-		Stop stop3 = otherStop();
+		stop3 = otherStop();
+		stop4 = yetAnotherStop();
 
 		stop1ToStop2 = connection()
 				.withId(1)
@@ -60,7 +63,7 @@ public class ConnectionsTest {
 				.departsAt(oneMinuteLater())
 				.arrivesAt(twoMinutesLater())
 				.build();
-		stop3ToStop4 = connection().startsAt(otherStop()).endsAt(yetAnotherStop()).build();
+		stop3ToStop4 = connection().startsAt(stop3).endsAt(stop4).build();
 		connections = new Connections();
 	}
 
