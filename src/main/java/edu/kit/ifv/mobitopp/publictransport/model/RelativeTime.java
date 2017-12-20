@@ -44,6 +44,10 @@ public class RelativeTime implements Comparable<RelativeTime> {
 	public RelativeTime plus(RelativeTime other) {
 		return plus(other.duration);
 	}
+	
+	public RelativeTime minus(RelativeTime other) {
+		return new RelativeTime(this.duration.minus(other.duration));
+	}
 
 	public Duration toDuration() {
 		return duration;
