@@ -82,13 +82,17 @@ class DefaultConnectionSweeper implements ConnectionSweeper {
 
 	@Override
 	public Optional<PublicTransportRoute> sweep(PreparedSearchRequest searchRequest) {
-		Time atTime = searchRequest.startTime();
-		int fromStartIndex = lookup.apply(atTime);
-		scanConnections(fromStartIndex, searchRequest);
+		scanConnections(searchRequest);
 		return searchRequest.createRoute();
 	}
 
-	private void scanConnections(int startIndex, PreparedSearchRequest searchRequest) {
+	private int startIndexFor(PreparedSearchRequest searchRequest) {
+		Time atTime = searchRequest.startTime();
+		return lookup.apply(atTime);
+	}
+
+	private void scanConnections(PreparedSearchRequest searchRequest) {
+		int startIndex = startIndexFor(searchRequest);
 		for (int index = startIndex; index < connections.size(); index++) {
 			Connection connection = connections.get(index);
 			if (sweepCanBeCancled(searchRequest, index, connection)) {
