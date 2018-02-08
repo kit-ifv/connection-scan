@@ -60,7 +60,7 @@ abstract class BaseSearchRequest implements PreparedSearchRequest {
 			return;
 		}
 		Time currentArrival = times.get(connection.end());
-		if (currentArrival.isAfter(connection.arrival())) {
+		if (currentArrival.isLaterThan(connection.arrival())) {
 			updateArrivalInternal(connection);
 		}
 	}
@@ -70,7 +70,7 @@ abstract class BaseSearchRequest implements PreparedSearchRequest {
 			return false;
 		}
 		Time currentArrival = times.getConsideringMinimumChangeTime(connection.start());
-		return currentArrival.isAfter(connection.departure());
+		return currentArrival.isLaterThan(connection.departure());
 	}
 
 	private void updateArrivalInternal(Connection connection) {
@@ -89,7 +89,7 @@ abstract class BaseSearchRequest implements PreparedSearchRequest {
 
 	private void updateArrivalByFoot(Stop start, Stop end, Time arrivalAtStart, Time arrivalAtEnd) {
 		Time currentArrival = times.get(end);
-		if (currentArrival.isAfter(arrivalAtEnd)) {
+		if (currentArrival.isLaterThan(arrivalAtEnd)) {
 			updateTransfer(start, end, arrivalAtStart, arrivalAtEnd);
 		}
 	}

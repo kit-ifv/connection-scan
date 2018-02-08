@@ -95,8 +95,8 @@ public class TimeTest {
 		assertThat(current.compareTo(later), is(lessThan(0)));
 		assertThat(current.isBefore(later), is(true));
 		assertThat(current.isBeforeOrEqualTo(later), is(true));
-		assertThat(current.isAfter(later), is(false));
-		assertThat(current.isAfterOrEqualTo(later), is(false));
+		assertThat(current.isLaterThan(later), is(false));
+		assertThat(current.isLaterOrEqualThan(later), is(false));
 	}
 
 	@Test
@@ -139,8 +139,8 @@ public class TimeTest {
 		assertThat(current.compareTo(earlier), is(greaterThan(0)));
 		assertThat(current.isBefore(earlier), is(false));
 		assertThat(current.isBeforeOrEqualTo(earlier), is(false));
-		assertThat(current.isAfter(earlier), is(true));
-		assertThat(current.isAfterOrEqualTo(earlier), is(true));
+		assertThat(current.isLaterThan(earlier), is(true));
+		assertThat(current.isLaterOrEqualThan(earlier), is(true));
 	}
 
 	@Test
@@ -148,13 +148,13 @@ public class TimeTest {
 		assertThat(current.compareTo(same), is(0));
 		assertThat(current.isBefore(same), is(false));
 		assertThat(current.isBeforeOrEqualTo(same), is(true));
-		assertThat(current.isAfter(same), is(false));
-		assertThat(current.isAfterOrEqualTo(same), is(true));
+		assertThat(current.isLaterThan(same), is(false));
+		assertThat(current.isLaterOrEqualThan(same), is(true));
 	}
 
 	@Test
 	public void infiniteIsLaterThanOtherTimes() throws Exception {
-		assertThat(Time.infinite.isAfter(current), is(true));
+		assertThat(Time.infinite.isLaterThan(current), is(true));
 	}
 
 	@Test
@@ -178,13 +178,13 @@ public class TimeTest {
 	}
 
 	@Test
-	public void differenceTo() throws Exception {
+	public void durationTo() throws Exception {
 		LocalDateTime minute1 = LocalDateTime.of(1, 1, 1, 0, 1, 0);
 		LocalDateTime minute3 = LocalDateTime.of(1, 1, 1, 0, 3, 0);
 		Time earlier = time(minute1);
 		Time later = time(minute3);
 
-		RelativeTime duration = later.differenceTo(earlier);
+		RelativeTime duration = earlier.durationTo(later);
 
 		assertThat(duration, is(equalTo(RelativeTime.of(2, MINUTES))));
 	}

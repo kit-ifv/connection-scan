@@ -54,16 +54,16 @@ public class Time implements Comparable<Time> {
 		return seconds <= other.seconds;
 	}
 
-	public boolean isAfter(Time other) {
+	public boolean isLaterThan(Time other) {
 		return seconds > other.seconds;
 	}
 
-	public boolean isAfterOrEqualTo(Time other) {
+	public boolean isLaterOrEqualThan(Time other) {
 		return seconds >= other.seconds;
 	}
 
-	public RelativeTime differenceTo(Time other) {
-		long duration = seconds - other.seconds;
+	public RelativeTime durationTo(Time other) {
+		long duration = other.seconds - seconds;
 		return RelativeTime.of(duration, SECONDS);
 	}
 
