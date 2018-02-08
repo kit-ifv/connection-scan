@@ -21,17 +21,37 @@ public class RelativeTimeTest {
 	}
 
 	@Test
-	public void oneMinuteContainsSixtySeconds() throws Exception {
+	public void oneMinuteInSeconds() throws Exception {
 		RelativeTime time = RelativeTime.of(1l, ChronoUnit.MINUTES);
 
 		assertThat(time.seconds(), is(60l));
 	}
 
 	@Test
-	public void oneHourContains3600Seconds() throws Exception {
+	public void oneHourInSeconds() throws Exception {
 		RelativeTime time = RelativeTime.of(1l, ChronoUnit.HOURS);
 
 		assertThat(time.seconds(), is(3600l));
+	}
+	
+	@Test
+	public void plus() {
+		RelativeTime some = RelativeTime.ofSeconds(1);
+		RelativeTime another = RelativeTime.ofSeconds(1);
+		
+		RelativeTime sum = some.plus(another);
+		
+		assertThat(sum, is(RelativeTime.ofSeconds(2)));
+	}
+	
+	@Test
+	public void minus() {
+		RelativeTime some = RelativeTime.ofSeconds(1);
+		RelativeTime another = RelativeTime.ofSeconds(1);
+		
+		RelativeTime sum = some.minus(another);
+		
+		assertThat(sum, is(RelativeTime.ofSeconds(0)));
 	}
 
 	@Test

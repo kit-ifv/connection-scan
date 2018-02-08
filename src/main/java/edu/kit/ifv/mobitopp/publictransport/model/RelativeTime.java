@@ -17,10 +17,6 @@ public class RelativeTime implements Comparable<RelativeTime> {
 		this.duration = duration;
 	}
 
-	private Duration truncateToMinutes(Duration duration) {
-		return Duration.of(duration.toMinutes(), MINUTES);
-	}
-
 	public static RelativeTime of(long amount, ChronoUnit unit) {
 		return new RelativeTime(Duration.of(amount, unit));
 	}
@@ -32,21 +28,45 @@ public class RelativeTime implements Comparable<RelativeTime> {
 	public long toMinutes() {
 		return duration.toMinutes();
 	}
+	
+	public long toHours() {
+		return duration.toHours();
+	}
+
+	public long toDays() {
+		return duration.toDays();
+	}
 
 	public RelativeTime plus(long amount, ChronoUnit unit) {
 		return new RelativeTime(duration.plus(amount, unit));
 	}
 
-	public RelativeTime plus(Duration duration) {
-		return new RelativeTime(this.duration.plus(truncateToMinutes(duration)));
+	public RelativeTime plus(RelativeTime other) {
+		return new RelativeTime(duration.plus(other.duration));
 	}
 
-	public RelativeTime plus(RelativeTime other) {
-		return plus(other.duration);
+	public RelativeTime plusHours(long hours) {
+		return new RelativeTime(duration.plusHours(hours));
 	}
 	
+	public RelativeTime plusMinutes(long minutes) {
+		return new RelativeTime(duration.plusMinutes(minutes));
+	}
+	
+	public RelativeTime plusSeconds(long seconds) {
+		return new RelativeTime(duration.plusSeconds(seconds));
+	}
+	
+	public RelativeTime plusDays(long days) {
+		return new RelativeTime(duration.plusDays(days));
+	}
+
 	public RelativeTime minus(RelativeTime other) {
-		return new RelativeTime(this.duration.minus(other.duration));
+		return new RelativeTime(duration.minus(other.duration));
+	}
+
+	public RelativeTime minusDays(long days) {
+		return new RelativeTime(duration.minusDays(days));
 	}
 
 	public Duration toDuration() {
@@ -91,6 +111,18 @@ public class RelativeTime implements Comparable<RelativeTime> {
 	@Override
 	public String toString() {
 		return "RelativeTime [duration=" + duration + "]";
+	}
+
+	public static RelativeTime ofDays(long days) {
+		return new RelativeTime(Duration.ofDays(days));
+	}
+
+	public static RelativeTime ofSeconds(long seconds) {
+		return new RelativeTime(Duration.ofSeconds(seconds));
+	}
+
+	public static RelativeTime of(Duration duration) {
+		return new RelativeTime(duration);
 	}
 
 }
