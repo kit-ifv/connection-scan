@@ -70,7 +70,7 @@ public class Connection {
 	}
 
 	public RelativeTime duration() {
-		return departure.durationTo(arrival);
+		return arrival.differenceTo(departure);
 	}
 
 	public Journey journey() {

@@ -43,7 +43,7 @@ public class ScannedRoute implements PublicTransportRoute {
 
 	@Override
 	public RelativeTime duration() {
-		return departure.durationTo(arrival);
+		return arrival.differenceTo(departure);
 	}
 
 	@Override
