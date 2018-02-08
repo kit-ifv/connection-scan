@@ -32,11 +32,11 @@ public class SimpleNetwork {
 	private static final Double locationOfDortmund = new Point2D.Double(7.4652789, 51.5142273);
 	private static final RelativeTime noChangeTime = RelativeTime.ZERO;
 	static final Time day = new Time(LocalDateTime.of(2017, 3, 14, 0, 0));
-	static final Time noon = day.add(12, HOURS);
-	static final Time oneOClock = noon.add(1, HOURS);
-	static final Time twoOClock = noon.add(2, HOURS);
-	static final Time threeOClock = noon.add(3, HOURS);
-	static final Time fourOClock = noon.add(4, HOURS);
+	static final Time noon = day.plus(12, HOURS);
+	static final Time oneOClock = noon.plus(1, HOURS);
+	static final Time twoOClock = noon.plus(2, HOURS);
+	static final Time threeOClock = noon.plus(3, HOURS);
+	static final Time fourOClock = noon.plus(4, HOURS);
 	static final TransportSystem ice = new TransportSystem("ICE");
 
 	private final Station amsterdamStation;

@@ -20,7 +20,7 @@ public class StopPath {
 	}
 
 	public Time arrivalTimeStartingAt(Time currentTime) {
-		return currentTime.add(duration);
+		return currentTime.plus(duration);
 	}
 
 	@Override

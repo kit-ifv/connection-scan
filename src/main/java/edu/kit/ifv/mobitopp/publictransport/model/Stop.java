@@ -51,7 +51,7 @@ public class Stop {
 	}
 	
 	public Time addChangeTimeTo(Time currentArrival) {
-		return currentArrival.add(minimumChangeTime);
+		return currentArrival.plus(minimumChangeTime);
 	}
 
 	public Time subtractChangeTimeFrom(Time departure) {
@@ -71,7 +71,7 @@ public class Stop {
 
 	public Optional<Time> arrivalAt(Stop stop, Time arrival) {
 		Optional<RelativeTime> walkTime = neighbours.walkTimeTo(stop);
-		return walkTime.map(arrival::add);
+		return walkTime.map(arrival::plus);
 	}
 
 	@Override

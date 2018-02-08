@@ -142,7 +142,7 @@ public class MultipleStartsTest {
 		ArrivalTimes times = timesFromPaths(noWalkTime(), timeAtStart, additionalStops);
 		times.set(otherStop, timeAtOther);
 
-		Time timeAtOtherIncludingChangeTime = oneMinuteLater().add(changeTime);
+		Time timeAtOtherIncludingChangeTime = oneMinuteLater().plus(changeTime);
 		assertThat(times.getConsideringMinimumChangeTime(otherStop),
 				is(equalTo(timeAtOtherIncludingChangeTime)));
 	}
@@ -204,11 +204,11 @@ public class MultipleStartsTest {
 	}
 
 	private static Time oneMinuteLater() {
-		return someTime().add(oneMinute);
+		return someTime().plus(oneMinute);
 	}
 
 	private static Time twoMinutesLater() {
-		return someTime().add(twoMinutes);
+		return someTime().plus(twoMinutes);
 	}
 
 	private ArrivalTimes times(int numberOfStops) {

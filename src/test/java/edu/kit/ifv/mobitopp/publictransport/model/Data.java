@@ -52,19 +52,19 @@ public class Data {
 	}
 
 	public static Time oneMinuteLater() {
-		return someTime().add(RelativeTime.of(1, MINUTES));
+		return someTime().plus(RelativeTime.of(1, MINUTES));
 	}
 
 	public static Time twoMinutesLater() {
-		return oneMinuteLater().add(RelativeTime.of(1, MINUTES));
+		return oneMinuteLater().plus(RelativeTime.of(1, MINUTES));
 	}
 
 	public static Time threeMinutesLater() {
-		return twoMinutesLater().add(RelativeTime.of(1, MINUTES));
+		return twoMinutesLater().plus(RelativeTime.of(1, MINUTES));
 	}
 
 	public static Time fourMinutesLater() {
-		return threeMinutesLater().add(RelativeTime.of(1, MINUTES));
+		return threeMinutesLater().plus(RelativeTime.of(1, MINUTES));
 	}
 
 	public static Stop someStop() {

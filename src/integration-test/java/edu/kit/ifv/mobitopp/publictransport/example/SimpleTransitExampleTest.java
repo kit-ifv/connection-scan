@@ -91,7 +91,7 @@ public class SimpleTransitExampleTest {
 
 		Time atOneOClock = oneOClock;
 		Connection chemnitzToBerlin = network.chemnitzToBerlin();
-		Time includingEgresspath = fourOClock.add(walkTimeInBerlin);
+		Time includingEgresspath = fourOClock.plus(walkTimeInBerlin);
 		
 		StopPaths starts = DefaultStopPaths.from(asList(viaChemnitz, viaDortmund));
 		StopPaths ends = DefaultStopPaths.from(asList(toPlaceInBerlin));

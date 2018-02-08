@@ -259,11 +259,11 @@ public class ConnectionsTest {
 	}
 
 	private Time oneMinuteLater() {
-		return someTime.add(anotherRelativeTime);
+		return someTime.plus(anotherRelativeTime);
 	}
 
 	private Time twoMinutesLater() {
-		return someTime.add(otherRelativeTime);
+		return someTime.plus(otherRelativeTime);
 	}
 
 	@Test

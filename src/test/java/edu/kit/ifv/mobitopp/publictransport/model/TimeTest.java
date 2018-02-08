@@ -47,10 +47,10 @@ public class TimeTest {
 		oneHourEarlier = current.minus(of(1, HOURS));
 		oneMinuteEarlier = current.minus(of(1, MINUTES));
 		oneSecondEarlier = current.minus(of(1, SECONDS));
-		oneSecondLater = current.add(of(1, SECONDS));
-		oneMinuteLater = current.add(of(1, MINUTES));
-		oneHourLater = current.add(of(1, HOURS));
-		oneDayLater = current.add(of(1, DAYS));
+		oneSecondLater = current.plus(of(1, SECONDS));
+		oneMinuteLater = current.plus(of(1, MINUTES));
+		oneHourLater = current.plus(of(1, HOURS));
+		oneDayLater = current.plus(of(1, DAYS));
 		oneMonthLater = time(LocalDateTime.of(2016, 6, 27, 10, 38));
 		oneYearLater = time(LocalDateTime.of(2017, 5, 27, 10, 38));
 	}
@@ -161,7 +161,7 @@ public class TimeTest {
 	public void incrementsTimeByRelativeAmount() throws Exception {
 		RelativeTime oneMinute = RelativeTime.of(1, MINUTES);
 
-		Time increasedTime = current.add(oneMinute);
+		Time increasedTime = current.plus(oneMinute);
 
 		assertThat(increasedTime, is(oneMinuteLater));
 		assertThat(increasedTime, is(not(sameInstance(current))));

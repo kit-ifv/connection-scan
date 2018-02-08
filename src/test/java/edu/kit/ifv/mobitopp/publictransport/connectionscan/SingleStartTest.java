@@ -116,7 +116,7 @@ public class SingleStartTest {
 		times.set(start, timeAtStart);
 		times.set(otherStop, timeAtOther);
 
-		Time timeAtOtherIncludingChangeTime = oneMinuteLater().add(changeTime);
+		Time timeAtOtherIncludingChangeTime = oneMinuteLater().plus(changeTime);
 		assertThat(times.getConsideringMinimumChangeTime(otherStop),
 				is(equalTo(timeAtOtherIncludingChangeTime)));
 	}

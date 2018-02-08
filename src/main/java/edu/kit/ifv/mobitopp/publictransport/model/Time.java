@@ -67,7 +67,7 @@ public class Time implements Comparable<Time> {
 		return RelativeTime.of(duration, SECONDS);
 	}
 
-	public Time add(RelativeTime relativeTime) {
+	public Time plus(RelativeTime relativeTime) {
 		return new Time(seconds + relativeTime.seconds());
 	}
 
@@ -75,8 +75,8 @@ public class Time implements Comparable<Time> {
 		return new Time(seconds - relativeTime.seconds());
 	}
 
-	public Time add(int amount, ChronoUnit unit) {
-		return add(RelativeTime.of(amount, unit));
+	public Time plus(int amount, ChronoUnit unit) {
+		return plus(RelativeTime.of(amount, unit));
 	}
 
 	@Override

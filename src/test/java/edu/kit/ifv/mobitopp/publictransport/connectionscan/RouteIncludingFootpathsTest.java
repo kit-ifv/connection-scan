@@ -40,7 +40,7 @@ public class RouteIncludingFootpathsTest {
 
 		Time endDate = routeIncludingFootpath.arrival();
 
-		Time endTimeIncludingWalk = someTime().add(twoMinutes);
+		Time endTimeIncludingWalk = someTime().plus(twoMinutes);
 		assertThat(endDate, is(equalTo(endTimeIncludingWalk)));
 	}
 

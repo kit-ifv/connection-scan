@@ -33,7 +33,7 @@ class RouteIncludingFootpaths implements PublicTransportRoute {
 
 	@Override
 	public Time arrival() {
-		return route.arrival().add(end.duration());
+		return route.arrival().plus(end.duration());
 	}
 	
 	@Override

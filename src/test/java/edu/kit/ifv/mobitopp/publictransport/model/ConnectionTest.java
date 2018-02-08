@@ -183,7 +183,7 @@ public class ConnectionTest {
 	}
 
 	private static Time time(int hour, int minute) {
-		return someTime.add(hour, HOURS).add(minute, MINUTES);
+		return someTime.plus(hour, HOURS).plus(minute, MINUTES);
 	}
 
 }

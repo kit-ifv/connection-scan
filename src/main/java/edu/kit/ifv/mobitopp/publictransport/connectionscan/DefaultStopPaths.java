@@ -56,7 +56,7 @@ public class DefaultStopPaths implements StopPaths {
 	public boolean isConnectionReachableAt(Stop stop, Time time, Connection connection) {
 		if (stopToPath.containsKey(stop)) {
 			StopPath pathToStop = stopToPath.get(stop);
-			Time arrivalAtStop = time.add(pathToStop.duration());
+			Time arrivalAtStop = time.plus(pathToStop.duration());
 			return arrivalAtStop.isBeforeOrEqualTo(connection.departure());
 		}
 		return false;
