@@ -31,7 +31,7 @@ import org.junit.Test;
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.ConnectionBuilder;
 import edu.kit.ifv.mobitopp.publictransport.model.Connections;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 public class DefaultConnectionSweeperTest {
 
@@ -129,7 +129,7 @@ public class DefaultConnectionSweeperTest {
 		verifyNoMoreInteractions(searchRequest);
 	}
 
-	private void departAt(SimulationDateIfc time) {
+	private void departAt(Time time) {
 		when(searchRequest.startTime()).thenReturn(time);
 	}
 
@@ -166,30 +166,30 @@ public class DefaultConnectionSweeperTest {
 
 	@Test
 	public void timeIsTooLateWhenNoConnectionsAreAvailable() throws Exception {
-		SimulationDateIfc someTime = someTime();
+		Time someTime = someTime();
 
 		assertThat(connections(), is(afterLatestDeparture(someTime)));
 	}
 
 	@Test
 	public void isNotTooLateWhenTimeIsBeforeDepartureOfSingleConnection() throws Exception {
-		SimulationDateIfc laterTime = oneMinuteLater();
+		Time laterTime = oneMinuteLater();
 
 		Connection connection = connection().departsAt(laterTime).build();
 		DefaultConnectionSweeper connections = connections(connection);
 
-		SimulationDateIfc earlyEnoughTime = someTime();
+		Time earlyEnoughTime = someTime();
 		assertThat(connections, is(not(afterLatestDeparture(earlyEnoughTime))));
 	}
 
 	@Test
 	public void isTooLateWhenTimeIsAfterDepartureOfSingleConnection() throws Exception {
-		SimulationDateIfc earlierTime = someTime();
+		Time earlierTime = someTime();
 
 		Connection connection = connection().departsAt(earlierTime).build();
 		DefaultConnectionSweeper connections = connections(connection);
 
-		SimulationDateIfc tooLateTime = oneMinuteLater();
+		Time tooLateTime = oneMinuteLater();
 		assertThat(connections, is(afterLatestDeparture(tooLateTime)));
 	}
 
@@ -237,7 +237,7 @@ public class DefaultConnectionSweeperTest {
 		return validatedConnections;
 	}
 
-	private static Matcher<DefaultConnectionSweeper> afterLatestDeparture(SimulationDateIfc time) {
+	private static Matcher<DefaultConnectionSweeper> afterLatestDeparture(Time time) {
 		return new TypeSafeMatcher<DefaultConnectionSweeper>() {
 
 			@Override

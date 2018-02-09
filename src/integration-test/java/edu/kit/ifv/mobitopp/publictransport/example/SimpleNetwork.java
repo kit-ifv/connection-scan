@@ -22,7 +22,7 @@ import edu.kit.ifv.mobitopp.publictransport.model.Station;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.TransportSystem;
 import edu.kit.ifv.mobitopp.simulation.SimulationDate;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 public class SimpleNetwork {
 
@@ -31,12 +31,12 @@ public class SimpleNetwork {
 	private static final Double locationOfChemnitz = new Point2D.Double(12.9252977, 50.8322608);
 	private static final Double locationOfDortmund = new Point2D.Double(7.4652789, 51.5142273);
 	private static final RelativeTime noChangeTime = RelativeTime.ZERO;
-	static final SimulationDateIfc day = new SimulationDate();
-	static final SimulationDateIfc noon = day.plus(12, HOURS);
-	static final SimulationDateIfc oneOClock = noon.plus(1, HOURS);
-	static final SimulationDateIfc twoOClock = noon.plus(2, HOURS);
-	static final SimulationDateIfc threeOClock = noon.plus(3, HOURS);
-	static final SimulationDateIfc fourOClock = noon.plus(4, HOURS);
+	static final Time day = new SimulationDate();
+	static final Time noon = day.plus(12, HOURS);
+	static final Time oneOClock = noon.plus(1, HOURS);
+	static final Time twoOClock = noon.plus(2, HOURS);
+	static final Time threeOClock = noon.plus(3, HOURS);
+	static final Time fourOClock = noon.plus(4, HOURS);
 	static final TransportSystem ice = new TransportSystem("ICE");
 
 	private final Station amsterdamStation;
@@ -123,7 +123,7 @@ public class SimpleNetwork {
 		return Connection.from(3, dortmund, berlin, oneOClock, threeOClock, ice2, route);
 	}
 
-	public SimulationDateIfc noon() {
+	public Time noon() {
 		return noon;
 	}
 

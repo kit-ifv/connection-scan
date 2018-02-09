@@ -25,12 +25,12 @@ import java.util.List;
 import org.junit.Test;
 
 import edu.kit.ifv.mobitopp.simulation.SimulationDate;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class ConnectionTest {
 
-	private static final SimulationDateIfc someTime = new SimulationDate();
+	private static final Time someTime = new SimulationDate();
 
 	@Test
 	public void footConnectionHasFixedId() throws Exception {
@@ -63,8 +63,8 @@ public class ConnectionTest {
 
 	@Test
 	public void isInvalidWhenStartAndEndAreDifferentButDepartsAfterItArrives() throws Exception {
-		SimulationDateIfc earlierTime = someTime();
-		SimulationDateIfc laterTime = oneMinuteLater();
+		Time earlierTime = someTime();
+		Time laterTime = oneMinuteLater();
 		Connection connection = connection()
 				.startsAt(someStop())
 				.endsAt(anotherStop())
@@ -77,19 +77,19 @@ public class ConnectionTest {
 
 	@Test
 	public void departsBeforeTimeLaterThenDeparture() throws Exception {
-		SimulationDateIfc earlierTime = someTime();
+		Time earlierTime = someTime();
 		Connection connection = connection().departsAt(earlierTime).build();
 
-		SimulationDateIfc laterTime = oneMinuteLater();
+		Time laterTime = oneMinuteLater();
 		assertThat(connection, departsBefore(laterTime));
 	}
 
 	@Test
 	public void departsAfterTimeEarlierThenDeparture() throws Exception {
-		SimulationDateIfc laterTime = oneMinuteLater();
+		Time laterTime = oneMinuteLater();
 		Connection connection = connection().departsAt(laterTime).build();
 
-		SimulationDateIfc earlierTime = someTime();
+		Time earlierTime = someTime();
 		assertThat(connection, not(departsBefore(earlierTime)));
 	}
 
@@ -162,7 +162,7 @@ public class ConnectionTest {
 		Connection anotherConnection = connection().startsAt(anotherStop).build();
 		EqualsVerifier
 				.forClass(Connection.class)
-				.withPrefabValues(SimulationDateIfc.class, someTime(), oneMinuteLater())
+				.withPrefabValues(Time.class, someTime(), oneMinuteLater())
 				.withPrefabValues(Point2D.class, coordinate(0, 0), coordinate(1, 1))
 				.withPrefabValues(Stop.class, oneStop, anotherStop)
 				.withPrefabValues(Journey.class, oneJourney, anotherJourney)
@@ -172,19 +172,19 @@ public class ConnectionTest {
 				.verify();
 	}
 
-	private static SimulationDateIfc someTime() {
+	private static Time someTime() {
 		return time(0, 0);
 	}
 
-	private static SimulationDateIfc sameTime() {
+	private static Time sameTime() {
 		return time(0, 0);
 	}
 
-	private SimulationDateIfc oneMinuteLater() {
+	private Time oneMinuteLater() {
 		return time(0, 1);
 	}
 
-	private static SimulationDateIfc time(int hour, int minute) {
+	private static Time time(int hour, int minute) {
 		return someTime.plus(hour, HOURS).plus(minute, MINUTES);
 	}
 

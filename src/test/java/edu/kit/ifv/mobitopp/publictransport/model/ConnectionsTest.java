@@ -25,13 +25,13 @@ import org.junit.Test;
 import org.mockito.InOrder;
 
 import edu.kit.ifv.mobitopp.simulation.SimulationDate;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class ConnectionsTest {
 
 	protected static final Point2D somePoint = new Point2D.Float();
-	private static final SimulationDateIfc someTime = new SimulationDate();
+	private static final Time someTime = new SimulationDate();
 	private static final RelativeTime anotherRelativeTime = RelativeTime.of(1, MINUTES);
 	private static final RelativeTime otherRelativeTime = RelativeTime.of(2, MINUTES);
 	private Connections connections;
@@ -135,8 +135,8 @@ public class ConnectionsTest {
 
 	@Test
 	public void filtersConnectionWhichArrivesBeforeItDeparts() throws Exception {
-		SimulationDateIfc earlierTime = someTime();
-		SimulationDateIfc laterTime = oneMinuteLater();
+		Time earlierTime = someTime();
+		Time laterTime = oneMinuteLater();
 		ConnectionBuilder differentStartAndEnd = connection()
 				.startsAt(someStop())
 				.endsAt(anotherStop());
@@ -255,15 +255,15 @@ public class ConnectionsTest {
 		connections.positionOf(connection);
 	}
 
-	private SimulationDateIfc someTime() {
+	private Time someTime() {
 		return someTime;
 	}
 
-	private SimulationDateIfc oneMinuteLater() {
+	private Time oneMinuteLater() {
 		return someTime.plus(anotherRelativeTime);
 	}
 
-	private SimulationDateIfc twoMinutesLater() {
+	private Time twoMinutesLater() {
 		return someTime.plus(otherRelativeTime);
 	}
 

@@ -6,18 +6,18 @@ import java.util.List;
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 public class ScannedRoute implements PublicTransportRoute {
 
 	private final Stop start;
 	private final Stop end;
-	private final SimulationDateIfc departure;
-	private final SimulationDateIfc arrival;
+	private final Time departure;
+	private final Time arrival;
 	private final List<Connection> connections;
 
 	public ScannedRoute(
-			Stop start, Stop end, SimulationDateIfc departure, SimulationDateIfc arrival, List<Connection> connections) {
+			Stop start, Stop end, Time departure, Time arrival, List<Connection> connections) {
 		super();
 		this.start = start;
 		this.end = end;
@@ -37,7 +37,7 @@ public class ScannedRoute implements PublicTransportRoute {
 	}
 
 	@Override
-	public SimulationDateIfc arrival() {
+	public Time arrival() {
 		return arrival;
 	}
 

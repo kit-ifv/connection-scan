@@ -7,7 +7,7 @@ import java.util.Collection;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connections;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 public class TransitNetwork {
 
@@ -45,7 +45,7 @@ public class TransitNetwork {
 		return stops;
 	}
 
-	boolean scanNotNeeded(Stop start, Stop end, SimulationDateIfc time) {
+	boolean scanNotNeeded(Stop start, Stop end, Time time) {
 		return connections.areDepartedBefore(time) || notAvailable(start, end);
 	}
 
@@ -53,7 +53,7 @@ public class TransitNetwork {
 		return !stops.contains(fromStart) || !stops.contains(toEnd);
 	}
 
-	public boolean scanNotNeeded(StopPaths starts, StopPaths ends, SimulationDateIfc time) {
+	public boolean scanNotNeeded(StopPaths starts, StopPaths ends, Time time) {
 		return connections.areDepartedBefore(time) || notAvailable(starts, ends);
 	}
 

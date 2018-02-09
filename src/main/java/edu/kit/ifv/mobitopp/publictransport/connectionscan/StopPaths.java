@@ -5,7 +5,7 @@ import java.util.List;
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 public interface StopPaths {
 
@@ -15,6 +15,6 @@ public interface StopPaths {
 
 	List<StopPath> stopPaths();
 	
-	boolean isConnectionReachableAt(Stop stop, SimulationDateIfc time, Connection connection);
+	boolean isConnectionReachableAt(Stop stop, Time time, Connection connection);
 
 }

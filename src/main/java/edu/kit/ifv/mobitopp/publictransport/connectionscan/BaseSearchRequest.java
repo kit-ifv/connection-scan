@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 abstract class BaseSearchRequest implements PreparedSearchRequest {
 
@@ -25,32 +25,32 @@ abstract class BaseSearchRequest implements PreparedSearchRequest {
 		this.usedJourneys = usedJourneys;
 	}
 
-	protected void initialise(Stop start, SimulationDateIfc departure) {
+	protected void initialise(Stop start, Time departure) {
 		for (Stop neighbour : start.neighbours()) {
 			start.arrivalAt(neighbour, departure).ifPresent(
 					arrival -> updateTransfer(start, neighbour, departure, arrival));
 		}
 	}
 
-	private void updateTransfer(Stop fromStart, Stop end, SimulationDateIfc departure, SimulationDateIfc arrival) {
+	private void updateTransfer(Stop fromStart, Stop end, Time departure, Time arrival) {
 		Connection connection = Connection.byFootFrom(fromStart, end, departure, arrival);
 		updateTimeAndConnection(connection);
 	}
 
 	private void updateTimeAndConnection(Connection connection) {
 		Stop end = connection.end();
-		SimulationDateIfc arrival = connection.arrival();
+		Time arrival = connection.arrival();
 		times.set(end, arrival);
 		usedConnections.update(end, connection);
 		usedJourneys.use(connection.journey());
 	}
 	
-	protected SimulationDateIfc arrivalAt(Stop stop) {
+	protected Time arrivalAt(Stop stop) {
 		return times.get(stop);
 	}
 
 	@Override
-	public SimulationDateIfc startTime() {
+	public Time startTime() {
 		return times.startTime();
 	}
 
@@ -59,7 +59,7 @@ abstract class BaseSearchRequest implements PreparedSearchRequest {
 		if (isNotReachable(connection)) {
 			return;
 		}
-		SimulationDateIfc currentArrival = times.get(connection.end());
+		Time currentArrival = times.get(connection.end());
 		if (currentArrival.isAfter(connection.arrival())) {
 			updateArrivalInternal(connection);
 		}
@@ -69,7 +69,7 @@ abstract class BaseSearchRequest implements PreparedSearchRequest {
 		if (usedJourneys.used(connection.journey())) {
 			return false;
 		}
-		SimulationDateIfc currentArrival = times.getConsideringMinimumChangeTime(connection.start());
+		Time currentArrival = times.getConsideringMinimumChangeTime(connection.start());
 		return currentArrival.isAfter(connection.departure());
 	}
 
@@ -80,29 +80,29 @@ abstract class BaseSearchRequest implements PreparedSearchRequest {
 
 	private void updateArrivalAtNeighbours(Connection connection) {
 		Stop end = connection.end();
-		SimulationDateIfc arrival = connection.arrival();
+		Time arrival = connection.arrival();
 		for (Stop neighbour : end.neighbours()) {
 			end.arrivalAt(neighbour, arrival).ifPresent(arrivalByFoot -> updateArrivalByFoot(end,
 					neighbour, connection.arrival(), arrivalByFoot));
 		}
 	}
 
-	private void updateArrivalByFoot(Stop start, Stop end, SimulationDateIfc arrivalAtStart, SimulationDateIfc arrivalAtEnd) {
-		SimulationDateIfc currentArrival = times.get(end);
+	private void updateArrivalByFoot(Stop start, Stop end, Time arrivalAtStart, Time arrivalAtEnd) {
+		Time currentArrival = times.get(end);
 		if (currentArrival.isAfter(arrivalAtEnd)) {
 			updateTransfer(start, end, arrivalAtStart, arrivalAtEnd);
 		}
 	}
 
-	protected boolean isAfterArrivalAt(SimulationDateIfc departure, Stop end) {
-		SimulationDateIfc arrival = times.getConsideringMinimumChangeTime(end);
+	protected boolean isAfterArrivalAt(Time departure, Stop end) {
+		Time arrival = times.getConsideringMinimumChangeTime(end);
 		return arrival.isBefore(departure);
 	}
 
 	@Override
 	public Optional<PublicTransportRoute> createRoute() {
 		try {
-			SimulationDateIfc time = times.startTime();
+			Time time = times.startTime();
 			List<Connection> connections = collectConnections(usedConnections, time);
 			if (connections.isEmpty()) {
 				return empty();
@@ -115,7 +115,7 @@ abstract class BaseSearchRequest implements PreparedSearchRequest {
 		}
 	}
 
-	protected abstract List<Connection> collectConnections(UsedConnections usedConnections, SimulationDateIfc time) throws StopNotReachable;
+	protected abstract List<Connection> collectConnections(UsedConnections usedConnections, Time time) throws StopNotReachable;
 
 	private Stop firstStopOf(List<Connection> connections) {
 		return connections.get(firstConnection).start();
@@ -125,8 +125,8 @@ abstract class BaseSearchRequest implements PreparedSearchRequest {
 		return connections.get(connections.size() - 1).end();
 	}
 
-	private Optional<PublicTransportRoute> createRoute(Stop start, Stop end, SimulationDateIfc time, List<Connection> connections) {
-		SimulationDateIfc arrivalTime = times.get(end);
+	private Optional<PublicTransportRoute> createRoute(Stop start, Stop end, Time time, List<Connection> connections) {
+		Time arrivalTime = times.get(end);
 		return of(new ScannedRoute(start, end, time, arrivalTime, connections));
 	}
 

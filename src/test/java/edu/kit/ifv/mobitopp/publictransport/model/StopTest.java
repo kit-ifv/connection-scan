@@ -22,7 +22,7 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class StopTest {
@@ -35,7 +35,7 @@ public class StopTest {
 	private static final int externalId = 0;
 
 	private Station station;
-	private SimulationDateIfc currentTime;
+	private Time currentTime;
 	private Point2D someCoordinate;
 
 	@Before
@@ -50,7 +50,7 @@ public class StopTest {
 		Stop stop = stop();
 
 		stop.addNeighbour(stop, smallDuration);
-		Optional<SimulationDateIfc> arrival = stop.arrivalAt(stop, currentTime);
+		Optional<Time> arrival = stop.arrivalAt(stop, currentTime);
 
 		assertThat(arrival, isEmpty());
 		assertThat(stop.neighbours(), not(contains(stop)));
@@ -62,28 +62,28 @@ public class StopTest {
 
 	@Test
 	public void addsChangeTimeToGivenTimeWhenChangeTimeIsGreaterZero() throws Exception {
-		SimulationDateIfc timeIncludingChangeTime = stopWith(smallChangeTime).addChangeTimeTo(currentTime);
+		Time timeIncludingChangeTime = stopWith(smallChangeTime).addChangeTimeTo(currentTime);
 
 		assertThat(timeIncludingChangeTime, is(equalTo(oneMinuteLater())));
 	}
 
 	@Test
 	public void addsNothingToGivenTimeWhenChangeTimeIsZero() throws Exception {
-		SimulationDateIfc timeIncludingChangeTime = stopWith(noChangeTime).addChangeTimeTo(currentTime);
+		Time timeIncludingChangeTime = stopWith(noChangeTime).addChangeTimeTo(currentTime);
 
 		assertThat(timeIncludingChangeTime, is(equalTo(currentTime)));
 	}
 
 	@Test
 	public void subtractsChangeTimeFromGivenTime() throws Exception {
-		SimulationDateIfc timeIncludingChangeTime = stopWith(smallChangeTime).subtractChangeTimeFrom(currentTime);
+		Time timeIncludingChangeTime = stopWith(smallChangeTime).subtractChangeTimeFrom(currentTime);
 
 		assertThat(timeIncludingChangeTime, is(equalTo(oneMinuteEarlier())));
 	}
 
 	@Test
 	public void subtractsNothingFromGivenTime() throws Exception {
-		SimulationDateIfc timeIncludingChangeTime = stopWith(noChangeTime).subtractChangeTimeFrom(currentTime);
+		Time timeIncludingChangeTime = stopWith(noChangeTime).subtractChangeTimeFrom(currentTime);
 
 		assertThat(timeIncludingChangeTime, is(equalTo(currentTime)));
 	}

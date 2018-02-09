@@ -5,7 +5,7 @@ import java.util.List;
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 public interface PublicTransportRoute {
 
@@ -13,7 +13,7 @@ public interface PublicTransportRoute {
 	
 	Stop end();
 	
-	SimulationDateIfc arrival();
+	Time arrival();
 	
 	RelativeTime duration();
 

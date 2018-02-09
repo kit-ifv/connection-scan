@@ -21,7 +21,7 @@ import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class DefaultStopPathsTest {
@@ -50,7 +50,7 @@ public class DefaultStopPathsTest {
 		StopPaths stops = stops(asList(shortDistance(), longDistance()));
 		Connection connection = mock(Connection.class);
 		when(connection.departure()).thenReturn(oneMinuteLater());
-		SimulationDateIfc time = someTime();
+		Time time = someTime();
 
 		assertTrue(stops.isConnectionReachableAt(nearStop(), time, connection));
 		assertFalse(stops.isConnectionReachableAt(farStop(), time, connection));

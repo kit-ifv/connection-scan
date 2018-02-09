@@ -3,11 +3,11 @@ package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 import java.util.Optional;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 interface PreparedSearchRequest {
 
-	SimulationDateIfc startTime();
+	Time startTime();
 	
 	boolean departsAfterArrivalAtEnd(Connection connection);
 

@@ -7,15 +7,15 @@ import static java.time.temporal.ChronoUnit.MINUTES;
 import java.awt.geom.Point2D;
 
 import edu.kit.ifv.mobitopp.simulation.SimulationDate;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 public class Data {
 
-	public static SimulationDateIfc time(int hour, int minute) {
+	public static Time time(int hour, int minute) {
 		return new SimulationDate(RelativeTime.ofHours(hour).plusMinutes(minute));
 	}
 
-	public static SimulationDateIfc second(int seconds) {
+	public static Time second(int seconds) {
 		return SimulationDate.ofSeconds(seconds);
 	}
 
@@ -23,27 +23,27 @@ public class Data {
 		return new Point2D.Float(x, y);
 	}
 
-	public static SimulationDateIfc oneMinuteEarlier() {
+	public static Time oneMinuteEarlier() {
 		return someTime().minus(RelativeTime.of(1, MINUTES));
 	}
 
-	public static SimulationDateIfc someTime() {
+	public static Time someTime() {
 		return time(0, 0);
 	}
 
-	public static SimulationDateIfc oneMinuteLater() {
+	public static Time oneMinuteLater() {
 		return someTime().plus(RelativeTime.of(1, MINUTES));
 	}
 
-	public static SimulationDateIfc twoMinutesLater() {
+	public static Time twoMinutesLater() {
 		return oneMinuteLater().plus(RelativeTime.of(1, MINUTES));
 	}
 
-	public static SimulationDateIfc threeMinutesLater() {
+	public static Time threeMinutesLater() {
 		return twoMinutesLater().plus(RelativeTime.of(1, MINUTES));
 	}
 
-	public static SimulationDateIfc fourMinutesLater() {
+	public static Time fourMinutesLater() {
 		return threeMinutesLater().plus(RelativeTime.of(1, MINUTES));
 	}
 

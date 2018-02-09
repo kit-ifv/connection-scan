@@ -1,12 +1,12 @@
 package edu.kit.ifv.mobitopp.publictransport.model;
 
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 public interface Journey {
 
 	int id();
 
-	SimulationDateIfc day();
+	Time day();
 
 	Connections connections();
 

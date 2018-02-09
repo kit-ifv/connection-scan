@@ -23,16 +23,16 @@ import org.junit.Test;
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Connections;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 public class TransitNetworkTest {
 
-	private SimulationDateIfc searchTime;
+	private Time searchTime;
 	private Stop start;
 	private Stop end;
 	private Stop unreachableStop;
 	private TransitNetwork transitNetwork;
-	private SimulationDateIfc tooLate;
+	private Time tooLate;
 	private StopPaths starts;
 	private StopPaths ends;
 	

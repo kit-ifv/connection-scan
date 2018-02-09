@@ -27,7 +27,7 @@ import edu.kit.ifv.mobitopp.publictransport.model.FootJourney;
 import edu.kit.ifv.mobitopp.publictransport.model.Journey;
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 public class SingleSearchRequestTest {
 
@@ -144,7 +144,7 @@ public class SingleSearchRequestTest {
 	public void whenConnectionStartsAfterLatestDepartureAtTheEndStop() throws Exception {
 		Stop start = stop1;
 		Stop end = stop2;
-		SimulationDateIfc time = someTime();
+		Time time = someTime();
 		PreparedSearchRequest searchRequest = newScannedArrival(start, end, time);
 		
 		assertFalse(searchRequest.departsAfterArrivalAtEnd(reachableConnection()));
@@ -532,7 +532,7 @@ public class SingleSearchRequestTest {
 		assertThat(route, isEmpty());
 	}
 
-	private PreparedSearchRequest newScannedArrival(Stop start, Stop end, SimulationDateIfc time) {
+	private PreparedSearchRequest newScannedArrival(Stop start, Stop end, Time time) {
 		return SingleSearchRequest.from(start, end, time, maximumNumberOfStops);
 	}
 	

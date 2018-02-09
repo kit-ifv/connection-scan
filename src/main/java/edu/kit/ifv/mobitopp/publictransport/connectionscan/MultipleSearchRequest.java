@@ -9,7 +9,7 @@ import java.util.Optional;
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 class MultipleSearchRequest extends BaseSearchRequest {
 
@@ -23,7 +23,7 @@ class MultipleSearchRequest extends BaseSearchRequest {
 		this.toEnds = toEnds;
 	}
 
-	static PreparedSearchRequest from(StopPaths fromStarts, StopPaths toEnds, SimulationDateIfc atTime, int numberOfStops) {
+	static PreparedSearchRequest from(StopPaths fromStarts, StopPaths toEnds, Time atTime, int numberOfStops) {
 		ArrivalTimes times = MultipleStarts.create(fromStarts, atTime, numberOfStops);
 		UsedConnections usedConnections = new DefaultUsedConnections(numberOfStops);
 		UsedJourneys usedJourneys = new DefaultUsedJourneys();
@@ -51,7 +51,7 @@ class MultipleSearchRequest extends BaseSearchRequest {
 	}
 
 	@Override
-	protected List<Connection> collectConnections(UsedConnections usedConnections, SimulationDateIfc time)
+	protected List<Connection> collectConnections(UsedConnections usedConnections, Time time)
 			throws StopNotReachable {
 		Optional<Stop> toEnd = stopWithEarliestArrival();
 		if (toEnd.isPresent()) {
@@ -62,11 +62,11 @@ class MultipleSearchRequest extends BaseSearchRequest {
 
 	private Optional<Stop> stopWithEarliestArrival() {
 		Stop stop = null;
-		SimulationDateIfc currentArrival = null;
+		Time currentArrival = null;
 		for (StopPath path : toEnds.stopPaths()) {
 			Stop current = path.stop();
-			SimulationDateIfc currentTime = arrivalAt(current);
-			SimulationDateIfc includingFootpath = path.arrivalTimeStartingAt(currentTime);
+			Time currentTime = arrivalAt(current);
+			Time includingFootpath = path.arrivalTimeStartingAt(currentTime);
 			if (null == currentArrival || includingFootpath.isBefore(currentArrival)) {
 				stop = current;
 				currentArrival = currentTime;
@@ -80,7 +80,7 @@ class MultipleSearchRequest extends BaseSearchRequest {
 		return isAfterArrivalAtEnd(connection.departure());
 	}
 	
-	private boolean isAfterArrivalAtEnd(SimulationDateIfc departure) {
+	private boolean isAfterArrivalAtEnd(Time departure) {
 		for (Stop stop : toEnds.stops()) {
 			if (isAfterArrivalAt(departure, stop)) {
 				return true;

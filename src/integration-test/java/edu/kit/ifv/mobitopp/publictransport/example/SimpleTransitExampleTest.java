@@ -25,7 +25,7 @@ import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 public class SimpleTransitExampleTest {
 
@@ -40,7 +40,7 @@ public class SimpleTransitExampleTest {
 	public void routeFromStopToStop() {
 		Stop fromAmsterdam = network.amsterdam();
 		Stop toBerlin = network.berlin();
-		SimulationDateIfc atNoon = network.noon();
+		Time atNoon = network.noon();
 		Connection amsterdamToDortmund = network.amsterdamToDortmund();
 		Connection dortmundToBerlin = network.dortmundToBerlin();
 		
@@ -60,7 +60,7 @@ public class SimpleTransitExampleTest {
 	public void anotherRouteFromStopToStop() {
 		Stop fromChemnitz = network.chemnitz();
 		Stop toBerlin = network.berlin();
-		SimulationDateIfc atOneOClock = oneOClock;
+		Time atOneOClock = oneOClock;
 		Connection chemnitzToBerlin = network.chemnitzToBerlin();
 		
 		RouteSearch connectionScan = network.connectionScan();
@@ -89,9 +89,9 @@ public class SimpleTransitExampleTest {
 		RelativeTime walkTimeInBerlin = RelativeTime.of(5, MINUTES);
 		StopPath toPlaceInBerlin = new StopPath(berlin, walkTimeInBerlin);
 
-		SimulationDateIfc atOneOClock = oneOClock;
+		Time atOneOClock = oneOClock;
 		Connection chemnitzToBerlin = network.chemnitzToBerlin();
-		SimulationDateIfc includingEgresspath = fourOClock.plus(walkTimeInBerlin);
+		Time includingEgresspath = fourOClock.plus(walkTimeInBerlin);
 		
 		StopPaths starts = DefaultStopPaths.from(asList(viaChemnitz, viaDortmund));
 		StopPaths ends = DefaultStopPaths.from(asList(toPlaceInBerlin));

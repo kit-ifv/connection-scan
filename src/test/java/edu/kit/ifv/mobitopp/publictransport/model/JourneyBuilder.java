@@ -1,17 +1,17 @@
 package edu.kit.ifv.mobitopp.publictransport.model;
 
 import edu.kit.ifv.mobitopp.simulation.SimulationDate;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 public class JourneyBuilder {
 
 	private static final int defaultId = 0;
-	private static final SimulationDateIfc defaultDay = new SimulationDate();
+	private static final Time defaultDay = new SimulationDate();
 	private static final int defaultCapacity = 0;
 	private static final TransportSystem defaultSystem = new TransportSystem("default system");
 
 	private int id;
-	private SimulationDateIfc day;
+	private Time day;
 	private TransportSystem system;
 	private int capacity;
 
@@ -32,7 +32,7 @@ public class JourneyBuilder {
 		return this;
 	}
 
-	public JourneyBuilder at(SimulationDateIfc day) {
+	public JourneyBuilder at(Time day) {
 		this.day = day;
 		return this;
 	}

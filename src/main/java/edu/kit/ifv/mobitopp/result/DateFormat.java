@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 
 import edu.kit.ifv.mobitopp.simulation.SimulationDate;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 public class DateFormat {
 
@@ -22,27 +22,27 @@ public class DateFormat {
 		super();
 	}
 
-	public String asDay(SimulationDateIfc date) {
+	public String asDay(Time date) {
 		return format(date, dayFormat);
 	}
 
-	public String asTime(SimulationDateIfc date) {
+	public String asTime(Time date) {
 		return format(date, timeFormat);
 	}
 
-	public String asFullDate(SimulationDateIfc date) {
+	public String asFullDate(Time date) {
 		return format(date, fullFormat);
 	}
 
-	public String asWeekdayTime(SimulationDateIfc date) {
+	public String asWeekdayTime(Time date) {
 		return format(date, weekdayTimeFormat);
 	}
 
-	public String asDayTime(SimulationDateIfc date) {
+	public String asDayTime(Time date) {
 		return format(date, dayTimeFormat);
 	}
 
-	private String format(SimulationDateIfc date, DateTimeFormatter format) {
+	private String format(Time date, DateTimeFormatter format) {
 		return SimulationDate.monday.plus(date.fromStart().toDuration()).format(format);
 	}
 

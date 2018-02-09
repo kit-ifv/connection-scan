@@ -20,7 +20,7 @@ import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Journey;
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class ScannedRouteTest {
@@ -43,7 +43,7 @@ public class ScannedRouteTest {
 		Connection anotherConnection = connection().startsAt(anotherStop).build();
 		EqualsVerifier
 				.forClass(ScannedRoute.class)
-				.withPrefabValues(SimulationDateIfc.class, someTime(), oneMinuteLater())
+				.withPrefabValues(Time.class, someTime(), oneMinuteLater())
 				.withPrefabValues(Point2D.class, coordinate(0, 0), coordinate(1, 1))
 				.withPrefabValues(Stop.class, oneStop, anotherStop)
 				.withPrefabValues(Journey.class, oneJourney, anotherJourney)
@@ -70,11 +70,11 @@ public class ScannedRouteTest {
 		return connection;
 	}
 
-	private static SimulationDateIfc someTime() {
+	private static Time someTime() {
 		return second(10);
 	}
 
-	private static SimulationDateIfc oneMinuteLater() {
+	private static Time oneMinuteLater() {
 		return second(70);
 	}
 

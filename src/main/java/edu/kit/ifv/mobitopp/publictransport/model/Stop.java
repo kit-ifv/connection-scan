@@ -3,7 +3,7 @@ package edu.kit.ifv.mobitopp.publictransport.model;
 import java.awt.geom.Point2D;
 import java.util.Optional;
 
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 public class Stop {
 
@@ -52,11 +52,11 @@ public class Stop {
 		return externalId;
 	}
 	
-	public SimulationDateIfc addChangeTimeTo(SimulationDateIfc currentArrival) {
+	public Time addChangeTimeTo(Time currentArrival) {
 		return currentArrival.plus(minimumChangeTime);
 	}
 
-	public SimulationDateIfc subtractChangeTimeFrom(SimulationDateIfc departure) {
+	public Time subtractChangeTimeFrom(Time departure) {
 		return departure.minus(minimumChangeTime);
 	}
 
@@ -71,7 +71,7 @@ public class Stop {
 		return neighbours;
 	}
 
-	public Optional<SimulationDateIfc> arrivalAt(Stop stop, SimulationDateIfc arrival) {
+	public Optional<Time> arrivalAt(Stop stop, Time arrival) {
 		Optional<RelativeTime> walkTime = neighbours.walkTimeTo(stop);
 		return walkTime.map(arrival::plus);
 	}

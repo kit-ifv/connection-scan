@@ -19,23 +19,23 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class SimulationDateTest {
 
-	private SimulationDateIfc date;
-	private SimulationDateIfc time;
+	private Time date;
+	private Time time;
 
 	private final int day = 0;
 	private final int hour = 6;
 	private final int minute = 30;
 	private final int second = 5;
-	private SimulationDateIfc monday;
-	private SimulationDateIfc tuesday;
-	private SimulationDateIfc wednesday;
-	private SimulationDateIfc thursday;
-	private SimulationDateIfc friday;
-	private SimulationDateIfc saturday;
-	private SimulationDateIfc sunday;
-	private SimulationDateIfc nextMonday;
-	private SimulationDateIfc same;
-	private SimulationDateIfc later;
+	private Time monday;
+	private Time tuesday;
+	private Time wednesday;
+	private Time thursday;
+	private Time friday;
+	private Time saturday;
+	private Time sunday;
+	private Time nextMonday;
+	private Time same;
+	private Time later;
 
 	@Before
 	public void setUp() {
@@ -55,7 +55,7 @@ public class SimulationDateTest {
 	
 	@Test
 	public void startsAtMonday() {
-		SimulationDateIfc date = new SimulationDate();
+		Time date = new SimulationDate();
 		
 		assertThat(date.weekDay(), is(DayOfWeek.MONDAY));
 	}
@@ -79,31 +79,31 @@ public class SimulationDateTest {
 		assertUnchangedSecondOf(time);
 	}
 
-	private void assertZeroSecondOf(SimulationDateIfc date) {
+	private void assertZeroSecondOf(Time date) {
 		assertEquals("failure - second wrong", 0, date.getSecond());
 	}
 
-	private void assertZeroMinuteOf(SimulationDateIfc date) {
+	private void assertZeroMinuteOf(Time date) {
 		assertEquals("failure - minute wrong", 0, date.getMinute());
 	}
 
-	private void assertZeroHourOf(SimulationDateIfc date) {
+	private void assertZeroHourOf(Time date) {
 		assertEquals("failure - hour wrong", 0, date.getHour());
 	}
 
-	private void assertUnchangedSecondOf(SimulationDateIfc date) {
+	private void assertUnchangedSecondOf(Time date) {
 		assertEquals("failure - second wrong", second, date.getSecond());
 	}
 
-	private void assertUnchangedMinuteOf(SimulationDateIfc date) {
+	private void assertUnchangedMinuteOf(Time date) {
 		assertEquals("failure - minute wrong", minute, date.getMinute());
 	}
 
-	private void assertUnchangedHourOf(SimulationDateIfc date) {
+	private void assertUnchangedHourOf(Time date) {
 		assertEquals("failure - hour wrong", hour, date.getHour());
 	}
 
-	private void assertUnchangedDayOf(SimulationDateIfc date) {
+	private void assertUnchangedDayOf(Time date) {
 		assertEquals("failure - day wrong", day, date.getDay());
 	}
 
@@ -121,14 +121,14 @@ public class SimulationDateTest {
 
 	@Test
 	public void previousDay() {
-		SimulationDateIfc nextDate = date.previousDay();
+		Time nextDate = date.previousDay();
 		
 		assertChangedDayOf(nextDate, day - 1);
 		assertZeroHourOf(nextDate);
 		assertZeroMinuteOf(nextDate);
 		assertZeroSecondOf(nextDate);
 		
-		SimulationDateIfc nextTime = time.previousDay();
+		Time nextTime = time.previousDay();
 		assertChangedDayOf(nextTime, day - 1);
 		assertZeroHourOf(nextTime);
 		assertZeroMinuteOf(nextTime);
@@ -137,14 +137,14 @@ public class SimulationDateTest {
 	
 	@Test
 	public void nextDay() {
-		SimulationDateIfc nextDate = date.nextDay();
+		Time nextDate = date.nextDay();
 
 		assertChangedDayOf(nextDate, day + 1);
 		assertZeroHourOf(nextDate);
 		assertZeroMinuteOf(nextDate);
 		assertZeroSecondOf(nextDate);
 
-		SimulationDateIfc nextTime = time.nextDay();
+		Time nextTime = time.nextDay();
 		assertChangedDayOf(nextTime, day + 1);
 		assertZeroHourOf(nextTime);
 		assertZeroMinuteOf(nextTime);
@@ -187,22 +187,22 @@ public class SimulationDateTest {
 	
 	@Test
 	public void isNotMidnight() {
-		SimulationDateIfc oneSecondAfter = date.plusSeconds(1);
-		SimulationDateIfc oneMinuteAfter = date.plusMinutes(1);
-		SimulationDateIfc oneHourAfter = date.plusHours(1);
+		Time oneSecondAfter = date.plusSeconds(1);
+		Time oneMinuteAfter = date.plusMinutes(1);
+		Time oneHourAfter = date.plusHours(1);
 		assertFalse(oneSecondAfter.isMidnight());
 		assertFalse(oneMinuteAfter.isMidnight());
 		assertFalse(oneHourAfter.isMidnight());
 	}
 
-	private void assertChangedDayOf(SimulationDateIfc nextDate, int expected) {
+	private void assertChangedDayOf(Time nextDate, int expected) {
 		assertEquals("failure - day wrong", expected, nextDate.getDay());
 	}
 	
 	@Test
 	public void decrease() {
 		int seconds = 1;
-		SimulationDateIfc changed = time.minus(RelativeTime.ofSeconds(seconds));
+		Time changed = time.minus(RelativeTime.ofSeconds(seconds));
 		
 		assertChangedSecondOf(changed, second - seconds);
 		assertUnchangedDayOf(changed);
@@ -213,7 +213,7 @@ public class SimulationDateTest {
 	@Test
 	public void increase() {
 		int seconds = 1;
-		SimulationDateIfc changed = time.plus(RelativeTime.ofSeconds(seconds));
+		Time changed = time.plus(RelativeTime.ofSeconds(seconds));
 		
 		assertChangedSecondOf(changed, second + seconds);
 		assertUnchangedDayOf(changed);
@@ -224,7 +224,7 @@ public class SimulationDateTest {
 	@Test
 	public void increaseDay() {
 		int increment = 1;
-		SimulationDateIfc next = time.plusDays(increment);
+		Time next = time.plusDays(increment);
 		
 		assertChangedDayOf(next, day + increment);
 		assertUnchangedHourOf(next);
@@ -237,7 +237,7 @@ public class SimulationDateTest {
 		int inc_hh = 2;
 		int inc_mm = 10;
 
-		SimulationDateIfc next = time.plusMinutes(inc_dd * 24 * 60 + inc_hh * 60 + inc_mm);
+		Time next = time.plusMinutes(inc_dd * 24 * 60 + inc_hh * 60 + inc_mm);
 
 		assertChangedDayOf(next, day + inc_dd);
 		assertChangedHourOf(next, hour + inc_hh);
@@ -245,11 +245,11 @@ public class SimulationDateTest {
 		assertUnchangedSecondOf(next);
 	}
 
-	private void assertChangedMinuteOf(SimulationDateIfc next, int minute) {
+	private void assertChangedMinuteOf(Time next, int minute) {
 		assertEquals("failure - minute wrong", minute, next.getMinute());
 	}
 
-	private void assertChangedHourOf(SimulationDateIfc next, int hour) {
+	private void assertChangedHourOf(Time next, int hour) {
 		assertEquals("failure - hour wrong", hour, next.getHour());
 	}
 
@@ -260,7 +260,7 @@ public class SimulationDateTest {
 		int inc_mm = 10;
 		int inc_ss = 17;
 
-		SimulationDateIfc next = time
+		Time next = time
 				.plusSeconds((((inc_dd * 24) + inc_hh) * 60 + inc_mm) * 60 + inc_ss);
 
 		assertChangedDayOf(next, day + inc_dd);
@@ -269,13 +269,13 @@ public class SimulationDateTest {
 		assertChangedSecondOf(next, second + inc_ss);
 	}
 
-	private void assertChangedSecondOf(SimulationDateIfc next, int second) {
+	private void assertChangedSecondOf(Time next, int second) {
 		assertEquals("failure - second wrong", second, next.getSecond());
 	}
 
 	@Test
 	public void startOfDay() {
-		SimulationDateIfc value = time.startOfDay();
+		Time value = time.startOfDay();
 
 		assertUnchangedDayOf(value);
 		assertZeroHourOf(value);
@@ -285,7 +285,7 @@ public class SimulationDateTest {
 
 	@Test
 	public void newTime() {
-		SimulationDateIfc value = time.newTime(12, 15, 30);
+		Time value = time.newTime(12, 15, 30);
 
 		assertUnchangedDayOf(value);
 		assertEquals("failure - hour wrong", 12, value.getHour());
@@ -300,7 +300,7 @@ public class SimulationDateTest {
 
 	@Test
 	public void differenceInSeconds() {
-		SimulationDateIfc value = time.plusSeconds(61);
+		Time value = time.plusSeconds(61);
 
 		assertEquals("failure - wrong difference", 61, value.differenceTo(time).seconds());
 		assertEquals("failure - wrong difference", -61, time.differenceTo(value).seconds());
@@ -308,7 +308,7 @@ public class SimulationDateTest {
 
 	@Test
 	public void differenceInMinutes() {
-		SimulationDateIfc value = time.plusSeconds(61);
+		Time value = time.plusSeconds(61);
 
 		assertEquals("failure - wrong difference", 1, value.differenceTo(time).toMinutes());
 		assertEquals("failure - wrong difference", -1, time.differenceTo(value).toMinutes());
@@ -322,7 +322,7 @@ public class SimulationDateTest {
 	@Test
 	public void testEquals() {
 
-		SimulationDateIfc value = time.startOfDay();
+		Time value = time.startOfDay();
 
 		assertEquals("failure - equals", date, date);
 		assertEquals("failure - equals", time, time);
@@ -340,7 +340,7 @@ public class SimulationDateTest {
 	@Test
 	public void testHashCode() {
 
-		SimulationDateIfc value = time.startOfDay();
+		Time value = time.startOfDay();
 
 		assertEquals("failure - equals", date, date);
 		assertEquals("failure - equals", time, time);

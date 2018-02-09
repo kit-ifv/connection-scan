@@ -4,13 +4,13 @@ import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 public class ArriveAt extends TypeSafeMatcher<Connection> {
 
-	private final SimulationDateIfc arrival;
+	private final Time arrival;
 
-	public ArriveAt(SimulationDateIfc arrival) {
+	public ArriveAt(Time arrival) {
 		super();
 		this.arrival = arrival;
 	}

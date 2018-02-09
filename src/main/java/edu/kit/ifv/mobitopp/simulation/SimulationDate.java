@@ -10,7 +10,7 @@ import java.util.List;
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.result.DateFormat;
 
-public class SimulationDate implements SimulationDateIfc, Comparable<SimulationDateIfc> {
+public class SimulationDate implements Time, Comparable<Time> {
 
 	public static final LocalDateTime monday = LocalDateTime.of(1970, 1, 5, 0, 0);
 	private final long seconds;
@@ -20,7 +20,7 @@ public class SimulationDate implements SimulationDateIfc, Comparable<SimulationD
 		this.seconds = 0;
 	}
 	
-	public SimulationDate(SimulationDateIfc date) {
+	public SimulationDate(Time date) {
 		this(date.fromStart());
 	}
 
@@ -33,7 +33,7 @@ public class SimulationDate implements SimulationDateIfc, Comparable<SimulationD
 		this(RelativeTime.ofDays(days).plusHours(hours).plusMinutes(minutes).plusSeconds(seconds));
 	}
 	
-	public static SimulationDateIfc ofSeconds(long seconds) {
+	public static Time ofSeconds(long seconds) {
 		return new SimulationDate(RelativeTime.ofSeconds(seconds));
 	}
 
@@ -73,13 +73,13 @@ public class SimulationDate implements SimulationDateIfc, Comparable<SimulationD
 	}
 
 	@Override
-	public SimulationDateIfc previousDay() {
+	public Time previousDay() {
 		RelativeTime previousDay = RelativeTime.ofDays(fromStart().toDays()).minusDays(1);
 		return new SimulationDate(previousDay);
 	}
 
 	@Override
-	public SimulationDateIfc nextDay() {
+	public Time nextDay() {
 		RelativeTime nextDay = RelativeTime.ofDays(fromStart().toDays()).plusDays(1);
 		return new SimulationDate(nextDay);
 	}
@@ -90,22 +90,22 @@ public class SimulationDate implements SimulationDateIfc, Comparable<SimulationD
 	}
 
 	@Override
-	public boolean isAfter(SimulationDateIfc otherDate) {
+	public boolean isAfter(Time otherDate) {
 		return toSeconds() > inSeconds(otherDate);
 	}
 
 	@Override
-	public boolean isBefore(SimulationDateIfc otherDate) {
+	public boolean isBefore(Time otherDate) {
 		return toSeconds() < inSeconds(otherDate);
 	}
 
 	@Override
-	public boolean isBeforeOrEqualTo(SimulationDateIfc otherDate) {
+	public boolean isBeforeOrEqualTo(Time otherDate) {
 		return toSeconds() <= inSeconds(otherDate);
 	}
 
 	@Override
-	public boolean isAfterOrEqualTo(SimulationDateIfc otherDate) {
+	public boolean isAfterOrEqualTo(Time otherDate) {
 		return toSeconds() >= inSeconds(otherDate);
 	}
 	
@@ -132,55 +132,55 @@ public class SimulationDate implements SimulationDateIfc, Comparable<SimulationD
 	}
 
 	@Override
-	public SimulationDateIfc minus(RelativeTime increment) {
+	public Time minus(RelativeTime increment) {
 		RelativeTime changed = fromStart().minus(increment);
 		return new SimulationDate(changed);
 	}
 	
 	@Override
-	public SimulationDateIfc plus(long amount, ChronoUnit unit) {
+	public Time plus(long amount, ChronoUnit unit) {
 		RelativeTime changed = fromStart().plus(RelativeTime.of(amount, unit));
 		return new SimulationDate(changed);
 	}
 	
 	@Override
-	public SimulationDateIfc plus(RelativeTime increment) {
+	public Time plus(RelativeTime increment) {
 		RelativeTime changed = fromStart().plus(increment);
 		return new SimulationDate(changed);
 	}
 
 	@Override
-	public SimulationDateIfc plusDays(int increment) {
+	public Time plusDays(int increment) {
 		RelativeTime changed = fromStart().plusDays(increment);
 		return new SimulationDate(changed);
 	}
 
 	@Override
-	public SimulationDateIfc plusHours(int increment) {
+	public Time plusHours(int increment) {
 		RelativeTime changed = fromStart().plusHours(increment);
 		return new SimulationDate(changed);
 	}
 
 	@Override
-	public SimulationDateIfc plusMinutes(int increment) {
+	public Time plusMinutes(int increment) {
 		RelativeTime changed = fromStart().plusMinutes(increment);
 		return new SimulationDate(changed);
 	}
 
 	@Override
-	public SimulationDateIfc plusSeconds(int increment) {
+	public Time plusSeconds(int increment) {
 		RelativeTime changed = fromStart().plusSeconds(increment);
 		return new SimulationDate(changed);
 	}
 
 	@Override
-	public SimulationDateIfc startOfDay() {
+	public Time startOfDay() {
 		RelativeTime changed = RelativeTime.ofDays(fromStart().toDays());
 		return new SimulationDate(changed);
 	}
 
 	@Override
-	public SimulationDateIfc newTime(int hour, int minute, int second) {
+	public Time newTime(int hour, int minute, int second) {
 		assert hour >= 0 && hour < 28 : (hour + ":" + minute);
 		assert minute >= 0 && minute < 60;
 		assert second >= 0 && second < 60;
@@ -195,11 +195,11 @@ public class SimulationDate implements SimulationDateIfc, Comparable<SimulationD
 		return new SimulationDate(changed);
 	}
 
-	public RelativeTime differenceTo(SimulationDateIfc otherDate) {
+	public RelativeTime differenceTo(Time otherDate) {
 		return this.fromStart().minus(otherDate.fromStart());
 	}
 
-	private long inSeconds(SimulationDateIfc otherDate) {
+	private long inSeconds(Time otherDate) {
 		if (otherDate instanceof SimulationDate) {
 			return ((SimulationDate) otherDate).toSeconds();
 		} else {
@@ -218,7 +218,7 @@ public class SimulationDate implements SimulationDateIfc, Comparable<SimulationD
 	}
 
 	@Override
-	public int compareTo(SimulationDateIfc other) {
+	public int compareTo(Time other) {
 		if (isBefore(other)) {
 			return -1;
 		} else if (other.isBefore(this)) {
@@ -228,20 +228,20 @@ public class SimulationDate implements SimulationDateIfc, Comparable<SimulationD
 	}
 
 
-	public SimulationDateIfc plus(int amount, ChronoUnit unit) {
+	public Time plus(int amount, ChronoUnit unit) {
 		return plus(RelativeTime.of(amount, unit));
 	}
 
-	public static List<SimulationDateIfc> oneWeek() {
-		SimulationDateIfc start = new SimulationDate();
-		List<SimulationDateIfc> week = new ArrayList<>();
+	public static List<Time> oneWeek() {
+		Time start = new SimulationDate();
+		List<Time> week = new ArrayList<>();
 		for (int day = 0; day < 7; day++) {
 			week.add(start.plusDays(day));
 		}
 		return week;
 	}
 
-	public static SimulationDateIfc future() {
+	public static Time future() {
 		return new SimulationDate(RelativeTime.ofDays(4000));
 	}
 

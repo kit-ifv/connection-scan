@@ -3,26 +3,26 @@ package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 import java.util.function.BiConsumer;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 class SingleStart extends BaseTimes {
 
 	private final Stop start;
-	private final SimulationDateIfc startTime;
+	private final Time startTime;
 
-	private SingleStart(Stop start, SimulationDateIfc startTime, int numberOfStops) {
+	private SingleStart(Stop start, Time startTime, int numberOfStops) {
 		super(numberOfStops);
 		this.start = start;
 		this.startTime = startTime;
 		initialise();
 	}
 
-	static ArrivalTimes create(Stop start, SimulationDateIfc departure, int numberOfStops) {
+	static ArrivalTimes create(Stop start, Time departure, int numberOfStops) {
 		return new SingleStart(start, departure, numberOfStops);
 	}
 	
 	@Override
-	public SimulationDateIfc startTime() {
+	public Time startTime() {
 		return startTime;
 	}
 
@@ -32,7 +32,7 @@ class SingleStart extends BaseTimes {
 	}
 
 	@Override
-	public void initialise(BiConsumer<Stop, SimulationDateIfc> consumer) {
+	public void initialise(BiConsumer<Stop, Time> consumer) {
 		consumer.accept(start, startTime);
 	}
 

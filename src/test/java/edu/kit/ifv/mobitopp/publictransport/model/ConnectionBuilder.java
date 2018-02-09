@@ -12,13 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.kit.ifv.mobitopp.simulation.SimulationDate;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 public class ConnectionBuilder {
 
 	private static final int defaultId = 0;
-	private static final SimulationDateIfc defaultDeparture = new SimulationDate();
-	private static final SimulationDateIfc defaultArrival = defaultDeparture.plus(RelativeTime.of(1, MINUTES));
+	private static final Time defaultDeparture = new SimulationDate();
+	private static final Time defaultArrival = defaultDeparture.plus(RelativeTime.of(1, MINUTES));
 	private static final Stop defaultStart = someStop();
 	private static final Stop defaultEnd = anotherStop();
 	private static final Journey defaultJourney = journey().build();
@@ -27,8 +27,8 @@ public class ConnectionBuilder {
 	private int id;
 	private Stop start;
 	private Stop end;
-	private SimulationDateIfc departure;
-	private SimulationDateIfc arrival;
+	private Time departure;
+	private Time arrival;
 	private Journey journey;
 	private List<Point2D> points;
 
@@ -73,12 +73,12 @@ public class ConnectionBuilder {
 		return this;
 	}
 
-	public ConnectionBuilder departsAt(SimulationDateIfc departure) {
+	public ConnectionBuilder departsAt(Time departure) {
 		this.departure = departure;
 		return this;
 	}
 
-	public ConnectionBuilder arrivesAt(SimulationDateIfc arrival) {
+	public ConnectionBuilder arrivesAt(Time arrival) {
 		this.arrival = arrival;
 		return this;
 	}
@@ -108,7 +108,7 @@ public class ConnectionBuilder {
 		return this;
 	}
 
-	public ConnectionBuilder departsAndArrivesAt(SimulationDateIfc time) {
+	public ConnectionBuilder departsAndArrivesAt(Time time) {
 		return departsAt(time).arrivesAt(time);
 	}
 

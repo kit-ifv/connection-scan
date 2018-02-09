@@ -12,20 +12,20 @@ import java.util.stream.Stream;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Connections;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 class DefaultConnectionSweeper implements ConnectionSweeper {
 
 	private static final int defaultDistance = 100;
-	private static final Function<SimulationDateIfc, Boolean> alwaysTooLate = (time) -> true;
+	private static final Function<Time, Boolean> alwaysTooLate = (time) -> true;
 	private final List<Connection> connections;
-	private final Function<SimulationDateIfc, Integer> lookup;
-	private final Function<SimulationDateIfc, Boolean> isTooLate;
+	private final Function<Time, Integer> lookup;
+	private final Function<Time, Boolean> isTooLate;
 	private final int intervalToCheckArrivalAtEnd;
 
 	private DefaultConnectionSweeper(
-			List<Connection> connections, Function<SimulationDateIfc, Integer> lookup,
-			Function<SimulationDateIfc, Boolean> isTooLate, int intervalToCheckArrivalAtEnd) {
+			List<Connection> connections, Function<Time, Integer> lookup,
+			Function<Time, Boolean> isTooLate, int intervalToCheckArrivalAtEnd) {
 		super();
 		this.connections = connections;
 		this.lookup = lookup;
@@ -41,29 +41,29 @@ class DefaultConnectionSweeper implements ConnectionSweeper {
 		Stream<Connection> stream = connections.asCollection().stream();
 		List<Connection> sorted = stream.sorted(new ConnectionComparator()).collect(toList());
 		List<Connection> fixedConnections = Collections.unmodifiableList(sorted);
-		Function<SimulationDateIfc, Integer> lookup = initialiseLookup(fixedConnections);
-		Function<SimulationDateIfc, Boolean> isTooLate = createIsTooLate(fixedConnections);
+		Function<Time, Integer> lookup = initialiseLookup(fixedConnections);
+		Function<Time, Boolean> isTooLate = createIsTooLate(fixedConnections);
 		return new DefaultConnectionSweeper(fixedConnections, lookup, isTooLate, intervalToCheckArrivalAtEnd);
 	}
 
-	private static Function<SimulationDateIfc, Integer> initialiseLookup(List<Connection> connections) {
-		TreeMap<SimulationDateIfc, Integer> lookup = new TreeMap<>();
+	private static Function<Time, Integer> initialiseLookup(List<Connection> connections) {
+		TreeMap<Time, Integer> lookup = new TreeMap<>();
 		for (int index = 0; index < connections.size(); index++) {
-			SimulationDateIfc departure = connections.get(index).departure();
+			Time departure = connections.get(index).departure();
 			lookup.putIfAbsent(departure, index);
 		}
 		return (time) -> indexIn(lookup, time, connections.size());
 	}
 
-	private static Integer indexIn(TreeMap<SimulationDateIfc, Integer> lookup, SimulationDateIfc time, int noEntryFound) {
-		Entry<SimulationDateIfc, Integer> possibleEntry = lookup.ceilingEntry(time);
+	private static Integer indexIn(TreeMap<Time, Integer> lookup, Time time, int noEntryFound) {
+		Entry<Time, Integer> possibleEntry = lookup.ceilingEntry(time);
 		if (possibleEntry == null) {
 			return noEntryFound;
 		}
 		return possibleEntry.getValue();
 	}
 
-	private static Function<SimulationDateIfc, Boolean> createIsTooLate(List<Connection> connections) {
+	private static Function<Time, Boolean> createIsTooLate(List<Connection> connections) {
 		if (connections.isEmpty()) {
 			return alwaysTooLate;
 		}
@@ -76,7 +76,7 @@ class DefaultConnectionSweeper implements ConnectionSweeper {
 	}
 
 	@Override
-	public boolean areDepartedBefore(SimulationDateIfc time) {
+	public boolean areDepartedBefore(Time time) {
 		return isTooLate.apply(time);
 	}
 
@@ -87,7 +87,7 @@ class DefaultConnectionSweeper implements ConnectionSweeper {
 	}
 
 	private int startIndexFor(PreparedSearchRequest searchRequest) {
-		SimulationDateIfc atTime = searchRequest.startTime();
+		Time atTime = searchRequest.startTime();
 		return lookup.apply(atTime);
 	}
 

@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 class DefaultUsedConnections implements UsedConnections {
 
@@ -43,7 +43,7 @@ class DefaultUsedConnections implements UsedConnections {
 	}
 
 	@Override
-	public List<Connection> collectConnections(StopPaths starts, Stop toEnd, SimulationDateIfc time)
+	public List<Connection> collectConnections(StopPaths starts, Stop toEnd, Time time)
 			throws StopNotReachable {
 		List<Connection> connections = new ArrayList<>();
 		Stop currentStop = toEnd;

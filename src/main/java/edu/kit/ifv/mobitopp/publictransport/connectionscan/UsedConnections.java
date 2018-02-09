@@ -4,7 +4,7 @@ import java.util.List;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 interface UsedConnections {
 
@@ -12,7 +12,7 @@ interface UsedConnections {
 
 	List<Connection> collectConnections(Stop fromStart, Stop toEnd) throws StopNotReachable;
 
-	List<Connection> collectConnections(StopPaths fromStarts, Stop toEnd, SimulationDateIfc atTime)
+	List<Connection> collectConnections(StopPaths fromStarts, Stop toEnd, Time atTime)
 			throws StopNotReachable;
 
 }

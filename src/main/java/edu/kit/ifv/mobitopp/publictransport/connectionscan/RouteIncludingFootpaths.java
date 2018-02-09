@@ -6,7 +6,7 @@ import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
-import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+import edu.kit.ifv.mobitopp.simulation.Time;
 
 class RouteIncludingFootpaths implements PublicTransportRoute {
 
@@ -32,7 +32,7 @@ class RouteIncludingFootpaths implements PublicTransportRoute {
 	}
 
 	@Override
-	public SimulationDateIfc arrival() {
+	public Time arrival() {
 		return route.arrival().plus(end.duration());
 	}
 	
