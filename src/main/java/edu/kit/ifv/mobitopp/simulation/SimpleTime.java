@@ -18,10 +18,6 @@ public class SimpleTime implements Time, Comparable<Time> {
 		this.seconds = 0;
 	}
 	
-	public SimpleTime(Time date) {
-		this(date.fromStart());
-	}
-
 	public SimpleTime(RelativeTime fromStart) {
 		super();
 		this.seconds = inSeconds(fromStart);
