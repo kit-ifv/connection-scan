@@ -4,7 +4,7 @@ import java.util.List;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
 
 class SingleSearchRequest extends BaseSearchRequest {
 
@@ -18,7 +18,7 @@ class SingleSearchRequest extends BaseSearchRequest {
 		this.end = end;
 	}
 
-	static PreparedSearchRequest from(Stop start, Stop end, Time atTime, int totalNumberOfStopsInNetwork) {
+	static PreparedSearchRequest from(Stop start, Stop end, SimulationDateIfc atTime, int totalNumberOfStopsInNetwork) {
 		ArrivalTimes times = SingleStart.create(start, atTime, totalNumberOfStopsInNetwork);
 		UsedConnections usedConnections = new DefaultUsedConnections(totalNumberOfStopsInNetwork);
 		UsedJourneys usedJourneys = new DefaultUsedJourneys();
@@ -33,7 +33,7 @@ class SingleSearchRequest extends BaseSearchRequest {
 	}
 
 	@Override
-	protected List<Connection> collectConnections(UsedConnections usedConnections, Time time)
+	protected List<Connection> collectConnections(UsedConnections usedConnections, SimulationDateIfc time)
 			throws StopNotReachable {
 		return usedConnections.collectConnections(start, end);
 	}

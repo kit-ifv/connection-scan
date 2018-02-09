@@ -2,13 +2,12 @@ package edu.kit.ifv.mobitopp.simulation;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
 import edu.kit.ifv.mobitopp.result.DateFormat;
 
 public class SimulationDate implements SimulationDateIfc, Comparable<SimulationDateIfc> {
@@ -33,12 +32,17 @@ public class SimulationDate implements SimulationDateIfc, Comparable<SimulationD
 	public SimulationDate(int days, int hours, int minutes, int seconds) {
 		this(RelativeTime.ofDays(days).plusHours(hours).plusMinutes(minutes).plusSeconds(seconds));
 	}
+	
+	public static SimulationDateIfc ofSeconds(long seconds) {
+		return new SimulationDate(RelativeTime.ofSeconds(seconds));
+	}
 
 	private long inSeconds(RelativeTime fromStart) {
 		return fromStart.seconds();
 	}
 
-	private long inSeconds() {
+	@Override
+	public long toSeconds() {
 		return this.seconds;
 	}
 
@@ -87,51 +91,55 @@ public class SimulationDate implements SimulationDateIfc, Comparable<SimulationD
 
 	@Override
 	public boolean isAfter(SimulationDateIfc otherDate) {
-		return inSeconds() > inSeconds(otherDate);
+		return toSeconds() > inSeconds(otherDate);
 	}
 
 	@Override
 	public boolean isBefore(SimulationDateIfc otherDate) {
-		return inSeconds() < inSeconds(otherDate);
+		return toSeconds() < inSeconds(otherDate);
 	}
 
 	@Override
 	public boolean isBeforeOrEqualTo(SimulationDateIfc otherDate) {
-		return inSeconds() <= inSeconds(otherDate);
+		return toSeconds() <= inSeconds(otherDate);
 	}
 
 	@Override
 	public boolean isAfterOrEqualTo(SimulationDateIfc otherDate) {
-		return inSeconds() >= inSeconds(otherDate);
-	}
-
-	@Override
-	public boolean equals(SimulationDateIfc otherDate) {
-		assert otherDate != null;
-
-		return inSeconds() == inSeconds(otherDate);
-	}
-
-	@Override
-	public boolean equals(Object otherDate) {
-
-		if (otherDate instanceof SimulationDate) {
-			return inSeconds() == ((SimulationDate) otherDate).inSeconds();
-		} else if (otherDate instanceof SimulationDateIfc) {
-			return inSeconds() == inSeconds((SimulationDateIfc) otherDate);
-		} else {
-			return false;
-		}
-	}
-
-	@Override
-	public int hashCode() {
-		return (int) inSeconds();
+		return toSeconds() >= inSeconds(otherDate);
 	}
 	
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (seconds ^ (seconds >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SimulationDate other = (SimulationDate) obj;
+		if (seconds != other.seconds)
+			return false;
+		return true;
+	}
+
+	@Override
 	public SimulationDateIfc minus(RelativeTime increment) {
 		RelativeTime changed = fromStart().minus(increment);
+		return new SimulationDate(changed);
+	}
+	
+	@Override
+	public SimulationDateIfc plus(long amount, ChronoUnit unit) {
+		RelativeTime changed = fromStart().plus(RelativeTime.of(amount, unit));
 		return new SimulationDate(changed);
 	}
 	
@@ -193,7 +201,7 @@ public class SimulationDate implements SimulationDateIfc, Comparable<SimulationD
 
 	private long inSeconds(SimulationDateIfc otherDate) {
 		if (otherDate instanceof SimulationDate) {
-			return ((SimulationDate) otherDate).inSeconds();
+			return ((SimulationDate) otherDate).toSeconds();
 		} else {
 			return inSeconds(otherDate.fromStart());
 		}
@@ -219,14 +227,9 @@ public class SimulationDate implements SimulationDateIfc, Comparable<SimulationD
 		return 0;
 	}
 
-	@Override
-	public Time toTime() {
-		return new Time(monday.plus(fromStart().toDuration()));
-	}
 
-	public static SimulationDateIfc from(Time time) {
-		Duration duration = Duration.between(monday, time.time());
-		return new SimulationDate(RelativeTime.of(duration));
+	public SimulationDateIfc plus(int amount, ChronoUnit unit) {
+		return plus(RelativeTime.of(amount, unit));
 	}
 
 	public static List<SimulationDateIfc> oneWeek() {

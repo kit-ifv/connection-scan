@@ -1,5 +1,7 @@
 package edu.kit.ifv.mobitopp.publictransport.model;
 
+import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+
 public class StopPath {
 
 	private final Stop stop;
@@ -19,7 +21,7 @@ public class StopPath {
 		return duration;
 	}
 
-	public Time arrivalTimeStartingAt(Time currentTime) {
+	public SimulationDateIfc arrivalTimeStartingAt(SimulationDateIfc currentTime) {
 		return currentTime.plus(duration);
 	}
 

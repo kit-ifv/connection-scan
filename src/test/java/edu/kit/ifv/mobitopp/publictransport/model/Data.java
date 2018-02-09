@@ -5,65 +5,45 @@ import static edu.kit.ifv.mobitopp.publictransport.model.StopBuilder.stop;
 import static java.time.temporal.ChronoUnit.MINUTES;
 
 import java.awt.geom.Point2D;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
-import edu.kit.ifv.mobitopp.publictransport.model.Connection;
-import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
-import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.simulation.SimulationDate;
+import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
 
 public class Data {
 
-	private static final int secondsOfDay = 86400;
-	private static final int day = 1;
-	private static final int month = 1;
-	private static final int year = 1;
-
-	public static Time time(int hour, int minute) {
-		return new Time(LocalDateTime.of(year, month, day, hour, minute));
+	public static SimulationDateIfc time(int hour, int minute) {
+		return new SimulationDate(RelativeTime.ofHours(hour).plusMinutes(minute));
 	}
 
-	public static Time second(int seconds) {
-		LocalDate date = LocalDate.ofYearDay(0, asStartDays(seconds));
-		LocalTime time = LocalTime.ofSecondOfDay(asSecondsAtDay(seconds));
-		return new Time(LocalDateTime.of(date, time));
-	}
-
-	private static int asSecondsAtDay(int seconds) {
-		return seconds % secondsOfDay;
-	}
-
-	private static int asStartDays(int seconds) {
-		return seconds / secondsOfDay + 1;
+	public static SimulationDateIfc second(int seconds) {
+		return SimulationDate.ofSeconds(seconds);
 	}
 
 	public static Point2D coordinate(float x, float y) {
 		return new Point2D.Float(x, y);
 	}
 
-	public static Time oneMinuteEarlier() {
+	public static SimulationDateIfc oneMinuteEarlier() {
 		return someTime().minus(RelativeTime.of(1, MINUTES));
 	}
 
-	public static Time someTime() {
+	public static SimulationDateIfc someTime() {
 		return time(0, 0);
 	}
 
-	public static Time oneMinuteLater() {
+	public static SimulationDateIfc oneMinuteLater() {
 		return someTime().plus(RelativeTime.of(1, MINUTES));
 	}
 
-	public static Time twoMinutesLater() {
+	public static SimulationDateIfc twoMinutesLater() {
 		return oneMinuteLater().plus(RelativeTime.of(1, MINUTES));
 	}
 
-	public static Time threeMinutesLater() {
+	public static SimulationDateIfc threeMinutesLater() {
 		return twoMinutesLater().plus(RelativeTime.of(1, MINUTES));
 	}
 
-	public static Time fourMinutesLater() {
+	public static SimulationDateIfc fourMinutesLater() {
 		return threeMinutesLater().plus(RelativeTime.of(1, MINUTES));
 	}
 

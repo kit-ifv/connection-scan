@@ -15,11 +15,11 @@ import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Journey;
 import edu.kit.ifv.mobitopp.publictransport.model.RoutePoints;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
 
 public class ConnectionMatchers {
 
-	public static Matcher<Connection> departsBefore(Time time) {
+	public static Matcher<Connection> departsBefore(SimulationDateIfc time) {
 		return new DepartsBefore(time);
 	}
 
@@ -31,11 +31,11 @@ public class ConnectionMatchers {
 		return new TraversePoints(points);
 	}
 
-	public static Matcher<Connection> arrivesAt(Time arrival) {
+	public static Matcher<Connection> arrivesAt(SimulationDateIfc arrival) {
 		return new ArriveAt(arrival);
 	}
 
-	public static Matcher<Connection> departsAt(Time departure) {
+	public static Matcher<Connection> departsAt(SimulationDateIfc departure) {
 		return new DepartAt(departure);
 	}
 

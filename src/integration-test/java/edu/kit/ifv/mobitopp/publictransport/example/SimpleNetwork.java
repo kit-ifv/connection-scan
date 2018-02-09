@@ -6,7 +6,6 @@ import static java.util.Collections.emptyList;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
-import java.time.LocalDateTime;
 import java.util.Collection;
 
 import edu.kit.ifv.mobitopp.publictransport.connectionscan.ConnectionScan;
@@ -21,8 +20,9 @@ import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.RoutePoints;
 import edu.kit.ifv.mobitopp.publictransport.model.Station;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
 import edu.kit.ifv.mobitopp.publictransport.model.TransportSystem;
+import edu.kit.ifv.mobitopp.simulation.SimulationDate;
+import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
 
 public class SimpleNetwork {
 
@@ -31,12 +31,12 @@ public class SimpleNetwork {
 	private static final Double locationOfChemnitz = new Point2D.Double(12.9252977, 50.8322608);
 	private static final Double locationOfDortmund = new Point2D.Double(7.4652789, 51.5142273);
 	private static final RelativeTime noChangeTime = RelativeTime.ZERO;
-	static final Time day = new Time(LocalDateTime.of(2017, 3, 14, 0, 0));
-	static final Time noon = day.plus(12, HOURS);
-	static final Time oneOClock = noon.plus(1, HOURS);
-	static final Time twoOClock = noon.plus(2, HOURS);
-	static final Time threeOClock = noon.plus(3, HOURS);
-	static final Time fourOClock = noon.plus(4, HOURS);
+	static final SimulationDateIfc day = new SimulationDate();
+	static final SimulationDateIfc noon = day.plus(12, HOURS);
+	static final SimulationDateIfc oneOClock = noon.plus(1, HOURS);
+	static final SimulationDateIfc twoOClock = noon.plus(2, HOURS);
+	static final SimulationDateIfc threeOClock = noon.plus(3, HOURS);
+	static final SimulationDateIfc fourOClock = noon.plus(4, HOURS);
 	static final TransportSystem ice = new TransportSystem("ICE");
 
 	private final Station amsterdamStation;
@@ -123,7 +123,7 @@ public class SimpleNetwork {
 		return Connection.from(3, dortmund, berlin, oneOClock, threeOClock, ice2, route);
 	}
 
-	public Time noon() {
+	public SimulationDateIfc noon() {
 		return noon;
 	}
 

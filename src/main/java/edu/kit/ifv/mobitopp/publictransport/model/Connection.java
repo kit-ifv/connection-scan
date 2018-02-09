@@ -1,5 +1,7 @@
 package edu.kit.ifv.mobitopp.publictransport.model;
 
+import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+
 public class Connection {
 
 	private static final int footId = -1;
@@ -7,13 +9,13 @@ public class Connection {
 	private final int id;
 	private final Stop start;
 	private final Stop end;
-	private final Time arrival;
-	private final Time departure;
+	private final SimulationDateIfc arrival;
+	private final SimulationDateIfc departure;
 	private final RoutePoints points;
 	private final Journey journey;
 
 	private Connection(
-			int id, Stop start, Stop end, Time departure, Time arrival, Journey journey,
+			int id, Stop start, Stop end, SimulationDateIfc departure, SimulationDateIfc arrival, Journey journey,
 			RoutePoints points) {
 		this.id = id;
 		this.start = start;
@@ -35,12 +37,12 @@ public class Connection {
 	}
 
 	public static Connection from(
-			int id, Stop start, Stop end, Time departure, Time arrival, Journey journey,
+			int id, Stop start, Stop end, SimulationDateIfc departure, SimulationDateIfc arrival, Journey journey,
 			RoutePoints route) {
 		return new Connection(id, start, end, departure, arrival, journey, route);
 	}
 
-	public static Connection byFootFrom(Stop stop, Stop neighbour, Time departure, Time arrival) {
+	public static Connection byFootFrom(Stop stop, Stop neighbour, SimulationDateIfc departure, SimulationDateIfc arrival) {
 		RoutePoints route = RoutePoints.from(stop, neighbour);
 		return Connection.from(footId, stop, neighbour, departure, arrival, FootJourney.footJourney, route);
 	}
@@ -61,11 +63,11 @@ public class Connection {
 		return points;
 	}
 
-	public Time departure() {
+	public SimulationDateIfc departure() {
 		return departure;
 	}
 
-	public Time arrival() {
+	public SimulationDateIfc arrival() {
 		return arrival;
 	}
 
@@ -93,7 +95,7 @@ public class Connection {
 		return departure.compareTo(arrival) <= 0;
 	}
 
-	public boolean departsBefore(Time time) {
+	public boolean departsBefore(SimulationDateIfc time) {
 		return departure.isBefore(time);
 	}
 

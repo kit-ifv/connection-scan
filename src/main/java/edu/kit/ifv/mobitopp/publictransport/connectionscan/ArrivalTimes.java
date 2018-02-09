@@ -3,18 +3,18 @@ package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 import java.util.function.BiConsumer;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
 
 interface ArrivalTimes {
 
-	void initialise(BiConsumer<Stop, Time> consumer);
+	void initialise(BiConsumer<Stop, SimulationDateIfc> consumer);
 
-	void set(Stop stop, Time time);
+	void set(Stop stop, SimulationDateIfc time);
 
-	Time getConsideringMinimumChangeTime(Stop stop);
+	SimulationDateIfc getConsideringMinimumChangeTime(Stop stop);
 
-	Time get(Stop stop);
+	SimulationDateIfc get(Stop stop);
 
-	Time startTime();
+	SimulationDateIfc startTime();
 
 }

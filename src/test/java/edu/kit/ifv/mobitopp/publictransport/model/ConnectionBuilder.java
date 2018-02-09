@@ -8,21 +8,17 @@ import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.util.Collections.emptyList;
 
 import java.awt.geom.Point2D;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.kit.ifv.mobitopp.publictransport.model.Connection;
-import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
-import edu.kit.ifv.mobitopp.publictransport.model.RoutePoints;
-import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.simulation.SimulationDate;
+import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
 
 public class ConnectionBuilder {
 
 	private static final int defaultId = 0;
-	private static final Time defaultDeparture = new Time(LocalDateTime.of(2011, 10, 17, 0, 0, 0));
-	private static final Time defaultArrival = defaultDeparture.plus(RelativeTime.of(1, MINUTES));
+	private static final SimulationDateIfc defaultDeparture = new SimulationDate();
+	private static final SimulationDateIfc defaultArrival = defaultDeparture.plus(RelativeTime.of(1, MINUTES));
 	private static final Stop defaultStart = someStop();
 	private static final Stop defaultEnd = anotherStop();
 	private static final Journey defaultJourney = journey().build();
@@ -31,8 +27,8 @@ public class ConnectionBuilder {
 	private int id;
 	private Stop start;
 	private Stop end;
-	private Time departure;
-	private Time arrival;
+	private SimulationDateIfc departure;
+	private SimulationDateIfc arrival;
 	private Journey journey;
 	private List<Point2D> points;
 
@@ -77,12 +73,12 @@ public class ConnectionBuilder {
 		return this;
 	}
 
-	public ConnectionBuilder departsAt(Time departure) {
+	public ConnectionBuilder departsAt(SimulationDateIfc departure) {
 		this.departure = departure;
 		return this;
 	}
 
-	public ConnectionBuilder arrivesAt(Time arrival) {
+	public ConnectionBuilder arrivesAt(SimulationDateIfc arrival) {
 		this.arrival = arrival;
 		return this;
 	}
@@ -112,7 +108,7 @@ public class ConnectionBuilder {
 		return this;
 	}
 
-	public ConnectionBuilder departsAndArrivesAt(Time time) {
+	public ConnectionBuilder departsAndArrivesAt(SimulationDateIfc time) {
 		return departsAt(time).arrivesAt(time);
 	}
 

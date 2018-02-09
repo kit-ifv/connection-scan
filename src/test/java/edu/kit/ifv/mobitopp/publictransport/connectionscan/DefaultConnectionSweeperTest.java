@@ -31,7 +31,7 @@ import org.junit.Test;
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.ConnectionBuilder;
 import edu.kit.ifv.mobitopp.publictransport.model.Connections;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
 
 public class DefaultConnectionSweeperTest {
 
@@ -129,7 +129,7 @@ public class DefaultConnectionSweeperTest {
 		verifyNoMoreInteractions(searchRequest);
 	}
 
-	private void departAt(Time time) {
+	private void departAt(SimulationDateIfc time) {
 		when(searchRequest.startTime()).thenReturn(time);
 	}
 
@@ -166,30 +166,30 @@ public class DefaultConnectionSweeperTest {
 
 	@Test
 	public void timeIsTooLateWhenNoConnectionsAreAvailable() throws Exception {
-		Time someTime = someTime();
+		SimulationDateIfc someTime = someTime();
 
 		assertThat(connections(), is(afterLatestDeparture(someTime)));
 	}
 
 	@Test
 	public void isNotTooLateWhenTimeIsBeforeDepartureOfSingleConnection() throws Exception {
-		Time laterTime = oneMinuteLater();
+		SimulationDateIfc laterTime = oneMinuteLater();
 
 		Connection connection = connection().departsAt(laterTime).build();
 		DefaultConnectionSweeper connections = connections(connection);
 
-		Time earlyEnoughTime = someTime();
+		SimulationDateIfc earlyEnoughTime = someTime();
 		assertThat(connections, is(not(afterLatestDeparture(earlyEnoughTime))));
 	}
 
 	@Test
 	public void isTooLateWhenTimeIsAfterDepartureOfSingleConnection() throws Exception {
-		Time earlierTime = someTime();
+		SimulationDateIfc earlierTime = someTime();
 
 		Connection connection = connection().departsAt(earlierTime).build();
 		DefaultConnectionSweeper connections = connections(connection);
 
-		Time tooLateTime = oneMinuteLater();
+		SimulationDateIfc tooLateTime = oneMinuteLater();
 		assertThat(connections, is(afterLatestDeparture(tooLateTime)));
 	}
 
@@ -215,7 +215,7 @@ public class DefaultConnectionSweeperTest {
 	public void isNotTooLateWhenTimeIsAfterDepartureEarlierConnectionWhenConnectionsAreNotSorted()
 			throws Exception {
 		Connection earlierConnection = connection().departsAt(someTime()).build();
-		Connection laterConnection = connection().departsAt(twoMinutesLater()).build();
+		Connection laterConnection = connection().departsAndArrivesAt(twoMinutesLater()).build();
 		DefaultConnectionSweeper connections = connections(laterConnection, earlierConnection);
 
 		assertThat(connections, is(not(afterLatestDeparture(oneMinuteLater()))));
@@ -237,7 +237,7 @@ public class DefaultConnectionSweeperTest {
 		return validatedConnections;
 	}
 
-	private static Matcher<DefaultConnectionSweeper> afterLatestDeparture(Time time) {
+	private static Matcher<DefaultConnectionSweeper> afterLatestDeparture(SimulationDateIfc time) {
 		return new TypeSafeMatcher<DefaultConnectionSweeper>() {
 
 			@Override

@@ -4,7 +4,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
 import edu.kit.ifv.mobitopp.simulation.SimulationDate;
 import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
 
@@ -45,10 +44,6 @@ public class DateFormat {
 
 	private String format(SimulationDateIfc date, DateTimeFormatter format) {
 		return SimulationDate.monday.plus(date.fromStart().toDuration()).format(format);
-	}
-
-	public String asTime(Time time) {
-		return timeFormat.format(time.time());
 	}
 
 	private static DateTimeFormatter fullFormat() {

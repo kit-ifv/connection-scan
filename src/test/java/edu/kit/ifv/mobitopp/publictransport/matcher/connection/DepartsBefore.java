@@ -4,13 +4,13 @@ import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
 
 public class DepartsBefore extends TypeSafeMatcher<Connection> {
 
-	private final Time time;
+	private final SimulationDateIfc time;
 
-	public DepartsBefore(Time time) {
+	public DepartsBefore(SimulationDateIfc time) {
 		super();
 		this.time = time;
 	}

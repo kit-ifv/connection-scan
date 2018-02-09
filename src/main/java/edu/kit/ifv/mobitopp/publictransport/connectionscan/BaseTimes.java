@@ -1,20 +1,20 @@
 package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
 
 abstract class BaseTimes implements ArrivalTimes {
 
-	private final Time[] times;
+	private final SimulationDateIfc[] times;
 
 	BaseTimes(int numberOfStops) {
 		super();
-		times = new Time[numberOfStops];
+		times = new SimulationDateIfc[numberOfStops];
 	}
 
 	protected void initialise() {
 		for (int i = 0; i < times.length; i++) {
-			times[i] = Time.infinite;
+			times[i] = SimulationDateIfc.infinite;
 		}
 		initialiseStart();
 	}
@@ -22,12 +22,12 @@ abstract class BaseTimes implements ArrivalTimes {
 	protected abstract void initialiseStart();
 
 	@Override
-	public void set(Stop stop, Time time) {
+	public void set(Stop stop, SimulationDateIfc time) {
 		times[stop.id()] = time;
 	}
 
 	@Override
-	public Time getConsideringMinimumChangeTime(Stop stop) {
+	public SimulationDateIfc getConsideringMinimumChangeTime(Stop stop) {
 		if (isStart(stop)) {
 			return get(stop);
 		}
@@ -36,15 +36,15 @@ abstract class BaseTimes implements ArrivalTimes {
 
 	protected abstract boolean isStart(Stop stop);
 
-	private Time considerChangeTime(Stop stop) {
+	private SimulationDateIfc considerChangeTime(Stop stop) {
 		return stop.addChangeTimeTo(get(stop));
 	}
 
 	@Override
-	public Time get(Stop stop) {
+	public SimulationDateIfc get(Stop stop) {
 		int internal = stop.id();
 		if (internal >= times.length || internal < 0) {
-			return Time.infinite;
+			return SimulationDateIfc.infinite;
 		}
 		return times[internal];
 	}

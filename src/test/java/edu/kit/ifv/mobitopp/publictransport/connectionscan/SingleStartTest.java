@@ -3,7 +3,7 @@ package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.oneMinuteLater;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.someTime;
 import static edu.kit.ifv.mobitopp.publictransport.model.StopBuilder.stop;
-import static edu.kit.ifv.mobitopp.publictransport.model.Time.infinite;
+import static edu.kit.ifv.mobitopp.simulation.SimulationDateIfc.infinite;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -17,7 +17,7 @@ import org.junit.Test;
 
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
 
 public class SingleStartTest {
 
@@ -29,9 +29,9 @@ public class SingleStartTest {
 	public void returnsInfiniteWhenTimeHasNotBeenSet() throws Exception {
 		ArrivalTimes times = times(onlyStartStop);
 
-		Time time = times.getConsideringMinimumChangeTime(anotherStop());
+		SimulationDateIfc time = times.getConsideringMinimumChangeTime(anotherStop());
 
-		assertThat(time, is(equalTo(Time.infinite)));
+		assertThat(time, is(equalTo(SimulationDateIfc.infinite)));
 	}
 
 	@Test
@@ -39,9 +39,9 @@ public class SingleStartTest {
 		ArrivalTimes times = times(onlyStartStop);
 
 		Stop stop = someStop();
-		Time timeToSet = someTime();
+		SimulationDateIfc timeToSet = someTime();
 		times.set(stop, timeToSet);
-		Time time = times.getConsideringMinimumChangeTime(stop);
+		SimulationDateIfc time = times.getConsideringMinimumChangeTime(stop);
 
 		assertThat(time, is(equalTo(timeToSet)));
 	}
@@ -50,15 +50,15 @@ public class SingleStartTest {
 	public void returnsSetTimeWhenTimesContainsSeveralTimes() throws Exception {
 		Stop stop0 = someStop();
 		Stop stop1 = anotherStop();
-		Time timeToSetForStop0 = someTime();
-		Time timeToSetForStop1 = oneMinuteLater();
+		SimulationDateIfc timeToSetForStop0 = someTime();
+		SimulationDateIfc timeToSetForStop1 = oneMinuteLater();
 		int numberOfStops = 2;
 
 		ArrivalTimes times = times(numberOfStops);
 		times.set(stop0, timeToSetForStop0);
 		times.set(stop1, timeToSetForStop1);
-		Time timeForStop0 = times.getConsideringMinimumChangeTime(stop0);
-		Time timeForStop1 = times.getConsideringMinimumChangeTime(stop1);
+		SimulationDateIfc timeForStop0 = times.getConsideringMinimumChangeTime(stop0);
+		SimulationDateIfc timeForStop1 = times.getConsideringMinimumChangeTime(stop1);
 
 		assertThat(timeForStop0, is(equalTo(timeToSetForStop0)));
 		assertThat(timeForStop1, is(equalTo(timeToSetForStop1)));
@@ -69,7 +69,7 @@ public class SingleStartTest {
 		Stop stop = anotherStop();
 
 		ArrivalTimes times = times(someStop(), someTime(), onlyStartStop);
-		Time time = times.getConsideringMinimumChangeTime(stop);
+		SimulationDateIfc time = times.getConsideringMinimumChangeTime(stop);
 
 		assertThat(time, is(equalTo(infinite)));
 	}
@@ -80,9 +80,9 @@ public class SingleStartTest {
 		Stop stop = stop().withId(tooHighIndex).build();
 
 		ArrivalTimes times = times(onlyStartStop);
-		Time time = times.getConsideringMinimumChangeTime(stop);
+		SimulationDateIfc time = times.getConsideringMinimumChangeTime(stop);
 
-		assertThat(time, is(equalTo(Time.infinite)));
+		assertThat(time, is(equalTo(infinite)));
 	}
 
 	@Test
@@ -91,15 +91,15 @@ public class SingleStartTest {
 		Stop stop = stop().withId(tooLowIndex).build();
 
 		ArrivalTimes times = times(onlyStartStop);
-		Time time = times.getConsideringMinimumChangeTime(stop);
+		SimulationDateIfc time = times.getConsideringMinimumChangeTime(stop);
 
-		assertThat(time, is(equalTo(Time.infinite)));
+		assertThat(time, is(equalTo(infinite)));
 	}
 
 	@Test
 	public void doesNotConsiderMinimumChangeTimeAtStartStop() throws Exception {
 		Stop start = someStop(changeTime);
-		Time timeAtStart = oneMinuteLater();
+		SimulationDateIfc timeAtStart = oneMinuteLater();
 		ArrivalTimes times = times(start, timeAtStart, 2);
 		times.set(start, timeAtStart);
 
@@ -110,13 +110,13 @@ public class SingleStartTest {
 	public void considersMinimumChangeTimeAtGivenStopOtherThanStart() throws Exception {
 		Stop start = someStop(changeTime);
 		Stop otherStop = anotherStop(changeTime);
-		Time timeAtStart = someTime();
-		Time timeAtOther = oneMinuteLater();
+		SimulationDateIfc timeAtStart = someTime();
+		SimulationDateIfc timeAtOther = oneMinuteLater();
 		ArrivalTimes times = times(start, timeAtStart, 2);
 		times.set(start, timeAtStart);
 		times.set(otherStop, timeAtOther);
 
-		Time timeAtOtherIncludingChangeTime = oneMinuteLater().plus(changeTime);
+		SimulationDateIfc timeAtOtherIncludingChangeTime = oneMinuteLater().plus(changeTime);
 		assertThat(times.getConsideringMinimumChangeTime(otherStop),
 				is(equalTo(timeAtOtherIncludingChangeTime)));
 	}
@@ -124,7 +124,7 @@ public class SingleStartTest {
 	@Test
 	public void doesNotConsiderMinimumChangeTimeOnGetAtStartStop() throws Exception {
 		Stop start = someStop(changeTime);
-		Time timeAtStart = someTime();
+		SimulationDateIfc timeAtStart = someTime();
 		ArrivalTimes times = times(start, timeAtStart, 2);
 		times.set(start, timeAtStart);
 
@@ -135,8 +135,8 @@ public class SingleStartTest {
 	public void doesNotConsiderMinimumChangeTimeOnGet() throws Exception {
 		Stop start = someStop(changeTime);
 		Stop otherStop = anotherStop(changeTime);
-		Time timeAtStart = someTime();
-		Time timeAtOther = oneMinuteLater();
+		SimulationDateIfc timeAtStart = someTime();
+		SimulationDateIfc timeAtOther = oneMinuteLater();
 		ArrivalTimes times = times(start, timeAtStart, 2);
 		times.set(start, timeAtStart);
 		times.set(otherStop, timeAtOther);
@@ -149,7 +149,7 @@ public class SingleStartTest {
 		Stop start = someStop();
 		ArrivalTimes times = times(start, someTime(), onlyStartStop);
 
-		Time time = times.get(someStop());
+		SimulationDateIfc time = times.get(someStop());
 
 		assertThat(time, is(someTime()));
 	}
@@ -157,7 +157,7 @@ public class SingleStartTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void initialisesOtherStops() throws Exception {
-		BiConsumer<Stop, Time> consumer = mock(BiConsumer.class);
+		BiConsumer<Stop, SimulationDateIfc> consumer = mock(BiConsumer.class);
 		ArrivalTimes times = times(someStop(), someTime(), onlyStartStop);
 
 		times.initialise(consumer);
@@ -186,7 +186,7 @@ public class SingleStartTest {
 		return times(stop, someTime(), numberOfStops);
 	}
 
-	private ArrivalTimes times(Stop start, Time departure, int numberOfStops) {
+	private ArrivalTimes times(Stop start, SimulationDateIfc departure, int numberOfStops) {
 		return SingleStart.create(start, departure, numberOfStops);
 	}
 }

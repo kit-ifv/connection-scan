@@ -1,5 +1,8 @@
 package edu.kit.ifv.mobitopp.publictransport.model;
 
+import edu.kit.ifv.mobitopp.simulation.SimulationDate;
+import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+
 public class FootJourney implements Journey {
 
 	public static final Journey footJourney = new FootJourney();
@@ -17,8 +20,8 @@ public class FootJourney implements Journey {
 	}
 
 	@Override
-	public Time day() {
-		return Time.infinite;
+	public SimulationDateIfc day() {
+		return SimulationDate.future();
 	}
 
 	@Override

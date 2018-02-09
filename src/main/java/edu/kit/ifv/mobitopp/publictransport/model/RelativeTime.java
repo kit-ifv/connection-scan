@@ -28,7 +28,7 @@ public class RelativeTime implements Comparable<RelativeTime> {
 	public long toMinutes() {
 		return duration.toMinutes();
 	}
-	
+
 	public long toHours() {
 		return duration.toHours();
 	}
@@ -48,15 +48,15 @@ public class RelativeTime implements Comparable<RelativeTime> {
 	public RelativeTime plusHours(long hours) {
 		return new RelativeTime(duration.plusHours(hours));
 	}
-	
+
 	public RelativeTime plusMinutes(long minutes) {
 		return new RelativeTime(duration.plusMinutes(minutes));
 	}
-	
+
 	public RelativeTime plusSeconds(long seconds) {
 		return new RelativeTime(duration.plusSeconds(seconds));
 	}
-	
+
 	public RelativeTime plusDays(long days) {
 		return new RelativeTime(duration.plusDays(days));
 	}
@@ -117,6 +117,14 @@ public class RelativeTime implements Comparable<RelativeTime> {
 		return new RelativeTime(Duration.ofDays(days));
 	}
 
+	public static RelativeTime ofHours(int hour) {
+		return new RelativeTime(Duration.ofHours(hour));
+	}
+
+	public static RelativeTime ofMinutes(long minutes) {
+		return new RelativeTime(Duration.ofMinutes(minutes));
+	}
+
 	public static RelativeTime ofSeconds(long seconds) {
 		return new RelativeTime(Duration.ofSeconds(seconds));
 	}
@@ -124,5 +132,6 @@ public class RelativeTime implements Comparable<RelativeTime> {
 	public static RelativeTime of(Duration duration) {
 		return new RelativeTime(duration);
 	}
+
 
 }

@@ -13,10 +13,10 @@ import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
+import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class RouteIncludingFootpathsTest {
@@ -38,9 +38,9 @@ public class RouteIncludingFootpathsTest {
 		StopPath end = anotherDistance();
 		PublicTransportRoute routeIncludingFootpath = new RouteIncludingFootpaths(route, start, end);
 
-		Time endDate = routeIncludingFootpath.arrival();
+		SimulationDateIfc endDate = routeIncludingFootpath.arrival();
 
-		Time endTimeIncludingWalk = someTime().plus(twoMinutes);
+		SimulationDateIfc endTimeIncludingWalk = someTime().plus(twoMinutes);
 		assertThat(endDate, is(equalTo(endTimeIncludingWalk)));
 	}
 

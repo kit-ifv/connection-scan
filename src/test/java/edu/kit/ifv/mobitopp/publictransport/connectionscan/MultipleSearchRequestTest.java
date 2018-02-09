@@ -14,7 +14,7 @@ import org.junit.Test;
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Data;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
 
 public class MultipleSearchRequestTest {
 
@@ -35,9 +35,9 @@ public class MultipleSearchRequestTest {
 		StopPaths ends = mock(StopPaths.class);
 		when(ends.stops()).thenReturn(asList(nearStop(), farStop()));
 		PreparedSearchRequest searchRequest = dataFromPaths(starts, ends);
-		Time beforeArrival = someTime();
-		Time atArrival = Data.oneMinuteLater();
-		Time afterArrival = Data.twoMinutesLater();
+		SimulationDateIfc beforeArrival = someTime();
+		SimulationDateIfc atArrival = Data.oneMinuteLater();
+		SimulationDateIfc afterArrival = Data.twoMinutesLater();
 		Connection beforeArrivalConnection = departing(beforeArrival);
 		Connection arrivalConnection = departing(atArrival);
 		Connection afterArrivalConnection = departing(afterArrival);
@@ -50,11 +50,11 @@ public class MultipleSearchRequestTest {
 		assertTrue(searchRequest.departsAfterArrivalAtEnd(afterArrivalConnection));
 	}
 
-	private void arrivingAt(Stop stop, Time atArrival) {
+	private void arrivingAt(Stop stop, SimulationDateIfc atArrival) {
 		when(times.getConsideringMinimumChangeTime(stop)).thenReturn(atArrival);
 	}
 
-	private Connection departing(Time beforeArrival) {
+	private Connection departing(SimulationDateIfc beforeArrival) {
 		return connection().departsAt(beforeArrival).build();
 	}
 

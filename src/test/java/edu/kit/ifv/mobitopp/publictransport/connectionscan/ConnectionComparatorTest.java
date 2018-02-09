@@ -16,14 +16,14 @@ import org.junit.Test;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
 
 public class ConnectionComparatorTest {
 
 	@Test
 	public void whenDepartureTimesAreDifferent() throws Exception {
-		Time earlierDeparture = someTime();
-		Time laterDeparture = oneMinuteLater();
+		SimulationDateIfc earlierDeparture = someTime();
+		SimulationDateIfc laterDeparture = oneMinuteLater();
 		Connection earlier = connection().departsAt(earlierDeparture).build();
 		Connection later = connection().departsAt(laterDeparture).build();
 
@@ -35,9 +35,9 @@ public class ConnectionComparatorTest {
 
 	@Test
 	public void whenDepartureTimesAreEqual() throws Exception {
-		Time departure = someTime();
-		Time earlierArrival = oneMinuteLater();
-		Time laterArrival = twoMinutesLater();
+		SimulationDateIfc departure = someTime();
+		SimulationDateIfc earlierArrival = oneMinuteLater();
+		SimulationDateIfc laterArrival = twoMinutesLater();
 		Connection earlier = connection().departsAt(departure).arrivesAt(earlierArrival).build();
 		Connection later = connection().departsAt(departure).arrivesAt(laterArrival).build();
 
@@ -53,7 +53,7 @@ public class ConnectionComparatorTest {
 		Stop start = someStop();
 		Stop intermediate = anotherStop();
 		Stop end = otherStop();
-		Time sameTime = someTime();
+		SimulationDateIfc sameTime = someTime();
 		Connection lessConnection = connection()
 				.startsAt(start)
 				.endsAt(intermediate)

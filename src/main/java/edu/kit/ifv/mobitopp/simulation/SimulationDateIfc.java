@@ -1,14 +1,18 @@
 package edu.kit.ifv.mobitopp.simulation;
 
+import java.time.temporal.ChronoUnit;
+
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
 
 public interface SimulationDateIfc extends Comparable<SimulationDateIfc> {
 
+	SimulationDateIfc infinite = SimulationDate.future();
+	
 	int getDay();
 	int getHour();
 	int getMinute();
 	int getSecond();
+	long toSeconds();
 
 	SimulationDateIfc previousDay();
 	SimulationDateIfc nextDay();
@@ -19,9 +23,9 @@ public interface SimulationDateIfc extends Comparable<SimulationDateIfc> {
 	boolean isBeforeOrEqualTo(SimulationDateIfc otherDate);
 	boolean isAfter(SimulationDateIfc otherDate);
 	boolean isAfterOrEqualTo(SimulationDateIfc otherDate);
-	boolean equals(SimulationDateIfc otherDate);
 	boolean isMidnight();
 
+	SimulationDateIfc plus(long amount, ChronoUnit unit);
 	SimulationDateIfc plus(RelativeTime increment);
 	SimulationDateIfc plusDays(int increment);
 	SimulationDateIfc plusHours(int increment);
@@ -34,7 +38,6 @@ public interface SimulationDateIfc extends Comparable<SimulationDateIfc> {
 
 	RelativeTime differenceTo(SimulationDateIfc otherDate);
 	
-	Time toTime();
 	RelativeTime fromStart();
 
 }

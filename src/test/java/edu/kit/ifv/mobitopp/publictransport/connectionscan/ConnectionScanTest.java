@@ -24,7 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
 
 public class ConnectionScanTest {
 
@@ -32,7 +32,7 @@ public class ConnectionScanTest {
 	private PreparedSearchRequest searchRequest;
 	private TransitNetwork transitNetwork;
 	private ConnectionScan scan;
-	private Time searchTime;
+	private SimulationDateIfc searchTime;
 	private Stop start;
 	private Stop end;
 	private StopPaths starts;
@@ -57,7 +57,7 @@ public class ConnectionScanTest {
 		return new ConnectionScan(timetable) {
 
 			@Override
-			PreparedSearchRequest newSearchRequest(StopPaths fromStarts, StopPaths toEnds, Time atTime) {
+			PreparedSearchRequest newSearchRequest(StopPaths fromStarts, StopPaths toEnds, SimulationDateIfc atTime) {
 				return searchRequest;
 			}
 		};
@@ -74,7 +74,7 @@ public class ConnectionScanTest {
 		verifyNoSweep();
 	}
 
-	private void scanNotNeeded(Stop start, Stop end, Time atTime) {
+	private void scanNotNeeded(Stop start, Stop end, SimulationDateIfc atTime) {
 		when(transitNetwork.scanNotNeeded(start, end, atTime)).thenReturn(true);
 	}
 
@@ -102,7 +102,7 @@ public class ConnectionScanTest {
 		when(transitNetwork.stops()).thenReturn(stops);
 	}
 
-	private void scanNeeded(Stop start, Stop end, Time atTime) {
+	private void scanNeeded(Stop start, Stop end, SimulationDateIfc atTime) {
 		when(transitNetwork.scanNotNeeded(start, end, atTime)).thenReturn(false);
 	}
 
@@ -123,7 +123,7 @@ public class ConnectionScanTest {
 		verify(connections).sweep(searchRequest);
 	}
 
-	private void scanNeeded(StopPaths starts, StopPaths ends, Time searchTime) {
+	private void scanNeeded(StopPaths starts, StopPaths ends, SimulationDateIfc searchTime) {
 		when(transitNetwork.scanNotNeeded(starts, ends, searchTime)).thenReturn(false);
 	}
 
@@ -142,7 +142,7 @@ public class ConnectionScanTest {
 		verify(transitNetwork).scanNotNeeded(starts, ends, searchTime);
 	}
 
-	private void scanNotNeeded(StopPaths starts, StopPaths ends, Time time) {
+	private void scanNotNeeded(StopPaths starts, StopPaths ends, SimulationDateIfc time) {
 		when(transitNetwork.scanNotNeeded(starts, ends, time)).thenReturn(true);
 	}
 

@@ -1,14 +1,16 @@
 package edu.kit.ifv.mobitopp.publictransport.model;
 
+import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
+
 public class DefaultModifiableJourney implements ModifiableJourney {
 
 	private final int id;
 	private final int capacity;
 	private final Connections connections;
-	private final Time day;
+	private final SimulationDateIfc day;
 	private final TransportSystem system;
 
-	public DefaultModifiableJourney(int id, Time day, TransportSystem system, int capacity) {
+	public DefaultModifiableJourney(int id, SimulationDateIfc day, TransportSystem system, int capacity) {
 		super();
 		this.id = id;
 		this.day = day;
@@ -23,7 +25,7 @@ public class DefaultModifiableJourney implements ModifiableJourney {
 	}
 
 	@Override
-	public Time day() {
+	public SimulationDateIfc day() {
 		return day;
 	}
 

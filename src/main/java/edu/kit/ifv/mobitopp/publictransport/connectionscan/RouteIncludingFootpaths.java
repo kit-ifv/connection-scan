@@ -3,10 +3,10 @@ package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 import java.util.List;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
-import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
+import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
 
 class RouteIncludingFootpaths implements PublicTransportRoute {
 
@@ -32,7 +32,7 @@ class RouteIncludingFootpaths implements PublicTransportRoute {
 	}
 
 	@Override
-	public Time arrival() {
+	public SimulationDateIfc arrival() {
 		return route.arrival().plus(end.duration());
 	}
 	

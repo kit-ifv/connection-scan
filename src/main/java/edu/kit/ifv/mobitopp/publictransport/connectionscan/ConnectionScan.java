@@ -3,7 +3,7 @@ package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 import java.util.Optional;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.simulation.SimulationDateIfc;
 
 public class ConnectionScan implements RouteSearch {
 
@@ -15,7 +15,7 @@ public class ConnectionScan implements RouteSearch {
 	}
 
 	@Override
-	public Optional<PublicTransportRoute> findRoute(Stop fromStart, Stop toEnd, Time atTime) {
+	public Optional<PublicTransportRoute> findRoute(Stop fromStart, Stop toEnd, SimulationDateIfc atTime) {
 		if (scanNotNeeded(fromStart, toEnd, atTime)) {
 			return Optional.empty();
 		}
@@ -23,17 +23,17 @@ public class ConnectionScan implements RouteSearch {
 		return sweepOver(searchRequest);
 	}
 
-	private boolean scanNotNeeded(Stop start, Stop end, Time time) {
+	private boolean scanNotNeeded(Stop start, Stop end, SimulationDateIfc time) {
 		return transitNetwork.scanNotNeeded(start, end, time);
 	}
 	
-	private PreparedSearchRequest newSweeperData(Stop fromStart, Stop toEnd, Time atTime) {
+	private PreparedSearchRequest newSweeperData(Stop fromStart, Stop toEnd, SimulationDateIfc atTime) {
 		return SingleSearchRequest.from(fromStart, toEnd, atTime, arrivalSize());
 	}
 
 	@Override
 	public Optional<PublicTransportRoute> findRoute(
-			StopPaths fromStarts, StopPaths toEnds, Time atTime) {
+			StopPaths fromStarts, StopPaths toEnds, SimulationDateIfc atTime) {
 		if (scanNotNeeded(fromStarts, toEnds, atTime)) {
 			return Optional.empty();
 		}
@@ -45,11 +45,11 @@ public class ConnectionScan implements RouteSearch {
 		return transitNetwork.connections().sweep(searchRequest);
 	}
 
-	private boolean scanNotNeeded(StopPaths startStops, StopPaths endStops, Time time) {
+	private boolean scanNotNeeded(StopPaths startStops, StopPaths endStops, SimulationDateIfc time) {
 		return transitNetwork.scanNotNeeded(startStops, endStops, time);
 	}
 
-	PreparedSearchRequest newSearchRequest(StopPaths fromStarts, StopPaths toEnds, Time atTime) {
+	PreparedSearchRequest newSearchRequest(StopPaths fromStarts, StopPaths toEnds, SimulationDateIfc atTime) {
 		return MultipleSearchRequest.from(fromStarts, toEnds, atTime, arrivalSize());
 	}
 	

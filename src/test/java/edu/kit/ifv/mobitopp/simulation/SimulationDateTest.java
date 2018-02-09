@@ -11,21 +11,17 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import java.time.LocalDateTime;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class SimulationDateTest {
 
 	private SimulationDateIfc date;
 	private SimulationDateIfc time;
 
-	private final int year = 1970;
-	private final int month = 1;
 	private final int day = 0;
 	private final int hour = 6;
 	private final int minute = 30;
@@ -333,8 +329,14 @@ public class SimulationDateTest {
 
 		assertEquals("failure - equals", date, value);
 		assertNotEquals("failure - equals", time, value);
+		assertFalse("failure - equals", time.equals(null));
 	}
-
+	
+	@Test
+	public void equalsAndHashCode() {
+		EqualsVerifier.forClass(SimulationDate.class).usingGetClass().verify();
+	}
+	
 	@Test
 	public void testHashCode() {
 
@@ -349,24 +351,4 @@ public class SimulationDateTest {
 		assertEquals("failure - hashCode", date.hashCode(), value.hashCode());
 	}
 
-	@Test
-	public void fromSimulationDate() throws Exception {
-		SimulationDateIfc simulation = time;
-
-		Time date = simulation.toTime();
-
-		Time expectedDate = time();
-		assertThat(date, is(equalTo(expectedDate)));
-	}
-
-	@Test
-	public void convertsToSimulationDatePreservingYearMonthAndDay() throws Exception {
-		SimulationDateIfc simulationDate = SimulationDate.from(time());
-
-		assertThat(simulationDate, is(equalTo(this.time)));
-	}
-
-	private Time time() {
-		return new Time(LocalDateTime.of(year, month, day + 5, hour, minute, second));
-	}
 }
