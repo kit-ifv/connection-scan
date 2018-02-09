@@ -225,7 +225,6 @@ public class SimpleTime implements Time, Comparable<Time> {
 		return 0;
 	}
 
-
 	public Time plus(int amount, ChronoUnit unit) {
 		return plus(RelativeTime.of(amount, unit));
 	}
