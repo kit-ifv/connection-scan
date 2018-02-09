@@ -2,7 +2,6 @@ package edu.kit.ifv.mobitopp.simulation;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,31 +9,30 @@ import java.util.List;
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.result.DateFormat;
 
-public class SimulationDate implements Time, Comparable<Time> {
+public class SimpleTime implements Time, Comparable<Time> {
 
-	public static final LocalDateTime monday = LocalDateTime.of(1970, 1, 5, 0, 0);
 	private final long seconds;
 
-	public SimulationDate() {
+	public SimpleTime() {
 		super();
 		this.seconds = 0;
 	}
 	
-	public SimulationDate(Time date) {
+	public SimpleTime(Time date) {
 		this(date.fromStart());
 	}
 
-	public SimulationDate(RelativeTime fromStart) {
+	public SimpleTime(RelativeTime fromStart) {
 		super();
 		this.seconds = inSeconds(fromStart);
 	}
 	
-	public SimulationDate(int days, int hours, int minutes, int seconds) {
+	public SimpleTime(int days, int hours, int minutes, int seconds) {
 		this(RelativeTime.ofDays(days).plusHours(hours).plusMinutes(minutes).plusSeconds(seconds));
 	}
 	
 	public static Time ofSeconds(long seconds) {
-		return new SimulationDate(RelativeTime.ofSeconds(seconds));
+		return new SimpleTime(RelativeTime.ofSeconds(seconds));
 	}
 
 	private long inSeconds(RelativeTime fromStart) {
@@ -75,13 +73,13 @@ public class SimulationDate implements Time, Comparable<Time> {
 	@Override
 	public Time previousDay() {
 		RelativeTime previousDay = RelativeTime.ofDays(fromStart().toDays()).minusDays(1);
-		return new SimulationDate(previousDay);
+		return new SimpleTime(previousDay);
 	}
 
 	@Override
 	public Time nextDay() {
 		RelativeTime nextDay = RelativeTime.ofDays(fromStart().toDays()).plusDays(1);
-		return new SimulationDate(nextDay);
+		return new SimpleTime(nextDay);
 	}
 
 	@Override
@@ -125,7 +123,7 @@ public class SimulationDate implements Time, Comparable<Time> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		SimulationDate other = (SimulationDate) obj;
+		SimpleTime other = (SimpleTime) obj;
 		if (seconds != other.seconds)
 			return false;
 		return true;
@@ -134,49 +132,49 @@ public class SimulationDate implements Time, Comparable<Time> {
 	@Override
 	public Time minus(RelativeTime increment) {
 		RelativeTime changed = fromStart().minus(increment);
-		return new SimulationDate(changed);
+		return new SimpleTime(changed);
 	}
 	
 	@Override
 	public Time plus(long amount, ChronoUnit unit) {
 		RelativeTime changed = fromStart().plus(RelativeTime.of(amount, unit));
-		return new SimulationDate(changed);
+		return new SimpleTime(changed);
 	}
 	
 	@Override
 	public Time plus(RelativeTime increment) {
 		RelativeTime changed = fromStart().plus(increment);
-		return new SimulationDate(changed);
+		return new SimpleTime(changed);
 	}
 
 	@Override
 	public Time plusDays(int increment) {
 		RelativeTime changed = fromStart().plusDays(increment);
-		return new SimulationDate(changed);
+		return new SimpleTime(changed);
 	}
 
 	@Override
 	public Time plusHours(int increment) {
 		RelativeTime changed = fromStart().plusHours(increment);
-		return new SimulationDate(changed);
+		return new SimpleTime(changed);
 	}
 
 	@Override
 	public Time plusMinutes(int increment) {
 		RelativeTime changed = fromStart().plusMinutes(increment);
-		return new SimulationDate(changed);
+		return new SimpleTime(changed);
 	}
 
 	@Override
 	public Time plusSeconds(int increment) {
 		RelativeTime changed = fromStart().plusSeconds(increment);
-		return new SimulationDate(changed);
+		return new SimpleTime(changed);
 	}
 
 	@Override
 	public Time startOfDay() {
 		RelativeTime changed = RelativeTime.ofDays(fromStart().toDays());
-		return new SimulationDate(changed);
+		return new SimpleTime(changed);
 	}
 
 	@Override
@@ -192,7 +190,7 @@ public class SimulationDate implements Time, Comparable<Time> {
 				.plusHours(hour)
 				.plusMinutes(minute)
 				.plusSeconds(second);
-		return new SimulationDate(changed);
+		return new SimpleTime(changed);
 	}
 
 	public RelativeTime differenceTo(Time otherDate) {
@@ -200,8 +198,8 @@ public class SimulationDate implements Time, Comparable<Time> {
 	}
 
 	private long inSeconds(Time otherDate) {
-		if (otherDate instanceof SimulationDate) {
-			return ((SimulationDate) otherDate).toSeconds();
+		if (otherDate instanceof SimpleTime) {
+			return ((SimpleTime) otherDate).toSeconds();
 		} else {
 			return inSeconds(otherDate.fromStart());
 		}
@@ -233,7 +231,7 @@ public class SimulationDate implements Time, Comparable<Time> {
 	}
 
 	public static List<Time> oneWeek() {
-		Time start = new SimulationDate();
+		Time start = new SimpleTime();
 		List<Time> week = new ArrayList<>();
 		for (int day = 0; day < 7; day++) {
 			week.add(start.plusDays(day));
@@ -242,7 +240,7 @@ public class SimulationDate implements Time, Comparable<Time> {
 	}
 
 	public static Time future() {
-		return new SimulationDate(RelativeTime.ofDays(4000));
+		return new SimpleTime(RelativeTime.ofDays(4000));
 	}
 
 }

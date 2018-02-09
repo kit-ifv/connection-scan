@@ -7,7 +7,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.kit.ifv.mobitopp.simulation.SimulationDate;
+import edu.kit.ifv.mobitopp.simulation.SimpleTime;
 import edu.kit.ifv.mobitopp.simulation.Time;
 
 public class DateFormatTest {
@@ -48,6 +48,6 @@ public class DateFormatTest {
 	}
 	
 	private Time date() {
-		return new SimulationDate().plusHours(1).plusMinutes(2).plusSeconds(3);
+		return new SimpleTime().plusHours(1).plusMinutes(2).plusSeconds(3);
 	}
 }

@@ -21,7 +21,7 @@ import edu.kit.ifv.mobitopp.publictransport.model.RoutePoints;
 import edu.kit.ifv.mobitopp.publictransport.model.Station;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.TransportSystem;
-import edu.kit.ifv.mobitopp.simulation.SimulationDate;
+import edu.kit.ifv.mobitopp.simulation.SimpleTime;
 import edu.kit.ifv.mobitopp.simulation.Time;
 
 public class SimpleNetwork {
@@ -31,7 +31,7 @@ public class SimpleNetwork {
 	private static final Double locationOfChemnitz = new Point2D.Double(12.9252977, 50.8322608);
 	private static final Double locationOfDortmund = new Point2D.Double(7.4652789, 51.5142273);
 	private static final RelativeTime noChangeTime = RelativeTime.ZERO;
-	static final Time day = new SimulationDate();
+	static final Time day = new SimpleTime();
 	static final Time noon = day.plus(12, HOURS);
 	static final Time oneOClock = noon.plus(1, HOURS);
 	static final Time twoOClock = noon.plus(2, HOURS);

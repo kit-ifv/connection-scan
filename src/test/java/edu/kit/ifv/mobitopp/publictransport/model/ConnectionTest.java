@@ -24,13 +24,13 @@ import java.util.List;
 
 import org.junit.Test;
 
-import edu.kit.ifv.mobitopp.simulation.SimulationDate;
+import edu.kit.ifv.mobitopp.simulation.SimpleTime;
 import edu.kit.ifv.mobitopp.simulation.Time;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class ConnectionTest {
 
-	private static final Time someTime = new SimulationDate();
+	private static final Time someTime = new SimpleTime();
 
 	@Test
 	public void footConnectionHasFixedId() throws Exception {

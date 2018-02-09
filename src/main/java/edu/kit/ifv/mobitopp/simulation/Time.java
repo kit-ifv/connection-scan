@@ -6,7 +6,7 @@ import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 
 public interface Time extends Comparable<Time> {
 
-	Time infinite = SimulationDate.future();
+	Time infinite = SimpleTime.future();
 	
 	int getDay();
 	int getHour();

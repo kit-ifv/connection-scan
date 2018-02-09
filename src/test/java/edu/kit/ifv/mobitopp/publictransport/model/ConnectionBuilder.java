@@ -11,13 +11,13 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.kit.ifv.mobitopp.simulation.SimulationDate;
+import edu.kit.ifv.mobitopp.simulation.SimpleTime;
 import edu.kit.ifv.mobitopp.simulation.Time;
 
 public class ConnectionBuilder {
 
 	private static final int defaultId = 0;
-	private static final Time defaultDeparture = new SimulationDate();
+	private static final Time defaultDeparture = new SimpleTime();
 	private static final Time defaultArrival = defaultDeparture.plus(RelativeTime.of(1, MINUTES));
 	private static final Stop defaultStart = someStop();
 	private static final Stop defaultEnd = anotherStop();

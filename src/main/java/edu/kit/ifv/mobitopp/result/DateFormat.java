@@ -1,14 +1,16 @@
 package edu.kit.ifv.mobitopp.result;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 
-import edu.kit.ifv.mobitopp.simulation.SimulationDate;
 import edu.kit.ifv.mobitopp.simulation.Time;
 
 public class DateFormat {
 
+	private static final LocalDateTime monday = LocalDateTime.of(1970, 1, 5, 0, 0);
+	
 	private static final String weekdayDateSeparator = ", ";
 	private static final String dateTimeSeparator = " ";
 	private static final int width = 2;
@@ -43,7 +45,7 @@ public class DateFormat {
 	}
 
 	private String format(Time date, DateTimeFormatter format) {
-		return SimulationDate.monday.plus(date.fromStart().toDuration()).format(format);
+		return monday.plus(date.fromStart().toDuration()).format(format);
 	}
 
 	private static DateTimeFormatter fullFormat() {

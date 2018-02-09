@@ -8,14 +8,14 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import edu.kit.ifv.mobitopp.simulation.SimulationDate;
+import edu.kit.ifv.mobitopp.simulation.SimpleTime;
 import edu.kit.ifv.mobitopp.simulation.Time;
 
 public class DefaultModifiableJourneyTest {
 
 	private static final int someId = 0;
 	private static final int anotherId = 1;
-	private static final Time someDay = new SimulationDate();
+	private static final Time someDay = new SimpleTime();
 	private static final Time anotherDay = someDay.plusDays(1);
 
 	@Test

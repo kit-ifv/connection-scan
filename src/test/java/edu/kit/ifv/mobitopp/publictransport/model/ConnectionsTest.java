@@ -24,14 +24,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 
-import edu.kit.ifv.mobitopp.simulation.SimulationDate;
+import edu.kit.ifv.mobitopp.simulation.SimpleTime;
 import edu.kit.ifv.mobitopp.simulation.Time;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class ConnectionsTest {
 
 	protected static final Point2D somePoint = new Point2D.Float();
-	private static final Time someTime = new SimulationDate();
+	private static final Time someTime = new SimpleTime();
 	private static final RelativeTime anotherRelativeTime = RelativeTime.of(1, MINUTES);
 	private static final RelativeTime otherRelativeTime = RelativeTime.of(2, MINUTES);
 	private Connections connections;

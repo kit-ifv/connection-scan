@@ -1,12 +1,12 @@
 package edu.kit.ifv.mobitopp.publictransport.model;
 
-import edu.kit.ifv.mobitopp.simulation.SimulationDate;
+import edu.kit.ifv.mobitopp.simulation.SimpleTime;
 import edu.kit.ifv.mobitopp.simulation.Time;
 
 public class JourneyBuilder {
 
 	private static final int defaultId = 0;
-	private static final Time defaultDay = new SimulationDate();
+	private static final Time defaultDay = new SimpleTime();
 	private static final int defaultCapacity = 0;
 	private static final TransportSystem defaultSystem = new TransportSystem("default system");
 

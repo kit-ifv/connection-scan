@@ -17,7 +17,7 @@ import org.junit.Test;
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
-public class SimulationDateTest {
+public class SimpleTimeTest {
 
 	private Time date;
 	private Time time;
@@ -39,11 +39,11 @@ public class SimulationDateTest {
 
 	@Before
 	public void setUp() {
-		date = new SimulationDate();
+		date = new SimpleTime();
 		time = date.plusHours(hour).plusMinutes(minute).plusSeconds(second);
-		same = new SimulationDate(time);
+		same = new SimpleTime(time);
 		later = time.plusSeconds(1);
-		monday = new SimulationDate();
+		monday = new SimpleTime();
 		tuesday = monday.nextDay();
 		wednesday = tuesday.nextDay();
 		thursday = wednesday.nextDay();
@@ -55,14 +55,14 @@ public class SimulationDateTest {
 	
 	@Test
 	public void startsAtMonday() {
-		Time date = new SimulationDate();
+		Time date = new SimpleTime();
 		
 		assertThat(date.weekDay(), is(DayOfWeek.MONDAY));
 	}
 	
 	@Test
 	public void oneWeek() {
-		assertThat(SimulationDate.oneWeek(),
+		assertThat(SimpleTime.oneWeek(),
 				contains(monday, tuesday, wednesday, thursday, friday, saturday, sunday));
 	}
 
@@ -334,7 +334,7 @@ public class SimulationDateTest {
 	
 	@Test
 	public void equalsAndHashCode() {
-		EqualsVerifier.forClass(SimulationDate.class).usingGetClass().verify();
+		EqualsVerifier.forClass(SimpleTime.class).usingGetClass().verify();
 	}
 	
 	@Test

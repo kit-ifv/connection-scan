@@ -6,17 +6,17 @@ import static java.time.temporal.ChronoUnit.MINUTES;
 
 import java.awt.geom.Point2D;
 
-import edu.kit.ifv.mobitopp.simulation.SimulationDate;
+import edu.kit.ifv.mobitopp.simulation.SimpleTime;
 import edu.kit.ifv.mobitopp.simulation.Time;
 
 public class Data {
 
 	public static Time time(int hour, int minute) {
-		return new SimulationDate(RelativeTime.ofHours(hour).plusMinutes(minute));
+		return new SimpleTime(RelativeTime.ofHours(hour).plusMinutes(minute));
 	}
 
 	public static Time second(int seconds) {
-		return SimulationDate.ofSeconds(seconds);
+		return SimpleTime.ofSeconds(seconds);
 	}
 
 	public static Point2D coordinate(float x, float y) {
