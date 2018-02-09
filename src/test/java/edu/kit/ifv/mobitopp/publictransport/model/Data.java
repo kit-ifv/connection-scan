@@ -12,7 +12,7 @@ import edu.kit.ifv.mobitopp.simulation.Time;
 public class Data {
 
 	public static Time time(int hour, int minute) {
-		return new SimpleTime(RelativeTime.ofHours(hour).plusMinutes(minute));
+		return SimpleTime.ofHours(hour).plusMinutes(minute);
 	}
 
 	public static Time second(int seconds) {

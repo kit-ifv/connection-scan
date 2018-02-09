@@ -117,7 +117,7 @@ public class RelativeTime implements Comparable<RelativeTime> {
 		return new RelativeTime(Duration.ofDays(days));
 	}
 
-	public static RelativeTime ofHours(int hour) {
+	public static RelativeTime ofHours(long hour) {
 		return new RelativeTime(Duration.ofHours(hour));
 	}
 

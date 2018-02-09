@@ -18,6 +18,11 @@ public class SimpleTime implements Time, Comparable<Time> {
 		this.seconds = 0;
 	}
 	
+	public SimpleTime(long seconds) {
+		super();
+		this.seconds = seconds;
+	}
+	
 	public SimpleTime(RelativeTime fromStart) {
 		super();
 		this.seconds = inSeconds(fromStart);
@@ -27,8 +32,16 @@ public class SimpleTime implements Time, Comparable<Time> {
 		this(RelativeTime.ofDays(days).plusHours(hours).plusMinutes(minutes).plusSeconds(seconds));
 	}
 	
+	public static Time ofDays(long days) {
+		return new SimpleTime(RelativeTime.ofDays(days));
+	}
+	
+	public static Time ofHours(long hours) {
+		return new SimpleTime(RelativeTime.ofHours(hours));
+	}
+	
 	public static Time ofSeconds(long seconds) {
-		return new SimpleTime(RelativeTime.ofSeconds(seconds));
+		return new SimpleTime(seconds);
 	}
 
 	private long inSeconds(RelativeTime fromStart) {
@@ -68,14 +81,12 @@ public class SimpleTime implements Time, Comparable<Time> {
 
 	@Override
 	public Time previousDay() {
-		RelativeTime previousDay = RelativeTime.ofDays(fromStart().toDays()).minusDays(1);
-		return new SimpleTime(previousDay);
+		return SimpleTime.ofDays(fromStart().toDays()).minusDays(1);
 	}
 
 	@Override
 	public Time nextDay() {
-		RelativeTime nextDay = RelativeTime.ofDays(fromStart().toDays()).plusDays(1);
-		return new SimpleTime(nextDay);
+		return SimpleTime.ofDays(fromStart().toDays()).plusDays(1);
 	}
 
 	@Override
@@ -85,24 +96,24 @@ public class SimpleTime implements Time, Comparable<Time> {
 
 	@Override
 	public boolean isAfter(Time otherDate) {
-		return toSeconds() > inSeconds(otherDate);
+		return toSeconds() > otherDate.toSeconds();
 	}
 
 	@Override
 	public boolean isBefore(Time otherDate) {
-		return toSeconds() < inSeconds(otherDate);
+		return toSeconds() < otherDate.toSeconds();
 	}
 
 	@Override
 	public boolean isBeforeOrEqualTo(Time otherDate) {
-		return toSeconds() <= inSeconds(otherDate);
-	}
-
-	@Override
-	public boolean isAfterOrEqualTo(Time otherDate) {
-		return toSeconds() >= inSeconds(otherDate);
+		return toSeconds() <= otherDate.toSeconds();
 	}
 	
+	@Override
+	public boolean isAfterOrEqualTo(Time otherDate) {
+		return toSeconds() >= otherDate.toSeconds();
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -126,8 +137,14 @@ public class SimpleTime implements Time, Comparable<Time> {
 	}
 
 	@Override
-	public Time minus(RelativeTime increment) {
-		RelativeTime changed = fromStart().minus(increment);
+	public Time minus(RelativeTime decrement) {
+		RelativeTime changed = fromStart().minus(decrement);
+		return new SimpleTime(changed);
+	}
+
+	@Override
+	public Time minusDays(int decrement) {
+		RelativeTime changed = fromStart().minusDays(decrement);
 		return new SimpleTime(changed);
 	}
 	
@@ -169,36 +186,30 @@ public class SimpleTime implements Time, Comparable<Time> {
 
 	@Override
 	public Time startOfDay() {
-		RelativeTime changed = RelativeTime.ofDays(fromStart().toDays());
-		return new SimpleTime(changed);
+		return SimpleTime.ofDays(fromStart().toDays());
 	}
 
 	@Override
-	public Time newTime(int hour, int minute, int second) {
-		assert hour >= 0 && hour < 28 : (hour + ":" + minute);
-		assert minute >= 0 && minute < 60;
-		assert second >= 0 && second < 60;
-		int day_offset = hour / 24;
-		assert day_offset >= 0 && day_offset <= 1 : day_offset;
+	public Time newTime(int hours, int minutes, int seconds) {
+		verify(hours, minutes, seconds);
+		long days = fromStart().toDays();
+		return SimpleTime.ofDays(days).plusHours(hours).plusMinutes(minutes).plusSeconds(seconds);
+	}
 
-		RelativeTime changed = RelativeTime
-				.ofDays(fromStart().toDays())
-				.plusHours(hour)
-				.plusMinutes(minute)
-				.plusSeconds(second);
-		return new SimpleTime(changed);
+	private void verify(int hours, int minutes, int seconds) {
+		if (0 > hours || 28 <= hours) {
+			throw new IllegalArgumentException("Hours too high or low: " + hours);
+		}
+		if (0 > minutes || 60 <= minutes) {
+			throw new IllegalArgumentException("Minutes too high or low: " + minutes);
+		}
+		if (0 > seconds || 60 <= seconds) {
+			throw new IllegalArgumentException("Seconds too high or low: " + seconds);
+		}
 	}
 
 	public RelativeTime differenceTo(Time otherDate) {
 		return this.fromStart().minus(otherDate.fromStart());
-	}
-
-	private long inSeconds(Time otherDate) {
-		if (otherDate instanceof SimpleTime) {
-			return ((SimpleTime) otherDate).toSeconds();
-		} else {
-			return inSeconds(otherDate.fromStart());
-		}
 	}
 
 	@Override
@@ -235,7 +246,7 @@ public class SimpleTime implements Time, Comparable<Time> {
 	}
 
 	public static Time future() {
-		return new SimpleTime(RelativeTime.ofDays(4000));
+		return SimpleTime.ofDays(4000);
 	}
 
 }

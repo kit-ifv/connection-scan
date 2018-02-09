@@ -293,9 +293,19 @@ public class SimpleTimeTest {
 		assertEquals("failure - second wrong", 30, value.getSecond());
 	}
 
-	@Test(expected = java.lang.AssertionError.class)
-	public void newTimeInvalidInput() {
-		time.newTime(0, 0, 61);
+	@Test(expected = java.lang.IllegalArgumentException.class)
+	public void newTimeInvalidSeconds() {
+		time.newTime(0, 0, 60);
+	}
+
+	@Test(expected = java.lang.IllegalArgumentException.class)
+	public void newTimeInvalidMinutes() {
+		time.newTime(0, 60, 0);
+	}
+
+	@Test(expected = java.lang.IllegalArgumentException.class)
+	public void newTimeInvalidHours() {
+		time.newTime(28, 0, 0);
 	}
 
 	@Test

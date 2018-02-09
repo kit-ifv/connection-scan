@@ -32,6 +32,7 @@ public interface Time extends Comparable<Time> {
 	Time plusMinutes(int increment);
 	Time plusSeconds(int increment);
 	Time minus(RelativeTime decrement);
+	Time minusDays(int decrement);
 
 	Time startOfDay();
 	Time newTime(int hour, int minute, int second);
