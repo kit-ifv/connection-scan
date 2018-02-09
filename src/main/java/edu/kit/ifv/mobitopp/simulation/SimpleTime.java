@@ -38,6 +38,10 @@ public class SimpleTime implements Time, Comparable<Time> {
 		return new SimpleTime(RelativeTime.ofHours(hours));
 	}
 	
+	public static Time ofMinutes(long minutes) {
+		return new SimpleTime(RelativeTime.ofMinutes(minutes));
+	}
+	
 	public static Time ofSeconds(long seconds) {
 		return new SimpleTime(seconds);
 	}
@@ -110,28 +114,6 @@ public class SimpleTime implements Time, Comparable<Time> {
 	@Override
 	public boolean isAfterOrEqualTo(Time otherDate) {
 		return toSeconds() >= otherDate.toSeconds();
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (seconds ^ (seconds >>> 32));
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		SimpleTime other = (SimpleTime) obj;
-		if (seconds != other.seconds)
-			return false;
-		return true;
 	}
 
 	@Override
@@ -209,21 +191,6 @@ public class SimpleTime implements Time, Comparable<Time> {
 		return RelativeTime.ofSeconds(seconds);
 	}
 
-	@Override
-	public String toString() {
-		return new DateFormat().asWeekdayTime(this);
-	}
-
-	@Override
-	public int compareTo(Time other) {
-		if (isBefore(other)) {
-			return -1;
-		} else if (other.isBefore(this)) {
-			return 1;
-		}
-		return 0;
-	}
-
 	public Time plus(int amount, ChronoUnit unit) {
 		return plus(RelativeTime.of(amount, unit));
 	}
@@ -239,6 +206,43 @@ public class SimpleTime implements Time, Comparable<Time> {
 
 	public static Time future() {
 		return SimpleTime.ofDays(4000);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (seconds ^ (seconds >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SimpleTime other = (SimpleTime) obj;
+		if (seconds != other.seconds)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return new DateFormat().asWeekdayTime(this);
+	}
+
+	@Override
+	public int compareTo(Time other) {
+		if (isBefore(other)) {
+			return -1;
+		} else if (other.isBefore(this)) {
+			return 1;
+		}
+		return 0;
 	}
 
 }
