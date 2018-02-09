@@ -1,7 +1,5 @@
 package edu.kit.ifv.mobitopp.simulation;
 
-import java.time.temporal.ChronoUnit;
-
 import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 
 public interface Time extends Comparable<Time> {
@@ -25,7 +23,6 @@ public interface Time extends Comparable<Time> {
 	boolean isAfterOrEqualTo(Time otherDate);
 	boolean isMidnight();
 
-	Time plus(long amount, ChronoUnit unit);
 	Time plus(RelativeTime increment);
 	Time plusDays(int increment);
 	Time plusHours(int increment);

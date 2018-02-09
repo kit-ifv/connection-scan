@@ -1,6 +1,5 @@
 package edu.kit.ifv.mobitopp.publictransport.example;
 
-import static java.time.temporal.ChronoUnit.HOURS;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
@@ -32,11 +31,11 @@ public class SimpleNetwork {
 	private static final Double locationOfDortmund = new Point2D.Double(7.4652789, 51.5142273);
 	private static final RelativeTime noChangeTime = RelativeTime.ZERO;
 	static final Time day = new SimpleTime();
-	static final Time noon = day.plus(12, HOURS);
-	static final Time oneOClock = noon.plus(1, HOURS);
-	static final Time twoOClock = noon.plus(2, HOURS);
-	static final Time threeOClock = noon.plus(3, HOURS);
-	static final Time fourOClock = noon.plus(4, HOURS);
+	static final Time noon = day.plusHours(12);
+	static final Time oneOClock = noon.plusHours(1);
+	static final Time twoOClock = noon.plusHours(2);
+	static final Time threeOClock = noon.plusHours(3);
+	static final Time fourOClock = noon.plusHours(4);
 	static final TransportSystem ice = new TransportSystem("ICE");
 
 	private final Station amsterdamStation;

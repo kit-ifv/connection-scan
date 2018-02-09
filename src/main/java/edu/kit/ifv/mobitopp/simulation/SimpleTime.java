@@ -1,7 +1,5 @@
 package edu.kit.ifv.mobitopp.simulation;
 
-import static java.time.temporal.ChronoUnit.SECONDS;
-
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -149,12 +147,6 @@ public class SimpleTime implements Time, Comparable<Time> {
 	}
 	
 	@Override
-	public Time plus(long amount, ChronoUnit unit) {
-		RelativeTime changed = fromStart().plus(RelativeTime.of(amount, unit));
-		return new SimpleTime(changed);
-	}
-	
-	@Override
 	public Time plus(RelativeTime increment) {
 		RelativeTime changed = fromStart().plus(increment);
 		return new SimpleTime(changed);
@@ -214,7 +206,7 @@ public class SimpleTime implements Time, Comparable<Time> {
 
 	@Override
 	public RelativeTime fromStart() {
-		return RelativeTime.of(seconds, SECONDS);
+		return RelativeTime.ofSeconds(seconds);
 	}
 
 	@Override

@@ -7,7 +7,6 @@ import static edu.kit.ifv.mobitopp.publictransport.model.Data.anotherStop;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.coordinate;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.someStop;
 import static edu.kit.ifv.mobitopp.publictransport.model.JourneyBuilder.journey;
-import static java.time.temporal.ChronoUnit.HOURS;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.not;
@@ -184,7 +183,7 @@ public class ConnectionTest {
 	}
 
 	private static Time time(int hour, int minute) {
-		return someTime.plus(hour, HOURS).plus(minute, MINUTES);
+		return someTime.plusHours(hour).plusMinutes(minute);
 	}
 
 }
