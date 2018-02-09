@@ -21,33 +21,28 @@ public class SimpleTime implements Time, Comparable<Time> {
 		this.seconds = seconds;
 	}
 	
-	public SimpleTime(RelativeTime fromStart) {
-		super();
-		this.seconds = inSeconds(fromStart);
+	public static Time of(int days, int hours, int minutes, int seconds) {
+		return from(RelativeTime.ofDays(days).plusHours(hours).plusMinutes(minutes).plusSeconds(seconds));
 	}
 	
-	public SimpleTime(int days, int hours, int minutes, int seconds) {
-		this(RelativeTime.ofDays(days).plusHours(hours).plusMinutes(minutes).plusSeconds(seconds));
+	public static Time from(RelativeTime fromStart) {
+		return ofSeconds(fromStart.seconds());
 	}
 	
 	public static Time ofDays(long days) {
-		return new SimpleTime(RelativeTime.ofDays(days));
+		return from(RelativeTime.ofDays(days));
 	}
 	
 	public static Time ofHours(long hours) {
-		return new SimpleTime(RelativeTime.ofHours(hours));
+		return from(RelativeTime.ofHours(hours));
 	}
 	
 	public static Time ofMinutes(long minutes) {
-		return new SimpleTime(RelativeTime.ofMinutes(minutes));
+		return from(RelativeTime.ofMinutes(minutes));
 	}
 	
 	public static Time ofSeconds(long seconds) {
 		return new SimpleTime(seconds);
-	}
-
-	private long inSeconds(RelativeTime fromStart) {
-		return fromStart.seconds();
 	}
 
 	@Override
@@ -119,43 +114,43 @@ public class SimpleTime implements Time, Comparable<Time> {
 	@Override
 	public Time minus(RelativeTime decrement) {
 		RelativeTime changed = fromStart().minus(decrement);
-		return new SimpleTime(changed);
+		return from(changed);
 	}
 
 	@Override
 	public Time minusDays(int decrement) {
 		RelativeTime changed = fromStart().minusDays(decrement);
-		return new SimpleTime(changed);
+		return from(changed);
 	}
 	
 	@Override
 	public Time plus(RelativeTime increment) {
 		RelativeTime changed = fromStart().plus(increment);
-		return new SimpleTime(changed);
+		return from(changed);
 	}
 
 	@Override
 	public Time plusDays(int increment) {
 		RelativeTime changed = fromStart().plusDays(increment);
-		return new SimpleTime(changed);
+		return from(changed);
 	}
 
 	@Override
 	public Time plusHours(int increment) {
 		RelativeTime changed = fromStart().plusHours(increment);
-		return new SimpleTime(changed);
+		return from(changed);
 	}
 
 	@Override
 	public Time plusMinutes(int increment) {
 		RelativeTime changed = fromStart().plusMinutes(increment);
-		return new SimpleTime(changed);
+		return from(changed);
 	}
 
 	@Override
 	public Time plusSeconds(int increment) {
 		RelativeTime changed = fromStart().plusSeconds(increment);
-		return new SimpleTime(changed);
+		return from(changed);
 	}
 
 	@Override

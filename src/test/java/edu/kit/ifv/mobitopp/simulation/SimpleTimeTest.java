@@ -41,7 +41,7 @@ public class SimpleTimeTest {
 	public void setUp() {
 		date = new SimpleTime();
 		time = date.plusHours(hour).plusMinutes(minute).plusSeconds(second);
-		same = new SimpleTime(time.fromStart());
+		same = SimpleTime.from(time.fromStart());
 		later = time.plusSeconds(1);
 		monday = new SimpleTime();
 		tuesday = monday.nextDay();
