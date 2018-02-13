@@ -22,10 +22,10 @@ import edu.kit.ifv.mobitopp.publictransport.connectionscan.PublicTransportRoute;
 import edu.kit.ifv.mobitopp.publictransport.connectionscan.RouteSearch;
 import edu.kit.ifv.mobitopp.publictransport.connectionscan.StopPaths;
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
-import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
-import edu.kit.ifv.mobitopp.simulation.Time;
+import edu.kit.ifv.mobitopp.time.RelativeTime;
+import edu.kit.ifv.mobitopp.time.Time;
 
 public class SimpleTransitExampleTest {
 

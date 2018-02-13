@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 
+import edu.kit.ifv.mobitopp.time.RelativeTime;
+
 public class Neighbourhood implements Iterable<Stop> {
 
 	private final Stop self;

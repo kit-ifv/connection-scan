@@ -1,4 +1,4 @@
-package edu.kit.ifv.mobitopp.result;
+package edu.kit.ifv.mobitopp.time;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Data;
-import edu.kit.ifv.mobitopp.simulation.Time;
 
 public class DateFormatTest {
 

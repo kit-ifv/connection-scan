@@ -10,7 +10,7 @@ import java.util.Map;
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
-import edu.kit.ifv.mobitopp.simulation.Time;
+import edu.kit.ifv.mobitopp.time.Time;
 
 public class DefaultStopPaths implements StopPaths {
 

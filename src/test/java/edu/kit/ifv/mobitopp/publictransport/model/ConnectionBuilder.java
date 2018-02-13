@@ -11,7 +11,8 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.kit.ifv.mobitopp.simulation.Time;
+import edu.kit.ifv.mobitopp.time.RelativeTime;
+import edu.kit.ifv.mobitopp.time.Time;
 
 public class ConnectionBuilder {
 

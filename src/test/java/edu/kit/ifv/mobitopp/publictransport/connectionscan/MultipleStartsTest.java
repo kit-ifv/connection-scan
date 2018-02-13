@@ -2,7 +2,7 @@ package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.someTime;
 import static edu.kit.ifv.mobitopp.publictransport.model.StopBuilder.stop;
-import static edu.kit.ifv.mobitopp.simulation.Time.future;
+import static edu.kit.ifv.mobitopp.time.Time.future;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -16,11 +16,11 @@ import java.util.function.BiConsumer;
 
 import org.junit.Test;
 
-import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.StopBuilder;
 import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
-import edu.kit.ifv.mobitopp.simulation.Time;
+import edu.kit.ifv.mobitopp.time.RelativeTime;
+import edu.kit.ifv.mobitopp.time.Time;
 
 public class MultipleStartsTest {
 

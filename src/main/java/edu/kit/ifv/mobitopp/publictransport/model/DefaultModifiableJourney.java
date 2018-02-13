@@ -1,6 +1,6 @@
 package edu.kit.ifv.mobitopp.publictransport.model;
 
-import edu.kit.ifv.mobitopp.simulation.Time;
+import edu.kit.ifv.mobitopp.time.Time;
 
 public class DefaultModifiableJourney implements ModifiableJourney {
 

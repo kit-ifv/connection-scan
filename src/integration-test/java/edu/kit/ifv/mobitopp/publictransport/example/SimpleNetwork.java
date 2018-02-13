@@ -15,13 +15,13 @@ import edu.kit.ifv.mobitopp.publictransport.model.Connections;
 import edu.kit.ifv.mobitopp.publictransport.model.DefaultModifiableJourney;
 import edu.kit.ifv.mobitopp.publictransport.model.DefaultStation;
 import edu.kit.ifv.mobitopp.publictransport.model.ModifiableJourney;
-import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.RoutePoints;
 import edu.kit.ifv.mobitopp.publictransport.model.Station;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.TransportSystem;
-import edu.kit.ifv.mobitopp.simulation.SimpleTime;
-import edu.kit.ifv.mobitopp.simulation.Time;
+import edu.kit.ifv.mobitopp.time.RelativeTime;
+import edu.kit.ifv.mobitopp.time.SimpleTime;
+import edu.kit.ifv.mobitopp.time.Time;
 
 public class SimpleNetwork {
 

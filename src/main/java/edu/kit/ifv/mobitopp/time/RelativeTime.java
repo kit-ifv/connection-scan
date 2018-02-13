@@ -1,4 +1,4 @@
-package edu.kit.ifv.mobitopp.publictransport.model;
+package edu.kit.ifv.mobitopp.time;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.MINUTES;

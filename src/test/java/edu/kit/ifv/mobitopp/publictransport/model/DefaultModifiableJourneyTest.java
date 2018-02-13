@@ -8,7 +8,7 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import edu.kit.ifv.mobitopp.simulation.Time;
+import edu.kit.ifv.mobitopp.time.Time;
 
 public class DefaultModifiableJourneyTest {
 

@@ -1,4 +1,4 @@
-package edu.kit.ifv.mobitopp.publictransport.model;
+package edu.kit.ifv.mobitopp.time;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
 import static org.hamcrest.Matchers.is;
@@ -8,7 +8,7 @@ import java.time.temporal.ChronoUnit;
 
 import org.junit.Test;
 
-import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
+import edu.kit.ifv.mobitopp.time.RelativeTime;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class RelativeTimeTest {

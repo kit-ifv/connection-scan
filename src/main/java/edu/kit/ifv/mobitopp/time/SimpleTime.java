@@ -1,11 +1,8 @@
-package edu.kit.ifv.mobitopp.simulation;
+package edu.kit.ifv.mobitopp.time;
 
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-
-import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
-import edu.kit.ifv.mobitopp.result.DateFormat;
 
 public class SimpleTime implements Time, Comparable<Time> {
 

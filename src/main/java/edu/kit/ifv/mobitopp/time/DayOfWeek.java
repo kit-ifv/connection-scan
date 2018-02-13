@@ -1,4 +1,4 @@
-package edu.kit.ifv.mobitopp.simulation;
+package edu.kit.ifv.mobitopp.time;
 
 import java.util.EnumSet;
 

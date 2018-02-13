@@ -13,10 +13,10 @@ import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
-import edu.kit.ifv.mobitopp.simulation.Time;
+import edu.kit.ifv.mobitopp.time.RelativeTime;
+import edu.kit.ifv.mobitopp.time.Time;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class RouteIncludingFootpathsTest {

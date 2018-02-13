@@ -7,7 +7,7 @@ import java.util.Collection;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connections;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.simulation.Time;
+import edu.kit.ifv.mobitopp.time.Time;
 
 public class TransitNetwork {
 

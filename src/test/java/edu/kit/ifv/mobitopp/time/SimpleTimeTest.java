@@ -1,4 +1,4 @@
-package edu.kit.ifv.mobitopp.simulation;
+package edu.kit.ifv.mobitopp.time;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -14,7 +14,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class SimpleTimeTest {

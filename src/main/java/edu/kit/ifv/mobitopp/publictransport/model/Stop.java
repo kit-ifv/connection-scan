@@ -3,7 +3,8 @@ package edu.kit.ifv.mobitopp.publictransport.model;
 import java.awt.geom.Point2D;
 import java.util.Optional;
 
-import edu.kit.ifv.mobitopp.simulation.Time;
+import edu.kit.ifv.mobitopp.time.RelativeTime;
+import edu.kit.ifv.mobitopp.time.Time;
 
 public class Stop {
 

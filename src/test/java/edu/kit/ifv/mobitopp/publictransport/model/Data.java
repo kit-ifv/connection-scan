@@ -6,8 +6,9 @@ import static java.time.temporal.ChronoUnit.MINUTES;
 
 import java.awt.geom.Point2D;
 
-import edu.kit.ifv.mobitopp.simulation.SimpleTime;
-import edu.kit.ifv.mobitopp.simulation.Time;
+import edu.kit.ifv.mobitopp.time.RelativeTime;
+import edu.kit.ifv.mobitopp.time.SimpleTime;
+import edu.kit.ifv.mobitopp.time.Time;
 
 public class Data {
 

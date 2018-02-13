@@ -3,7 +3,7 @@ package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 import java.util.function.BiConsumer;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.simulation.Time;
+import edu.kit.ifv.mobitopp.time.Time;
 
 class SingleStart extends BaseTimes {
 

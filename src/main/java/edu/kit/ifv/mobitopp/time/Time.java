@@ -1,6 +1,4 @@
-package edu.kit.ifv.mobitopp.simulation;
-
-import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
+package edu.kit.ifv.mobitopp.time;
 
 public interface Time extends Comparable<Time> {
 

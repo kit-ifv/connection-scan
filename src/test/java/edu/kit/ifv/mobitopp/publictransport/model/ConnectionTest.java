@@ -23,7 +23,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import edu.kit.ifv.mobitopp.simulation.Time;
+import edu.kit.ifv.mobitopp.time.RelativeTime;
+import edu.kit.ifv.mobitopp.time.Time;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class ConnectionTest {
