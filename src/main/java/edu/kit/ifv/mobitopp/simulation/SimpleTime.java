@@ -199,10 +199,6 @@ public class SimpleTime implements Time, Comparable<Time> {
 		return week;
 	}
 
-	public static Time future() {
-		return SimpleTime.ofDays(4000);
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;

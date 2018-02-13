@@ -3,7 +3,7 @@ package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.oneMinuteLater;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.someTime;
 import static edu.kit.ifv.mobitopp.publictransport.model.StopBuilder.stop;
-import static edu.kit.ifv.mobitopp.simulation.Time.infinite;
+import static edu.kit.ifv.mobitopp.simulation.Time.future;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -31,7 +31,7 @@ public class SingleStartTest {
 
 		Time time = times.getConsideringMinimumChangeTime(anotherStop());
 
-		assertThat(time, is(equalTo(Time.infinite)));
+		assertThat(time, is(equalTo(Time.future)));
 	}
 
 	@Test
@@ -71,7 +71,7 @@ public class SingleStartTest {
 		ArrivalTimes times = times(someStop(), someTime(), onlyStartStop);
 		Time time = times.getConsideringMinimumChangeTime(stop);
 
-		assertThat(time, is(equalTo(infinite)));
+		assertThat(time, is(equalTo(future)));
 	}
 
 	@Test
@@ -82,7 +82,7 @@ public class SingleStartTest {
 		ArrivalTimes times = times(onlyStartStop);
 		Time time = times.getConsideringMinimumChangeTime(stop);
 
-		assertThat(time, is(equalTo(infinite)));
+		assertThat(time, is(equalTo(future)));
 	}
 
 	@Test
@@ -93,7 +93,7 @@ public class SingleStartTest {
 		ArrivalTimes times = times(onlyStartStop);
 		Time time = times.getConsideringMinimumChangeTime(stop);
 
-		assertThat(time, is(equalTo(infinite)));
+		assertThat(time, is(equalTo(future)));
 	}
 
 	@Test

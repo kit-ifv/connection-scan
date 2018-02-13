@@ -1,6 +1,5 @@
 package edu.kit.ifv.mobitopp.publictransport.model;
 
-import edu.kit.ifv.mobitopp.simulation.SimpleTime;
 import edu.kit.ifv.mobitopp.simulation.Time;
 
 public class FootJourney implements Journey {
@@ -21,7 +20,7 @@ public class FootJourney implements Journey {
 
 	@Override
 	public Time day() {
-		return SimpleTime.future();
+		return Time.future;
 	}
 
 	@Override

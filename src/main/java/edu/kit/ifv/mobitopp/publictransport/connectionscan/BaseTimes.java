@@ -14,7 +14,7 @@ abstract class BaseTimes implements ArrivalTimes {
 
 	protected void initialise() {
 		for (int i = 0; i < times.length; i++) {
-			times[i] = Time.infinite;
+			times[i] = Time.future;
 		}
 		initialiseStart();
 	}
@@ -44,7 +44,7 @@ abstract class BaseTimes implements ArrivalTimes {
 	public Time get(Stop stop) {
 		int internal = stop.id();
 		if (internal >= times.length || internal < 0) {
-			return Time.infinite;
+			return Time.future;
 		}
 		return times[internal];
 	}
