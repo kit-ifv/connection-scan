@@ -31,7 +31,7 @@ import org.junit.Test;
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.ConnectionBuilder;
 import edu.kit.ifv.mobitopp.publictransport.model.Connections;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.time.Time;
 
 public class DefaultConnectionSweeperTest {
 
@@ -215,7 +215,7 @@ public class DefaultConnectionSweeperTest {
 	public void isNotTooLateWhenTimeIsAfterDepartureEarlierConnectionWhenConnectionsAreNotSorted()
 			throws Exception {
 		Connection earlierConnection = connection().departsAt(someTime()).build();
-		Connection laterConnection = connection().departsAt(twoMinutesLater()).build();
+		Connection laterConnection = connection().departsAndArrivesAt(twoMinutesLater()).build();
 		DefaultConnectionSweeper connections = connections(laterConnection, earlierConnection);
 
 		assertThat(connections, is(not(afterLatestDeparture(oneMinuteLater()))));

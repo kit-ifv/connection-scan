@@ -1,5 +1,8 @@
 package edu.kit.ifv.mobitopp.publictransport.model;
 
+import edu.kit.ifv.mobitopp.time.RelativeTime;
+import edu.kit.ifv.mobitopp.time.Time;
+
 public class StopPath {
 
 	private final Stop stop;
@@ -20,7 +23,7 @@ public class StopPath {
 	}
 
 	public Time arrivalTimeStartingAt(Time currentTime) {
-		return currentTime.add(duration);
+		return currentTime.plus(duration);
 	}
 
 	@Override

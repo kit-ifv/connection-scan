@@ -6,16 +6,16 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
-import java.time.LocalDateTime;
-
 import org.junit.Test;
+
+import edu.kit.ifv.mobitopp.time.Time;
 
 public class DefaultModifiableJourneyTest {
 
 	private static final int someId = 0;
 	private static final int anotherId = 1;
-	private static final Time someDay = new Time(LocalDateTime.of(2011, 10, 17, 0, 0));
-	private static final Time anotherDay = new Time(LocalDateTime.of(2011, 10, 18, 0, 0));
+	private static final Time someDay = Data.someTime();
+	private static final Time anotherDay = someDay.plusDays(1);
 
 	@Test
 	public void equalsAndHashCode() throws Exception {

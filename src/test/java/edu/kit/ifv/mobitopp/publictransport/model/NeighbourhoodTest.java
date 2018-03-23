@@ -16,6 +16,8 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.kit.ifv.mobitopp.time.RelativeTime;
+
 public class NeighbourhoodTest {
 
 	private static final RelativeTime someTime = RelativeTime.of(1, MINUTES);

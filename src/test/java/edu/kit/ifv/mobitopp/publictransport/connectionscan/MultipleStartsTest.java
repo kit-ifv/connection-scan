@@ -2,7 +2,7 @@ package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.someTime;
 import static edu.kit.ifv.mobitopp.publictransport.model.StopBuilder.stop;
-import static edu.kit.ifv.mobitopp.publictransport.model.Time.infinite;
+import static edu.kit.ifv.mobitopp.time.Time.future;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -16,11 +16,11 @@ import java.util.function.BiConsumer;
 
 import org.junit.Test;
 
-import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.StopBuilder;
 import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.time.RelativeTime;
+import edu.kit.ifv.mobitopp.time.Time;
 
 public class MultipleStartsTest {
 
@@ -59,7 +59,7 @@ public class MultipleStartsTest {
 
 		Time time = times.getConsideringMinimumChangeTime(targetStop());
 
-		assertThat(time, is(equalTo(Time.infinite)));
+		assertThat(time, is(equalTo(Time.future)));
 	}
 
 	@Test
@@ -99,7 +99,7 @@ public class MultipleStartsTest {
 		ArrivalTimes times = timesFromPaths(noWalkTime(), someTime(), onlyStartStops);
 		Time time = times.getConsideringMinimumChangeTime(stop);
 
-		assertThat(time, is(equalTo(infinite)));
+		assertThat(time, is(equalTo(future)));
 	}
 
 	@Test
@@ -110,7 +110,7 @@ public class MultipleStartsTest {
 		ArrivalTimes times = times(onlyStartStops);
 		Time time = times.getConsideringMinimumChangeTime(stop);
 
-		assertThat(time, is(equalTo(Time.infinite)));
+		assertThat(time, is(equalTo(Time.future)));
 	}
 
 	@Test
@@ -121,7 +121,7 @@ public class MultipleStartsTest {
 		ArrivalTimes times = times(onlyStartStops);
 		Time time = times.getConsideringMinimumChangeTime(stop);
 
-		assertThat(time, is(equalTo(Time.infinite)));
+		assertThat(time, is(equalTo(Time.future)));
 	}
 
 	@Test
@@ -142,7 +142,7 @@ public class MultipleStartsTest {
 		ArrivalTimes times = timesFromPaths(noWalkTime(), timeAtStart, additionalStops);
 		times.set(otherStop, timeAtOther);
 
-		Time timeAtOtherIncludingChangeTime = oneMinuteLater().add(changeTime);
+		Time timeAtOtherIncludingChangeTime = oneMinuteLater().plus(changeTime);
 		assertThat(times.getConsideringMinimumChangeTime(otherStop),
 				is(equalTo(timeAtOtherIncludingChangeTime)));
 	}
@@ -204,11 +204,11 @@ public class MultipleStartsTest {
 	}
 
 	private static Time oneMinuteLater() {
-		return someTime().add(oneMinute);
+		return someTime().plus(oneMinute);
 	}
 
 	private static Time twoMinutesLater() {
-		return someTime().add(twoMinutes);
+		return someTime().plus(twoMinutes);
 	}
 
 	private ArrivalTimes times(int numberOfStops) {

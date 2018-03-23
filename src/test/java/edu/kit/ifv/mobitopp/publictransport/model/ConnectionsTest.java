@@ -18,19 +18,20 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
 import java.awt.geom.Point2D;
-import java.time.LocalDateTime;
 import java.util.Collection;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 
+import edu.kit.ifv.mobitopp.time.RelativeTime;
+import edu.kit.ifv.mobitopp.time.Time;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class ConnectionsTest {
 
 	protected static final Point2D somePoint = new Point2D.Float();
-	private static final Time someTime = new Time(LocalDateTime.of(1971, 1, 1, 0, 0));
+	private static final Time someTime = Data.someTime();
 	private static final RelativeTime anotherRelativeTime = RelativeTime.of(1, MINUTES);
 	private static final RelativeTime otherRelativeTime = RelativeTime.of(2, MINUTES);
 	private Connections connections;
@@ -259,11 +260,11 @@ public class ConnectionsTest {
 	}
 
 	private Time oneMinuteLater() {
-		return someTime.add(anotherRelativeTime);
+		return someTime.plus(anotherRelativeTime);
 	}
 
 	private Time twoMinutesLater() {
-		return someTime.add(otherRelativeTime);
+		return someTime.plus(otherRelativeTime);
 	}
 
 	@Test

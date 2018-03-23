@@ -1,12 +1,10 @@
 package edu.kit.ifv.mobitopp.publictransport.example;
 
-import static java.time.temporal.ChronoUnit.HOURS;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
-import java.time.LocalDateTime;
 import java.util.Collection;
 
 import edu.kit.ifv.mobitopp.publictransport.connectionscan.ConnectionScan;
@@ -17,12 +15,13 @@ import edu.kit.ifv.mobitopp.publictransport.model.Connections;
 import edu.kit.ifv.mobitopp.publictransport.model.DefaultModifiableJourney;
 import edu.kit.ifv.mobitopp.publictransport.model.DefaultStation;
 import edu.kit.ifv.mobitopp.publictransport.model.ModifiableJourney;
-import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.RoutePoints;
 import edu.kit.ifv.mobitopp.publictransport.model.Station;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
 import edu.kit.ifv.mobitopp.publictransport.model.TransportSystem;
+import edu.kit.ifv.mobitopp.time.RelativeTime;
+import edu.kit.ifv.mobitopp.time.SimpleTime;
+import edu.kit.ifv.mobitopp.time.Time;
 
 public class SimpleNetwork {
 
@@ -31,12 +30,12 @@ public class SimpleNetwork {
 	private static final Double locationOfChemnitz = new Point2D.Double(12.9252977, 50.8322608);
 	private static final Double locationOfDortmund = new Point2D.Double(7.4652789, 51.5142273);
 	private static final RelativeTime noChangeTime = RelativeTime.ZERO;
-	static final Time day = new Time(LocalDateTime.of(2017, 3, 14, 0, 0));
-	static final Time noon = day.add(12, HOURS);
-	static final Time oneOClock = noon.add(1, HOURS);
-	static final Time twoOClock = noon.add(2, HOURS);
-	static final Time threeOClock = noon.add(3, HOURS);
-	static final Time fourOClock = noon.add(4, HOURS);
+	static final Time day = new SimpleTime();
+	static final Time noon = day.plusHours(12);
+	static final Time oneOClock = noon.plusHours(1);
+	static final Time twoOClock = noon.plusHours(2);
+	static final Time threeOClock = noon.plusHours(3);
+	static final Time fourOClock = noon.plusHours(4);
 	static final TransportSystem ice = new TransportSystem("ICE");
 
 	private final Station amsterdamStation;

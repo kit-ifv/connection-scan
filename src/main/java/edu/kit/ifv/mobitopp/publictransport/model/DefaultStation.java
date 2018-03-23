@@ -3,6 +3,7 @@ package edu.kit.ifv.mobitopp.publictransport.model;
 import java.util.List;
 
 import edu.kit.ifv.mobitopp.network.Node;
+import edu.kit.ifv.mobitopp.time.RelativeTime;
 
 public class DefaultStation extends BaseStation implements Station {
 

@@ -7,7 +7,6 @@ import static edu.kit.ifv.mobitopp.publictransport.model.Data.anotherStop;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.coordinate;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.someStop;
 import static edu.kit.ifv.mobitopp.publictransport.model.JourneyBuilder.journey;
-import static java.time.temporal.ChronoUnit.HOURS;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.not;
@@ -20,16 +19,17 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.awt.geom.Point2D;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.Test;
 
+import edu.kit.ifv.mobitopp.time.RelativeTime;
+import edu.kit.ifv.mobitopp.time.Time;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class ConnectionTest {
 
-	private static final Time someTime = new Time(LocalDateTime.of(2011, 10, 17, 0, 0));
+	private static final Time someTime = Data.someTime();
 
 	@Test
 	public void footConnectionHasFixedId() throws Exception {
@@ -161,6 +161,7 @@ public class ConnectionTest {
 		Connection anotherConnection = connection().startsAt(anotherStop).build();
 		EqualsVerifier
 				.forClass(Connection.class)
+				.withPrefabValues(Time.class, someTime(), oneMinuteLater())
 				.withPrefabValues(Point2D.class, coordinate(0, 0), coordinate(1, 1))
 				.withPrefabValues(Stop.class, oneStop, anotherStop)
 				.withPrefabValues(Journey.class, oneJourney, anotherJourney)
@@ -183,7 +184,7 @@ public class ConnectionTest {
 	}
 
 	private static Time time(int hour, int minute) {
-		return someTime.add(hour, HOURS).add(minute, MINUTES);
+		return someTime.plusHours(hour).plusMinutes(minute);
 	}
 
 }

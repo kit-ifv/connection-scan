@@ -5,7 +5,7 @@ import java.util.function.BiConsumer;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.time.Time;
 
 class MultipleStarts extends BaseTimes {
 
@@ -31,14 +31,14 @@ class MultipleStarts extends BaseTimes {
 	@Override
 	protected void initialiseStart() {
 		for (StopPath pathToStop : startPaths) {
-			set(pathToStop.stop(), startTime.add(pathToStop.duration()));
+			set(pathToStop.stop(), startTime.plus(pathToStop.duration()));
 		}
 	}
 
 	@Override
 	public void initialise(BiConsumer<Stop, Time> consumer) {
 		for (StopPath pathToStop : startPaths) {
-			consumer.accept(pathToStop.stop(), startTime.add(pathToStop.duration()));
+			consumer.accept(pathToStop.stop(), startTime.plus(pathToStop.duration()));
 		}
 	}
 

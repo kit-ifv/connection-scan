@@ -8,21 +8,17 @@ import static java.time.temporal.ChronoUnit.MINUTES;
 import static java.util.Collections.emptyList;
 
 import java.awt.geom.Point2D;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.kit.ifv.mobitopp.publictransport.model.Connection;
-import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
-import edu.kit.ifv.mobitopp.publictransport.model.RoutePoints;
-import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.time.RelativeTime;
+import edu.kit.ifv.mobitopp.time.Time;
 
 public class ConnectionBuilder {
 
 	private static final int defaultId = 0;
-	private static final Time defaultDeparture = new Time(LocalDateTime.of(2011, 10, 17, 0, 0, 0));
-	private static final Time defaultArrival = defaultDeparture.add(RelativeTime.of(1, MINUTES));
+	private static final Time defaultDeparture = Data.someTime();
+	private static final Time defaultArrival = defaultDeparture.plus(RelativeTime.of(1, MINUTES));
 	private static final Stop defaultStart = someStop();
 	private static final Stop defaultEnd = anotherStop();
 	private static final Journey defaultJourney = journey().build();

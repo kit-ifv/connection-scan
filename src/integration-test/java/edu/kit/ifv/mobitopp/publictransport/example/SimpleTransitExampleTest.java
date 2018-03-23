@@ -22,10 +22,10 @@ import edu.kit.ifv.mobitopp.publictransport.connectionscan.PublicTransportRoute;
 import edu.kit.ifv.mobitopp.publictransport.connectionscan.RouteSearch;
 import edu.kit.ifv.mobitopp.publictransport.connectionscan.StopPaths;
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
-import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.time.RelativeTime;
+import edu.kit.ifv.mobitopp.time.Time;
 
 public class SimpleTransitExampleTest {
 
@@ -91,7 +91,7 @@ public class SimpleTransitExampleTest {
 
 		Time atOneOClock = oneOClock;
 		Connection chemnitzToBerlin = network.chemnitzToBerlin();
-		Time includingEgresspath = fourOClock.add(walkTimeInBerlin);
+		Time includingEgresspath = fourOClock.plus(walkTimeInBerlin);
 		
 		StopPaths starts = DefaultStopPaths.from(asList(viaChemnitz, viaDortmund));
 		StopPaths ends = DefaultStopPaths.from(asList(toPlaceInBerlin));

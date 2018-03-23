@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.time.Time;
 
 abstract class BaseSearchRequest implements PreparedSearchRequest {
 
@@ -60,7 +60,7 @@ abstract class BaseSearchRequest implements PreparedSearchRequest {
 			return;
 		}
 		Time currentArrival = times.get(connection.end());
-		if (currentArrival.isLaterThan(connection.arrival())) {
+		if (currentArrival.isAfter(connection.arrival())) {
 			updateArrivalInternal(connection);
 		}
 	}
@@ -70,7 +70,7 @@ abstract class BaseSearchRequest implements PreparedSearchRequest {
 			return false;
 		}
 		Time currentArrival = times.getConsideringMinimumChangeTime(connection.start());
-		return currentArrival.isLaterThan(connection.departure());
+		return currentArrival.isAfter(connection.departure());
 	}
 
 	private void updateArrivalInternal(Connection connection) {
@@ -89,7 +89,7 @@ abstract class BaseSearchRequest implements PreparedSearchRequest {
 
 	private void updateArrivalByFoot(Stop start, Stop end, Time arrivalAtStart, Time arrivalAtEnd) {
 		Time currentArrival = times.get(end);
-		if (currentArrival.isLaterThan(arrivalAtEnd)) {
+		if (currentArrival.isAfter(arrivalAtEnd)) {
 			updateTransfer(start, end, arrivalAtStart, arrivalAtEnd);
 		}
 	}

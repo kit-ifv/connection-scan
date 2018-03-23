@@ -5,6 +5,8 @@ import static java.util.Collections.emptyList;
 
 import java.awt.geom.Point2D;
 
+import edu.kit.ifv.mobitopp.time.RelativeTime;
+
 public class StopBuilder {
 
 	private final int defaultId = 0;

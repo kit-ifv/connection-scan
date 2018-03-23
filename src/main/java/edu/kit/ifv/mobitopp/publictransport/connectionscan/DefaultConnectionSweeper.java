@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Connections;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.time.Time;
 
 class DefaultConnectionSweeper implements ConnectionSweeper {
 

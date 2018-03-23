@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.kit.ifv.mobitopp.network.Node;
+import edu.kit.ifv.mobitopp.time.RelativeTime;
 
 public class BaseStationTest {
 

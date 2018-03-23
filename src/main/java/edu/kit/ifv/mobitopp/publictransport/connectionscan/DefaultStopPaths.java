@@ -10,7 +10,7 @@ import java.util.Map;
 import edu.kit.ifv.mobitopp.publictransport.model.Connection;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
 import edu.kit.ifv.mobitopp.publictransport.model.StopPath;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.time.Time;
 
 public class DefaultStopPaths implements StopPaths {
 
@@ -56,7 +56,7 @@ public class DefaultStopPaths implements StopPaths {
 	public boolean isConnectionReachableAt(Stop stop, Time time, Connection connection) {
 		if (stopToPath.containsKey(stop)) {
 			StopPath pathToStop = stopToPath.get(stop);
-			Time arrivalAtStop = time.add(pathToStop.duration());
+			Time arrivalAtStop = time.plus(pathToStop.duration());
 			return arrivalAtStop.isBeforeOrEqualTo(connection.departure());
 		}
 		return false;

@@ -22,6 +22,8 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.kit.ifv.mobitopp.time.RelativeTime;
+import edu.kit.ifv.mobitopp.time.Time;
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class StopTest {

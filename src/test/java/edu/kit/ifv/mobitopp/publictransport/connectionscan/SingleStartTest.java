@@ -3,7 +3,7 @@ package edu.kit.ifv.mobitopp.publictransport.connectionscan;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.oneMinuteLater;
 import static edu.kit.ifv.mobitopp.publictransport.model.Data.someTime;
 import static edu.kit.ifv.mobitopp.publictransport.model.StopBuilder.stop;
-import static edu.kit.ifv.mobitopp.publictransport.model.Time.infinite;
+import static edu.kit.ifv.mobitopp.time.Time.future;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -15,9 +15,9 @@ import java.util.function.BiConsumer;
 
 import org.junit.Test;
 
-import edu.kit.ifv.mobitopp.publictransport.model.RelativeTime;
 import edu.kit.ifv.mobitopp.publictransport.model.Stop;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
+import edu.kit.ifv.mobitopp.time.RelativeTime;
+import edu.kit.ifv.mobitopp.time.Time;
 
 public class SingleStartTest {
 
@@ -31,7 +31,7 @@ public class SingleStartTest {
 
 		Time time = times.getConsideringMinimumChangeTime(anotherStop());
 
-		assertThat(time, is(equalTo(Time.infinite)));
+		assertThat(time, is(equalTo(Time.future)));
 	}
 
 	@Test
@@ -71,7 +71,7 @@ public class SingleStartTest {
 		ArrivalTimes times = times(someStop(), someTime(), onlyStartStop);
 		Time time = times.getConsideringMinimumChangeTime(stop);
 
-		assertThat(time, is(equalTo(infinite)));
+		assertThat(time, is(equalTo(future)));
 	}
 
 	@Test
@@ -82,7 +82,7 @@ public class SingleStartTest {
 		ArrivalTimes times = times(onlyStartStop);
 		Time time = times.getConsideringMinimumChangeTime(stop);
 
-		assertThat(time, is(equalTo(Time.infinite)));
+		assertThat(time, is(equalTo(future)));
 	}
 
 	@Test
@@ -93,7 +93,7 @@ public class SingleStartTest {
 		ArrivalTimes times = times(onlyStartStop);
 		Time time = times.getConsideringMinimumChangeTime(stop);
 
-		assertThat(time, is(equalTo(Time.infinite)));
+		assertThat(time, is(equalTo(future)));
 	}
 
 	@Test
@@ -116,7 +116,7 @@ public class SingleStartTest {
 		times.set(start, timeAtStart);
 		times.set(otherStop, timeAtOther);
 
-		Time timeAtOtherIncludingChangeTime = oneMinuteLater().add(changeTime);
+		Time timeAtOtherIncludingChangeTime = oneMinuteLater().plus(changeTime);
 		assertThat(times.getConsideringMinimumChangeTime(otherStop),
 				is(equalTo(timeAtOtherIncludingChangeTime)));
 	}

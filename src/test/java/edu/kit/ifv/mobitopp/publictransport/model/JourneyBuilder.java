@@ -1,16 +1,11 @@
 package edu.kit.ifv.mobitopp.publictransport.model;
 
-import java.time.LocalDateTime;
-
-import edu.kit.ifv.mobitopp.publictransport.model.DefaultModifiableJourney;
-import edu.kit.ifv.mobitopp.publictransport.model.Time;
-import edu.kit.ifv.mobitopp.publictransport.model.TransportSystem;
-import edu.kit.ifv.mobitopp.publictransport.model.ModifiableJourney;
+import edu.kit.ifv.mobitopp.time.Time;
 
 public class JourneyBuilder {
 
 	private static final int defaultId = 0;
-	private static final Time defaultDay = new Time(LocalDateTime.of(2011, 10, 17, 0, 0));
+	private static final Time defaultDay = Data.someTime();
 	private static final int defaultCapacity = 0;
 	private static final TransportSystem defaultSystem = new TransportSystem("default system");
 

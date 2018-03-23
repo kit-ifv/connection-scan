@@ -1,5 +1,7 @@
 package edu.kit.ifv.mobitopp.publictransport.model;
 
+import edu.kit.ifv.mobitopp.time.Time;
+
 public class FootJourney implements Journey {
 
 	public static final Journey footJourney = new FootJourney();
@@ -18,7 +20,7 @@ public class FootJourney implements Journey {
 
 	@Override
 	public Time day() {
-		return Time.infinite;
+		return Time.future;
 	}
 
 	@Override

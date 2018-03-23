@@ -1,5 +1,8 @@
 package edu.kit.ifv.mobitopp.publictransport.model;
 
+import edu.kit.ifv.mobitopp.time.RelativeTime;
+import edu.kit.ifv.mobitopp.time.Time;
+
 public class Connection {
 
 	private static final int footId = -1;
@@ -70,7 +73,7 @@ public class Connection {
 	}
 
 	public RelativeTime duration() {
-		return departure.durationTo(arrival);
+		return arrival.differenceTo(departure);
 	}
 
 	public Journey journey() {
