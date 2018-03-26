@@ -30,5 +30,9 @@ public enum DayOfWeek {
 		}
 		throw new AssertionError("invalid code: " + numeric);
 	}
+	
+	public DayOfWeek next() {
+		return getTypeFromInt((numeric+1)%7);
+	}
 
 }
