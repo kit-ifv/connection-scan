@@ -54,8 +54,7 @@ public class SimpleTime implements Time, Comparable<Time> {
 
 	@Override
 	public DayOfWeek weekDay() {
-		int weekDay = getDay() % 7;
-		return DayOfWeek.getTypeFromInt(weekDay);
+		return DayOfWeek.fromDay(getDay());
 	}
 
 	@Override
