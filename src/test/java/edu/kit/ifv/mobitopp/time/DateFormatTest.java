@@ -36,7 +36,7 @@ public class DateFormatTest {
 	public void asFullDate() {
 		String time = formatter.asFullDate(date());
 
-		assertThat(time, is(equalTo("05 01:02:03")));
+		assertThat(time, is(equalTo("Mo 01:02:03")));
 	}
 
 	@Test
