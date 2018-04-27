@@ -48,7 +48,7 @@ public class DateFormat {
 
 	private static DateTimeFormatter fullFormat() {
 		return new DateTimeFormatterBuilder()
-				.append(dateFormat())
+				.append(weekdayFormat())
 				.appendLiteral(dateTimeSeparator)
 				.append(timeFormat())
 				.toFormatter();
