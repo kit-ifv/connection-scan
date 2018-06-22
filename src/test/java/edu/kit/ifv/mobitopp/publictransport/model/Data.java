@@ -116,4 +116,13 @@ public class Data {
 				.build();
 	}
 
+	public static Connection laterFromAnotherToOther() {
+		return connection()
+				.startsAt(anotherStop())
+				.endsAt(otherStop())
+				.departsAt(twoMinutesLater())
+				.arrivesAt(threeMinutesLater())
+				.build();
+	}
+
 }
