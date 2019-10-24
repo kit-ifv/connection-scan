@@ -1,6 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 
+wrapper.gradleVersion = '5.2'
 group = 'edu.kit.ifv.mobitopp'
 version = '0.2-SNAPSHOT'
 
@@ -31,7 +32,7 @@ sourceSets {
 }
 
 task integrationTest(type: Test) {
-    testClassesDir = sourceSets.integrationTest.output.classesDir
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
     classpath = sourceSets.integrationTest.runtimeClasspath
 }
 
